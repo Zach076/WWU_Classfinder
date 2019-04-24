@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Classfinder</string>
+    <string name="buttonTest">buttonTest</string>
+    <string name="btn_new">New</string>
+    <string name="btn_view">View</string>
+    <string name="btn_search">Search</string>
 </resources>
