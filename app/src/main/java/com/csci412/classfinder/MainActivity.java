@@ -1,6 +1,5 @@
 package com.csci412.classfinder;
 
-
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
