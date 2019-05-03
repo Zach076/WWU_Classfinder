@@ -2,5 +2,5 @@
 
 CSCI 412 Spring 2019 Classfinder term project
 
-[](https://gitlab.cs.wwu.edu/richarz/412_s19_classfinder/wikis/CHECKPOINT_1)
+[CHECKPOINT 1](https://gitlab.cs.wwu.edu/richarz/412_s19_classfinder/wikis/CHECKPOINT_1)
 
