@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">classfinder</string>
+    <string name="app_name">ClassFinder</string>
     <string name="buttonTest">buttonTest</string>
     <string name="btn_new">New Schedule</string>
     <string name="btn_view">View Schedules</string>
