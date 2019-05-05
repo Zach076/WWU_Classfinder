@@ -21,6 +21,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     HashMap<String, List<Course>> classes;
+    HashMap<String, String> term;
+    HashMap<String, String> otherAttributes;
+    HashMap<String, String> subject;
+    HashMap<String, String> gurAttributes;
+    HashMap<String, String> siteAttributes;
+    HashMap<String, String> Instructor;
+
 
     //content views
     View filterView;
@@ -29,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //intitalize all the menu options
+        new getMenuAttributes().execute();
+        //todo make the main thread wait on the thread above
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -183,6 +193,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(HashMap<String, List<Course>> result) {
             classes = result;
+        }
+    }
+
+    private class getMenuAttributes extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> >{
+
+        @Override
+        protected List<HashMap<String, String>> doInBackground(List<Pair<String, String>>... list) {
+            return Utilities.getMenuAttributes();
+        }
+
+        @Override
+        protected void onPostExecute(List<HashMap<String, String>> result) {
+            term = result.get(0);
+            gurAttributes = result.get(1);
+            otherAttributes = result.get(2);
+            siteAttributes = result.get(3);
+            subject = result.get(4);
+            Instructor = result.get(5);
         }
     }
 }

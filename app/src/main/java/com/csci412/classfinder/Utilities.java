@@ -214,6 +214,121 @@ public class Utilities {
         return classes;
     }
 
+    public static List<HashMap<String, String>> getMenuAttributes(){
+
+        HttpsURLConnection connection = null;
+        StringBuilder result = null;
+        int linecount = 0;
+
+        try{
+            URL url = new URL("https://admin.wwu.edu/pls/wwis/wwsktime.SelClass");
+            connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            //fixed header values
+            connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
+            connection.setRequestProperty("Accept-Encoding", "gzip, deflate, br");
+            connection.setRequestProperty("Accept-Language", "en-US,en;q=0.9");
+            connection.setRequestProperty("Cache-Control", "max-age=0");
+            connection.setRequestProperty("Connection", "keep-alive");
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Host", "admin.wwu.edu");
+            connection.setRequestProperty("Origin", "https://admin.wwu.edu");
+            connection.setRequestProperty("Referer", "https://admin.wwu.edu/pls/wwis/wwsktime.SelClass");
+            connection.setRequestProperty("Upgrade-Insecure-Requests", "1");
+            connection.setRequestProperty("User-Agent", "Android ClassFinder Application");
+
+            StringBuilder sbParams = new StringBuilder();
+
+            //update content length
+            connection.setRequestProperty("Content-Length", Integer.toString(sbParams.toString().getBytes().length));
+
+            connection.setReadTimeout(20000);
+            connection.setConnectTimeout(30000);
+            connection.connect();
+
+            DataOutputStream outStream = new DataOutputStream(connection.getOutputStream());
+            outStream.writeBytes(sbParams.toString());
+            outStream.flush();
+            outStream.close();
+
+            InputStream inStream = new BufferedInputStream(connection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+            result = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null){
+                linecount++;
+                result.append(line + "\n");
+            }
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (connection != null)
+                connection.disconnect();
+        }
+
+        //get the correct table from the html
+        Document doc = Jsoup.parse(result.toString());
+        Elements tables = doc.select("table");
+        Element attributes = tables.get(1);
+        Elements rows = attributes.select("tr");
+
+        //todo handle no classes found
+
+        //data structures to store information in
+        List<HashMap<String, String>> menuAttributes = new ArrayList<HashMap<String,String>>();
+        for(int i = 0; i < 6; i++){
+            menuAttributes.add(new HashMap<>());
+        }
+
+        try {
+            //removing only removes from doc we need to re get rows
+            tables = doc.select("table");
+            attributes = tables.get(1);
+            rows = attributes.select("tr");
+
+            //parse html
+            //only go through the first 3 rows becasue those are the only ones that contain scrollable options
+            for(int i = 0; i < 3; i++) {
+                Element row = rows.get(i);
+                Elements td = row.select("td");
+                Elements select = td.get(1).select("select");
+                Elements options = select.get(0).select("option");
+
+                int size = options.size();
+                int j = 0;
+                //adding all the options to the hash map
+                while(j < size) {
+                    menuAttributes.get(i * 2).put(options.get(j).text(),options.get(j).val());
+                    j++;
+                }
+
+                select = td.get(3).select("select");
+                options = select.get(0).select("option");
+                size = options.size();
+                j = 0;
+                //adding all the options to the hash map
+                while(j < size) {
+                    menuAttributes.get(i * 2 + 1).put(options.get(j).text(),options.get(j).val());
+                    j++;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return menuAttributes;
+    }
+
+
     private static boolean isEndofClass(Element row) {
         Elements cols = row.select("td");
         if(cols.size() > 8) {
@@ -221,10 +336,7 @@ public class Utilities {
                 return true;
             }
         }
-        if(row.getElementsByClass("ddheader").size() > 0) {
-            return true;
-        }
-        return false;
+        return row.getElementsByClass("ddheader").size() > 0;
     }
 
     private static boolean isEmptyRow(Element row){
