@@ -2,14 +2,14 @@ package com.csci412.classfinder;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
@@ -17,6 +17,7 @@ import com.csci412.classfinder.animatedbottombar.Item;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,15 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         //intitalize all the menu options
         new getMenuAttributes().execute();
-        //todo make the main thread wait on the thread above
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //get content views
         filterView = findViewById(R.id.filter_view);
-        filterView.setVisibility(View.VISIBLE);
+        //filterView.setVisibility(View.VISIBLE);
         clsView = findViewById(R.id.classes_view);
         scheView = findViewById(R.id.schedule_view);
 
@@ -182,6 +183,72 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 
+    public void termButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = term.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < term.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void GURattributesButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = gurAttributes.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < gurAttributes.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void otherAttributesButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = otherAttributes.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < otherAttributes.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void siteAttributesButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = siteAttributes.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < siteAttributes.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void subjectButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = subject.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < subject.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void instructorButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = Instructor.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < Instructor.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
     //example async class for getting classes from classfinder
     private class GetClasses extends AsyncTask<List<Pair<String, String>>, Void, HashMap<String, List<Course>>> {
 
@@ -211,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
             siteAttributes = result.get(3);
             subject = result.get(4);
             Instructor = result.get(5);
+            filterView.setVisibility(View.VISIBLE);
         }
     }
 }
