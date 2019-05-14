@@ -2,6 +2,8 @@ package com.csci412.classfinder;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
@@ -16,11 +18,19 @@ import com.csci412.classfinder.recyclerwidget.RecyclerWidget;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
     RecyclerWidget classList;
     HashMap<String, List<Course>> classes;
+    HashMap<String, String> term;
+    HashMap<String, String> otherAttributes;
+    HashMap<String, String> subject;
+    HashMap<String, String> gurAttributes;
+    HashMap<String, String> siteAttributes;
+    HashMap<String, String> Instructor;
+
 
     //content views
     View filterView;
@@ -29,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //intitalize all the menu options
+        new getMenuAttributes().execute();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -181,6 +194,72 @@ public class MainActivity extends AppCompatActivity {
         //todo display loading icon
     }
 
+    public void termButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = term.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < term.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void GURattributesButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = gurAttributes.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < gurAttributes.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void otherAttributesButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = otherAttributes.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < otherAttributes.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void siteAttributesButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = siteAttributes.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < siteAttributes.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void subjectButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = subject.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < subject.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
+    public void instructorButton(View view) {
+        Context context = view.getContext();
+        Intent intent = new Intent(this, menuListActivity.class);
+        Set<String> keys = Instructor.keySet();
+        String[] content = keys.toArray(new String[keys.size()]);
+        for(int i = 0; i < Instructor.size(); i++) {
+            intent.putExtra("" + i, content[i]);
+        }
+        context.startActivity(intent);
+    }
+
     //example async class for getting classes from classfinder
     private class GetClasses extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
 
@@ -199,6 +278,25 @@ public class MainActivity extends AppCompatActivity {
                 courses.addAll(list);
             }
             classList.updateClasses(courses);
+        }
+    }
+
+    private class getMenuAttributes extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> >{
+
+        @Override
+        protected List<HashMap<String, String>> doInBackground(List<Pair<String, String>>... list) {
+            return Utilities.getMenuAttributes();
+        }
+
+        @Override
+        protected void onPostExecute(List<HashMap<String, String>> result) {
+            term = result.get(0);
+            gurAttributes = result.get(1);
+            otherAttributes = result.get(2);
+            siteAttributes = result.get(3);
+            subject = result.get(4);
+            Instructor = result.get(5);
+            filterView.setVisibility(View.VISIBLE);
         }
     }
 }

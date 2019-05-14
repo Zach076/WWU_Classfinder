@@ -4,4 +4,6 @@
     <string name="btn_new">New Schedule</string>
     <string name="btn_view">View Schedules</string>
     <string name="btn_search">Search Classes</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>
