@@ -7,12 +7,11 @@ import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
+import com.csci412.classfinder.recyclerwidget.RecyclerWidget;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    RecyclerWidget classList;
     HashMap<String, List<Course>> classes;
 
     //content views
@@ -38,33 +38,10 @@ public class MainActivity extends AppCompatActivity {
         clsView = findViewById(R.id.classes_view);
         scheView = findViewById(R.id.schedule_view);
 
-        //example getting all classes
-        //required fields to get classes from classfinder
-        //unknown behavior if out of order
-        final List<Pair<String, String>> formData = new ArrayList<>();
-        formData.add(new Pair<>("sel_crn", ""));
-        formData.add(new Pair<>("term", "201930"));
-        formData.add(new Pair<>("sel_gur", "All"));
-        formData.add(new Pair<>("sel_attr", "All"));
-        formData.add(new Pair<>("sel_site", "All"));
-        formData.add(new Pair<>("sel_subj", "CSCI"));
-        formData.add(new Pair<>("sel_inst", "ANY"));
-        formData.add(new Pair<>("sel_crse", ""));
-        formData.add(new Pair<>("begin_hh", "0"));
-        formData.add(new Pair<>("begin_mi", "A"));
-        formData.add(new Pair<>("end_hh", "0"));
-        formData.add(new Pair<>("end_mi", "A"));
-        formData.add(new Pair<>("sel_cdts", "%25"));
-        //actually gets and parses classes on a background thread using the filters provided
-        //when complete the classes field will be populated with classes from
-
-        //commented out so classfinder isnt called unnecessarily
-        //new GetClasses().execute(formData);
-
-        //done
-
         //setup up nav bar
         setupBar();
+        //set up class view
+        setUpClasses();
     }
 
     private void setupBar(){
@@ -96,6 +73,24 @@ public class MainActivity extends AppCompatActivity {
                     show(filterView, dir);
                     break;
                 case 1:
+                    //example getting all classes
+                    //required fields to get classes from classfinder
+                    //unknown behavior if out of order
+                    final List<Pair<String, String>> formData = new ArrayList<>();
+                    formData.add(new Pair<>("sel_crn", ""));
+                    formData.add(new Pair<>("term", "201930"));
+                    formData.add(new Pair<>("sel_gur", "All"));
+                    formData.add(new Pair<>("sel_attr", "All"));
+                    formData.add(new Pair<>("sel_site", "All"));
+                    formData.add(new Pair<>("sel_subj", "CSCI"));
+                    formData.add(new Pair<>("sel_inst", "ANY"));
+                    formData.add(new Pair<>("sel_crse", ""));
+                    formData.add(new Pair<>("begin_hh", "0"));
+                    formData.add(new Pair<>("begin_mi", "A"));
+                    formData.add(new Pair<>("end_hh", "0"));
+                    formData.add(new Pair<>("end_mi", "A"));
+                    formData.add(new Pair<>("sel_cdts", "%25"));
+                    updateClasses(formData);
                     show(clsView, dir);
                     break;
                 case 2:
@@ -125,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
 
         //build nav bar
         bottomView.build(0);
+    }
+
+    private void setUpClasses(){
+        classList = new RecyclerWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
     }
 
     //get direction for animation
@@ -172,17 +171,34 @@ public class MainActivity extends AppCompatActivity {
             });
     }
 
+
+    private void updateClasses(List<Pair<String, String>> formData){
+        //actually gets and parses classes on a background thread using the filters provided
+        //when complete the classes field will be populated with classes from classfinder
+        GetClasses getClasses = new GetClasses();
+        getClasses.formData = formData;
+        getClasses.execute();
+        //todo display loading icon
+    }
+
     //example async class for getting classes from classfinder
-    private class GetClasses extends AsyncTask<List<Pair<String, String>>, Void, HashMap<String, List<Course>>> {
+    private class GetClasses extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
+
+        List<Pair<String, String>> formData;
 
         @Override
-        protected HashMap<String, List<Course>> doInBackground(List<Pair<String, String>>... list) {
-            return Utilities.getClasses(list[0]);
+        protected HashMap<String, List<Course>> doInBackground(String... unused) {
+            return Utilities.getClasses(formData);
         }
 
         @Override
         protected void onPostExecute(HashMap<String, List<Course>> result) {
             classes = result;
+            ArrayList<Course> courses = new ArrayList<>();
+            for(List<Course> list : result.values()){
+                courses.addAll(list);
+            }
+            classList.updateClasses(courses);
         }
     }
 }
