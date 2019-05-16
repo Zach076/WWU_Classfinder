@@ -9,17 +9,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.csci412.classfinder.dummy.DummyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link menuDetailActivity} representing
+ * lead to a {} representing
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
@@ -30,17 +34,20 @@ public class menuListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    static ArrayList<item> content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-    /*    int length = savedInstanceState.size();
-        String[] content = new String[length];
-        for(int i = 0; i < length; i++){
-            content[i] = savedInstanceState.getString("" + i);
-            System.out.println(content[i]);
-        }*/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_list);
+        content = new ArrayList<>();
+        Intent intent = getIntent();
+        int l = 0;
+        boolean b = true;
+        int length = intent.getIntExtra("length",l);
+        for(int i = 0; i < length; i++){
+            content.add(new item(intent.getStringExtra("" + i),intent.getBooleanExtra("" + i + length,b)));
+        }
 
         if (findViewById(R.id.item_detail_container) != null) {
             // The detail container view will be present only in the
@@ -57,45 +64,41 @@ public class menuListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        for(int i = 0; i < content.size(); i++){
+            intent.putExtra("" + i,content.get(i).selected);
+        }
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new menuRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+        recyclerView.setAdapter(new menuRecyclerViewAdapter(this, content, mTwoPane));
     }
 
     public static class menuRecyclerViewAdapter
             extends RecyclerView.Adapter<menuRecyclerViewAdapter.ViewHolder> {
 
         private final menuListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
         private final boolean mTwoPane;
+        private final ArrayList<item> mValues;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(menuDetailFragment.ARG_ITEM_ID, item.id);
-                    menuDetailFragment fragment = new menuDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.item_detail_container, fragment)
-                            .commit();
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, menuDetailActivity.class);
-                    intent.putExtra(menuDetailFragment.ARG_ITEM_ID, item.id);
-
-                    context.startActivity(intent);
-                }
+                item item = (item) view.getTag();
+                System.out.println(item.text);
             }
         };
 
         menuRecyclerViewAdapter(menuListActivity parent,
-                                List<DummyContent.DummyItem> items,
+                                ArrayList<item> items,
                                 boolean twoPane) {
-            mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
+            mValues = items;
+
         }
 
         @Override
@@ -107,10 +110,8 @@ public class menuListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.radioButton.setText(mValues.get(position).id);
-//            holder.mContentView.setText(mValues.get(position).content);
-
-            holder.itemView.setTag(mValues.get(position));
+            holder.text.setText(mValues.get(position).text);
+            holder.radioButton.setSelected(mValues.get(position).selected);
             holder.itemView.setOnClickListener(mOnClickListener);
         }
 
@@ -120,12 +121,23 @@ public class menuListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            final TextView radioButton;
+            final TextView text;
+            final CheckBox radioButton;
 
             ViewHolder(View view) {
                 super(view);
-                radioButton = (TextView) view.findViewById(R.id.radioButton);
+                radioButton = (CheckBox) view.findViewById(R.id.radioButton);
+                text = (TextView) view.findViewById(R.id.radioButton);
             }
+        }
+    }
+    private class item{
+        String text;
+        boolean selected;
+
+        item(String t, boolean s) {
+            selected = s;
+            text = t;
         }
     }
 }

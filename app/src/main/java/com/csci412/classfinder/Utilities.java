@@ -329,6 +329,7 @@ public class Utilities {
     }
 
 
+
     private static boolean isEndofClass(Element row) {
         Elements cols = row.select("td");
         if(cols.size() > 8) {
