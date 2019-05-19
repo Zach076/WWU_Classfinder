@@ -1,4 +1,4 @@
-package com.csci412.classfinder.recyclerwidget;
+package com.csci412.classfinder.classviewwidget;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,13 +9,13 @@ import com.csci412.classfinder.R;
 
 import java.util.ArrayList;
 
-public class RecyclerWidget {
+public class ClassViewWidget {
 
     private RecyclerView rv;
-    private RecyclerAdapter adapter;
+    private ClassViewAdapter adapter;
     private ArrayList<Course> courses;
 
-    public RecyclerWidget(View parent, ArrayList<Course> courses) {
+    public ClassViewWidget(View parent, ArrayList<Course> courses) {
         this.courses = courses;
         this.rv = parent.findViewById(R.id.course_recycler_view);
         init();
@@ -28,7 +28,7 @@ public class RecyclerWidget {
         rv.setLayoutManager(lManager);
 
         // Setting Adapter
-        adapter = new RecyclerAdapter(courses);
+        adapter = new ClassViewAdapter(courses);
         rv.setAdapter(adapter);
     }
 
