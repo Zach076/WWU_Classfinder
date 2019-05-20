@@ -42,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
 
     //references to menu buttons
     private Button termButton;
-    private Button otherAttributestermButton;
-    private Button subjecttermButton;
-    private Button gurAttributestermButton;
-    private Button siteAttributestermButton;
-    private Button InstructortermButton;
+    private Button otherAttributesButton;
+    private Button subjectButton;
+    private Button gurAttributesButton;
+    private Button siteAttributesButton;
+    private Button InstructorButton;
     private Button startHourButton;
     private Button endHourButton;
     private Button creditHourButton;
@@ -123,11 +123,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void getMenuReferences() {
         termButton = findViewById(R.id.termButton);
-        otherAttributestermButton = findViewById(R.id.otherAttributesButton);
-        subjecttermButton = findViewById(R.id.subjectButton);
-        gurAttributestermButton = findViewById(R.id.GURattributesButton);
-        siteAttributestermButton = findViewById(R.id.siteAttributesButton);
-        InstructortermButton = findViewById(R.id.instructorButton);
+        otherAttributesButton = findViewById(R.id.otherAttributesButton);
+        subjectButton = findViewById(R.id.subjectButton);
+        gurAttributesButton = findViewById(R.id.GURattributesButton);
+        siteAttributesButton = findViewById(R.id.siteAttributesButton);
+        InstructorButton = findViewById(R.id.instructorButton);
         startHourButton = findViewById(R.id.startHour);
         endHourButton = findViewById(R.id.endHour);
         creditHourButton = findViewById(R.id.creditHoursButton);
@@ -315,49 +315,64 @@ public class MainActivity extends AppCompatActivity {
         {
             case TERM:
                 isSelected = termSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent,termButton);
                 break;
             case OTHERATTRIBUTES:
                 isSelected = otherAttributesSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, otherAttributesButton);
                 break;
             case SUBJECT:
                 isSelected = subjectSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, subjectButton);
                 break;
             case GURATTRIBUTES:
                 isSelected = gurAttributesSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent,gurAttributesButton);
                 break;
             case SITEATTRIBUTES:
                 isSelected = siteAttributesSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, siteAttributesButton);
                 break;
             case INSTRUCTOR:
                 isSelected = InstructorSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, InstructorButton);
                 break;
             case STARTHOUR:
                 isSelected = startHourSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, startHourButton);
                 break;
             case ENDHOUR:
                 isSelected = endHourSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, endHourButton);
                 break;
             case CREDITS:
                 isSelected = creditHourSelected;
-                updateSelected(isSelected,length, dataIntent);
+                updateSelected(isSelected,length, dataIntent, creditHourButton);
                 break;
         }
 
     }
 
-    private void updateSelected(ArrayList<String> isSelected, int length, Intent dataIntent) {
+    private void updateSelected(ArrayList<String> isSelected, int length, Intent dataIntent, Button button) {
         isSelected.clear();
         for(int i = 0; i < length; i++){
             String name = dataIntent.getStringExtra("" + i);
             isSelected.add(name);
+        }
+        if(length > 1) {
+            button.setText(length + " Selected");
+        }else if(length == 1){
+            String text = isSelected.get(0);
+            setButtonText(button, text);
+        }else{
+            button.setText("none");
+        }
+    }
+    private void setButtonText(Button button, String text){
+        if(text.length() > 15) {
+            button.setText(text.substring(0,15) + "...");
+        }else{
+            button.setText(text);
         }
     }
 
@@ -423,6 +438,15 @@ public class MainActivity extends AppCompatActivity {
         endAM.setChecked(false);
         openSections.setChecked(false);
         courseNumber.setText("");
+        setButtonText(termButton, defaultValues.get("" + 0));
+        setButtonText(otherAttributesButton, defaultValues.get("" + 2));
+        setButtonText(subjectButton, defaultValues.get("" + 4));
+        setButtonText(gurAttributesButton, defaultValues.get("" + 1));
+        setButtonText(siteAttributesButton, defaultValues.get("" + 3));
+        setButtonText(InstructorButton, defaultValues.get("" + 5));
+        startHourButton.setText("All");
+        endHourButton.setText("All");
+        creditHourButton.setText("All");
     }
 
     public void search(View view) {

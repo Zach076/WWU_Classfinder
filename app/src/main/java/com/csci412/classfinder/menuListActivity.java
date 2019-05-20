@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class menuListActivity extends AppCompatActivity {
+public class menuListActivity extends AppCompatActivity{
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -31,14 +32,31 @@ public class menuListActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private static boolean oneSelectMode; //only allows for one item to be selected at a time
     static ArrayList<item> content;
+    static ArrayList<item> contentCopy;
     private item defaultValue;
     private static menuRecyclerViewAdapter adapter;
+    private SearchView search;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_list);
+        search = findViewById(R.id.searchView);
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                adapter.filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return true;
+            }
+        });
         content = new ArrayList<>();
+        contentCopy = new ArrayList<>();
         Intent intent = getIntent();
         int l = 0;
         oneSelectMode = intent.getBooleanExtra("oneSelectMode",false);
@@ -53,6 +71,7 @@ public class menuListActivity extends AppCompatActivity {
             }
             item item = new item(name ,isSelected);
             content.add(item);
+            contentCopy.add(item);
             if(name.equals(defaultName)){
                 System.out.println("assigned");
                 defaultValue = item;
@@ -63,6 +82,10 @@ public class menuListActivity extends AppCompatActivity {
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
     }
+
+
+
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
@@ -89,7 +112,13 @@ public class menuListActivity extends AppCompatActivity {
             content.get(i).setSelected(false);
         }
         defaultValue.setSelected(true);
+        search.setQuery("", false);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
     public static class menuRecyclerViewAdapter
@@ -104,6 +133,21 @@ public class menuListActivity extends AppCompatActivity {
             mTwoPane = twoPane;
             mValues = items;
 
+        }
+
+        public void filter(String query) {
+            mValues.clear();
+            if(query.isEmpty()){
+                mValues.addAll(contentCopy);
+            } else{
+                query = query.toLowerCase();
+                for(int i = 0; i < contentCopy.size(); i++){
+                    if(contentCopy.get(i).text.toLowerCase().contains(query)){
+                        mValues.add(contentCopy.get(i));
+                    }
+                }
+            }
+            notifyDataSetChanged();
         }
 
         @Override
@@ -139,6 +183,8 @@ public class menuListActivity extends AppCompatActivity {
         public int getItemCount() {
             return mValues.size();
         }
+
+
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public CheckBox checkBox;
