@@ -9,17 +9,24 @@ import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
-import com.csci412.classfinder.recyclerwidget.RecyclerWidget;
+import com.csci412.classfinder.classviewwidget.ClassViewWidget;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -37,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private final static int ENDHOUR = 8;
     private final static int CREDITS = 9;
 
-    private RecyclerWidget classList;
+    private ClassViewWidget classList;
+    private BottomBar bottomView;
     private HashMap<String, List<Course>> classes;
 
     //references to menu buttons
@@ -91,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> endHourSelected;
     private ArrayList<String> creditHourSelected;
 
-
+    Filter activeFilter;
 
     //content views
     private View filterView;
@@ -155,18 +163,20 @@ public class MainActivity extends AppCompatActivity {
     private void setupBar(){
         //animated bottom bar
         //views for send activities
-        BottomBar bottomView = findViewById(R.id.bottomView);
+        bottomView = findViewById(R.id.bottomView);
 
         //set colors
-        bottomView.setIndicatorColor(Color.BLUE);
-        bottomView.setActiveColor(Color.BLUE);
+        bottomView.setIndicatorColor(getResources().getColor(R.color.deparmentHighlight));
+        bottomView.setActiveColor(getResources().getColor(R.color.blue));
 
         //set listener
         bottomView.setupListener((int oldPos, int newPos) -> {
             //do nothing or refresh depending on page
-            if(oldPos == newPos) {
-                if(newPos == 1){
-                    //todo refresh classes
+            if (oldPos == newPos) {
+                if (newPos == 1) {
+                    if(clsView.findViewById(R.id.progressBar).getVisibility() == View.VISIBLE)
+                        return;
+                    updateClasses(getFilters(), true);
                 }
                 return;
             }
@@ -181,24 +191,33 @@ public class MainActivity extends AppCompatActivity {
                     show(filterView, dir);
                     break;
                 case 1:
-                    //example getting all classes
-                    //required fields to get classes from classfinder
-                    //unknown behavior if out of order
-                    final List<Pair<String, String>> formData = new ArrayList<>();
-                    formData.add(new Pair<>("sel_crn", ""));
-                    formData.add(new Pair<>("term", "201930"));
-                    formData.add(new Pair<>("sel_gur", "All"));
-                    formData.add(new Pair<>("sel_attr", "All"));
-                    formData.add(new Pair<>("sel_site", "All"));
-                    formData.add(new Pair<>("sel_subj", "CSCI"));
-                    formData.add(new Pair<>("sel_inst", "ANY"));
-                    formData.add(new Pair<>("sel_crse", ""));
-                    formData.add(new Pair<>("begin_hh", "0"));
-                    formData.add(new Pair<>("begin_mi", "A"));
-                    formData.add(new Pair<>("end_hh", "0"));
-                    formData.add(new Pair<>("end_mi", "A"));
-                    formData.add(new Pair<>("sel_cdts", "%25"));
-                    updateClasses(formData);
+                    if(clsView.findViewById(R.id.progressBar).getVisibility() == View.INVISIBLE) {
+                        updateClasses(getFilters(), false);
+                    }
+
+                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
+                    View labels = clsView.findViewById(R.id.labels);
+
+                    float height = labels.getMeasuredHeight();
+                    float transY = labels.getTranslationY();
+                    rv.setPadding(0, (int) height, 0, 0);
+                    rv.setClipToPadding(false);
+
+                    rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                            float newY = labels.getTranslationY() - dy;
+
+                            newY = Math.max(newY, -(height - Utilities.dpToPx(1)));
+                            newY = Math.min(newY, 0);
+
+                            labels.setTranslationY(newY);
+
+                            super.onScrolled(recyclerView, dx, dy);
+                        }
+                    });
+
                     show(clsView, dir);
                     break;
                 case 2:
@@ -213,25 +232,32 @@ public class MainActivity extends AppCompatActivity {
                     close(filterView, -dir);
                     break;
                 case 1:
+                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
+                    rv.clearOnScrollListeners();
                     close(clsView, -dir);
                     break;
                 case 2:
                     close(scheView, -dir);
                     break;
             }
-        });
+        }).addItem(new Item("Filter"));
 
         //add items to nav bar
-        bottomView.addItem(new Item("Filter"));
         bottomView.addItem(new Item("Classes"));
         bottomView.addItem(new Item("Schedule"));
 
         //build nav bar
         bottomView.build(0);
+
+        //set up page change on drag
+        clsView.setOnDragListener((view, event) -> {
+            bottomView.changePosition(2);
+            return true;
+        });
     }
 
     private void setUpClasses(){
-        classList = new RecyclerWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
+        classList = new ClassViewWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
     }
 
     //todo add on start and on stop with a bundle
@@ -282,13 +308,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void updateClasses(List<Pair<String, String>> formData){
-        //actually gets and parses classes on a background thread using the filters provided
-        //when complete the classes field will be populated with classes from classfinder
-        GetClasses getClasses = new GetClasses();
-        getClasses.formData = formData;
-        getClasses.execute();
-        //todo display loading icon
+    private void updateClasses(Filter filter, boolean force){
+
+        if(force || activeFilter == null || !activeFilter.equals(filter)) {
+            //actually gets and parses classes on a background thread using the filters provided
+            //when complete the classes field will be populated with classes from classfinder
+            GetClasses getClasses = new GetClasses();
+            getClasses.formData = filter.getFormData();
+            getClasses.execute();
+
+            TextView tv = clsView.findViewById(R.id.time);
+            tv.setText("Valid as of: " + DateFormat.getTimeInstance().format(new Date()));
+
+            clsView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
+            activeFilter = filter;
+        }
     }
 
     public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode){
@@ -454,6 +489,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void search(View view) {
+        bottomView.changePosition(1);
+    }
+
+    private Filter getFilters(){
+        Filter filter = new Filter();
+        filter.term = term.get(termSelected.get(0));
+        filter.sel_gur = gurAttributes.get(gurAttributesSelected.get(0));
+        filter.sel_attr = otherAttributes.get(otherAttributesSelected.get(0));
+        filter.sel_site = siteAttributes.get(siteAttributesSelected.get(0));
+        filter.sel_subj = subject.get(subjectSelected.get(0));
+        filter.sel_inst = Instructor.get(InstructorSelected.get(0));
+        filter.sel_crse = courseNumber.getText().toString();
+        if(startPM.isSelected()){
+            filter.begin_mi = "P";
+        }else {
+            filter.begin_mi = "A";
+        }
+        if(endPM.isSelected()){
+            filter.end_mi = "P";
+        }else {
+            filter.end_mi = "A";
+        }
+        String startHour = startHourSelected.get(0);
+        if(startHour.equals("All")) {
+            filter.begin_hh = "0";
+        }else{
+            filter.begin_hh = startHour;
+        }
+        String endHour = endHourSelected.get(0);
+        if(startHour.equals("All")) {
+            filter.end_hh = "0";
+        }else{
+            filter.end_hh = endHour;
+        }
+        String creditHour = creditHourSelected.get(0);
+        if(creditHour.equals("All")) {
+            filter.sel_cdts = "%25";
+        }else{
+            filter.sel_cdts = creditHour;
+        }
+        return filter;
     }
 
     public void startHourButton(View view) {
@@ -489,6 +565,9 @@ public class MainActivity extends AppCompatActivity {
                 courses.addAll(list);
             }
             classList.updateClasses(courses);
+            clsView.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+            ((RecyclerView)clsView.findViewById(R.id.course_recycler_view)).scrollToPosition(0);
+            clsView.findViewById(R.id.labels).setTranslationY(0);
         }
     }
 
