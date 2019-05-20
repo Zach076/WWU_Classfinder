@@ -326,7 +326,7 @@
             android:id="@+id/radioGroup2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="0dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
@@ -350,7 +350,7 @@
 
             <Button
                 android:id="@+id/startHour"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="startHourButton"
@@ -397,20 +397,20 @@
 
         </RadioGroup>
 
-    <EditText
-        android:id="@+id/editCourseNumber"
-        android:layout_width="147dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textCursorDrawable="@drawable/blue_cursor"
-        android:backgroundTint="#0000FF"
-        android:text=""
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseNumber" />
+        <EditText
+            android:id="@+id/editCourseNumber"
+            android:layout_width="139dp"
+            android:layout_height="37dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#0000FF"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text=""
+            android:textCursorDrawable="@drawable/blue_cursor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseNumber" />
 
     <TextView
         android:id="@+id/courseNumber"
@@ -423,15 +423,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
 
-    <TextView
-        android:id="@+id/openSections"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="Open Sections Only:"
-        app:layout_constraintStart_toEndOf="@+id/courseNumber"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
+        <TextView
+            android:id="@+id/openSections"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Open Sections Only:"
+            app:layout_constraintStart_toEndOf="@+id/courseNumber"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
 
     <CheckBox
         android:id="@+id/openSectionsCheck"
