@@ -9,9 +9,9 @@ import java.util.List;
 
 public class MatrixAdapter extends BaseAdapter {
     Context context;
-    List<MatrixUtils.MatrixItem> matrixList;
+    List<CustomItems.MatrixItem> matrixList;
 
-    public MatrixAdapter(Context context, List<MatrixUtils.MatrixItem> matrixList) {
+    public MatrixAdapter(Context context, List<CustomItems.MatrixItem> matrixList) {
         this.context = context;
         this.matrixList = matrixList;
     }
@@ -33,7 +33,7 @@ public class MatrixAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v=View.inflate(context,R.layout.griditem,null);
+        View v=View.inflate(context,R.layout.schedule_griditem,null);
         return v;
     }
 }
