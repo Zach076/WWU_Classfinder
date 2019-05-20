@@ -430,49 +430,49 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:text="Open Sections Only:"
+            app:layout_constraintEnd_toStartOf="@+id/creditHours"
             app:layout_constraintStart_toEndOf="@+id/courseNumber"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
 
-    <CheckBox
-        android:id="@+id/openSectionsCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Yes"
-        android:buttonTint="#0000FF"
-        app:layout_constraintStart_toEndOf="@+id/editCourseNumber"
-        app:layout_constraintTop_toBottomOf="@+id/openSections" />
+        <CheckBox
+            android:id="@+id/openSectionsCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:buttonTint="#0000FF"
+            android:text="Yes"
+            app:layout_constraintEnd_toStartOf="@+id/creditHoursButton"
+            app:layout_constraintStart_toEndOf="@+id/editCourseNumber"
+            app:layout_constraintTop_toBottomOf="@+id/openSections" />
 
         <TextView
             android:id="@+id/creditHours"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:text="Credit Hours"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/openSections"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
 
-    <Button
-        android:id="@+id/creditHoursButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="All"
-        android:onClick="creditHoursButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/openSectionsCheck"
-        app:layout_constraintTop_toBottomOf="@+id/creditHours" />
+        <Button
+            android:id="@+id/creditHoursButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:onClick="creditHoursButton"
+            android:text="All"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/creditHours" />
 
 
     </android.support.constraint.ConstraintLayout>
