@@ -285,7 +285,7 @@ public class Utilities {
 
         //data structures to store information in
         List<HashMap<String, String>> menuAttributes = new ArrayList<HashMap<String,String>>();
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < 7; i++){
             menuAttributes.add(new HashMap<>());
         }
 
@@ -294,7 +294,7 @@ public class Utilities {
             tables = doc.select("table");
             attributes = tables.get(1);
             rows = attributes.select("tr");
-
+            int defaultValue = 0;
             //parse html
             //only go through the first 3 rows becasue those are the only ones that contain scrollable options
             for(int i = 0; i < 3; i++) {
@@ -306,6 +306,8 @@ public class Utilities {
                 int size = options.size();
                 int j = 0;
                 //adding all the options to the hash map
+                menuAttributes.get(6).put("" + defaultValue,options.get(j).text());
+                defaultValue++;
                 while(j < size) {
                     menuAttributes.get(i * 2).put(options.get(j).text(),options.get(j).val());
                     j++;
@@ -315,6 +317,8 @@ public class Utilities {
                 options = select.get(0).select("option");
                 size = options.size();
                 j = 0;
+                menuAttributes.get(6).put("" + defaultValue,options.get(j).text());
+                defaultValue++;
                 //adding all the options to the hash map
                 while(j < size) {
                     menuAttributes.get(i * 2 + 1).put(options.get(j).text(),options.get(j).val());

@@ -176,6 +176,7 @@
             android:layout_marginRight="32dp"
             android:layout_marginBottom="8dp"
             android:text="Search"
+            android:onClick="search"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/creditHoursButton" />
@@ -188,6 +189,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Mon"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -198,6 +201,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Tue"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/mon"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -208,6 +213,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Wed"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Tue"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -218,6 +225,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Thu"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Wed"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -228,6 +237,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Fri"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Thu"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -238,6 +249,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Sat"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Fri"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -248,6 +261,8 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Sun"
+            android:checked="true"
+            android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Sat"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -274,7 +289,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="276dp"
             android:layout_marginRight="276dp"
-            android:text="Begin"
+            android:text="Start Time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mon" />
@@ -288,7 +303,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="End"
+        android:text="End Time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/begin"
         app:layout_constraintTop_toBottomOf="@+id/mon" />
@@ -302,6 +317,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:text="Reset"
+        android:onClick="resetFilters"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editCourseNumber" />
@@ -321,6 +337,7 @@
                 android:id="@+id/startAM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="#0000FF"
                 android:text="AM" />
 
             <RadioButton
@@ -328,6 +345,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:buttonTint="#0000FF"
                 android:text="PM" />
 
             <Button
@@ -335,7 +353,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Hour" />
+                android:onClick="startHourButton"
+                android:text="All" />
 
         </RadioGroup>
 
@@ -354,24 +373,27 @@
             app:layout_constraintTop_toBottomOf="@+id/end">
 
             <RadioButton
-                android:id="@+id/radioButton10"
+                android:id="@+id/endAM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:buttonTint="#0000FF"
                 android:text="AM" />
 
             <RadioButton
-                android:id="@+id/radioButton11"
+                android:id="@+id/endPM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:buttonTint="#0000FF"
                 android:text="PM" />
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/endHour"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Hour" />
+                android:onClick="endHourButton"
+                android:text="All" />
 
         </RadioGroup>
 
@@ -384,6 +406,8 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textCursorDrawable="@drawable/blue_cursor"
+        android:backgroundTint="#0000FF"
         android:text=""
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/courseNumber" />
@@ -416,6 +440,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:text="Yes"
+        android:buttonTint="#0000FF"
         app:layout_constraintStart_toEndOf="@+id/editCourseNumber"
         app:layout_constraintTop_toBottomOf="@+id/openSections" />
 
@@ -443,6 +468,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="All"
+        android:onClick="creditHoursButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/openSectionsCheck"
         app:layout_constraintTop_toBottomOf="@+id/creditHours" />

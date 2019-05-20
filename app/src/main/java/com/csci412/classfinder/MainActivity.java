@@ -10,6 +10,10 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
@@ -22,16 +26,71 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final static int REQUEST_CODE_1 = 1;
+    //intent request codes
+    private final static int TERM = 1;
+    private final static int OTHERATTRIBUTES = 2;
+    private final static int SUBJECT = 3;
+    private final static int GURATTRIBUTES = 4;
+    private final static int SITEATTRIBUTES = 5;
+    private final static int INSTRUCTOR = 6;
+    private final static int STARTHOUR = 7;
+    private final static int ENDHOUR = 8;
+    private final static int CREDITS = 9;
 
     private RecyclerWidget classList;
     private HashMap<String, List<Course>> classes;
+
+    //references to menu buttons
+    private Button termButton;
+    private Button otherAttributestermButton;
+    private Button subjecttermButton;
+    private Button gurAttributestermButton;
+    private Button siteAttributestermButton;
+    private Button InstructortermButton;
+    private Button startHourButton;
+    private Button endHourButton;
+    private Button creditHourButton;
+
+    //references to menu check boxes
+    private CheckBox mon;
+    private CheckBox tue;
+    private CheckBox wed;
+    private CheckBox thu;
+    private CheckBox fri;
+    private CheckBox sat;
+    private CheckBox sun;
+    private CheckBox openSections;
+
+    //reference to edit text
+    private EditText courseNumber;
+
+    //references to menu radio buttons
+    private RadioButton startAM;
+    private RadioButton startPM;
+    private RadioButton endAM;
+    private RadioButton endPM;
+
+
+    //menu attributes
     private HashMap<String, String> term;
     private HashMap<String, String> otherAttributes;
     private HashMap<String, String> subject;
     private HashMap<String, String> gurAttributes;
     private HashMap<String, String> siteAttributes;
     private HashMap<String, String> Instructor;
+    private HashMap<String, String> defaultValues;
+
+    //things that are selected in the menu attributes
+    private ArrayList<String> termSelected;
+    private ArrayList<String> otherAttributesSelected;
+    private ArrayList<String> subjectSelected;
+    private ArrayList<String> gurAttributesSelected;
+    private ArrayList<String> siteAttributesSelected;
+    private ArrayList<String> InstructorSelected;
+    private ArrayList<String> startHourSelected;
+    private ArrayList<String> endHourSelected;
+    private ArrayList<String> creditHourSelected;
+
 
 
     //content views
@@ -42,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         //intitalize all the menu options
         new getMenuAttributes().execute();
         super.onCreate(savedInstanceState);
@@ -49,14 +109,47 @@ public class MainActivity extends AppCompatActivity {
 
         //get content views
         filterView = findViewById(R.id.filter_view);
-        //filterView.setVisibility(View.VISIBLE);
         clsView = findViewById(R.id.classes_view);
         scheView = findViewById(R.id.schedule_view);
+
+        //set references to menu items
+        getMenuReferences();
 
         //setup up nav bar
         setupBar();
         //set up class view
         setUpClasses();
+    }
+
+    private void getMenuReferences() {
+        termButton = findViewById(R.id.termButton);
+        otherAttributestermButton = findViewById(R.id.otherAttributesButton);
+        subjecttermButton = findViewById(R.id.subjectButton);
+        gurAttributestermButton = findViewById(R.id.GURattributesButton);
+        siteAttributestermButton = findViewById(R.id.siteAttributesButton);
+        InstructortermButton = findViewById(R.id.instructorButton);
+        startHourButton = findViewById(R.id.startHour);
+        endHourButton = findViewById(R.id.endHour);
+        creditHourButton = findViewById(R.id.creditHoursButton);
+
+        //references to menu check boxes
+        mon = findViewById(R.id.mon);
+        tue = findViewById(R.id.Tue);
+        wed = findViewById(R.id.Wed);
+        thu = findViewById(R.id.Thu);
+        fri = findViewById(R.id.Fri);
+        sat = findViewById(R.id.Sat);
+        sun = findViewById(R.id.Sun);
+        openSections = findViewById(R.id.openSectionsCheck);
+
+        //reference to edit text
+        courseNumber = findViewById(R.id.editCourseNumber);
+
+        //references to menu radio buttons
+        startAM = findViewById(R.id.startAM);
+        startPM = findViewById(R.id.startPM);
+        endAM = findViewById(R.id.endAM);
+        endPM = findViewById(R.id.endPM);
     }
 
     private void setupBar(){
@@ -196,18 +289,18 @@ public class MainActivity extends AppCompatActivity {
         //todo display loading icon
     }
 
-    public void callMenueList(Set<String> keys, int length, View view){
-        Context context = view.getContext();
+    public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode){
         Intent intent = new Intent(this, menuListActivity.class);
-        String[] content = keys.toArray(new String[keys.size()]);
         for(int i = 0; i < length; i++) {
-            intent.putExtra("" + i, content[i]);
+            intent.putExtra("0" + i, content[i]);
+            if(isSelected.contains(content[i])){
+                intent.putExtra(content[i],"s");
+            }
         }
         intent.putExtra("length",length);
-        for(int i = length; i < length * 2; i++){
-            intent.putExtra("" + i, true);
-        }
-        context.startActivity(intent);
+        intent.putExtra("default",defaultItem);
+        intent.putExtra("oneSelectMode",oneSelectMode);
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -215,47 +308,139 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, dataIntent);
 
         // The returned result data is identified by requestCode.
-        // The request code is specified in startActivityForResult(intent, REQUEST_CODE_1); method.
+        // The request code is specified in startActivityForResult(intent, REQUEST_CODE); method.
+        int length = dataIntent.getIntExtra("length",0);
+        ArrayList<String> isSelected = null;
         switch (requestCode)
         {
-            // This request code is set by startActivityForResult(intent, REQUEST_CODE_1) method.
-            case REQUEST_CODE_1:
-           //     TextView textView = (TextView)findViewById(R.id.resultDataTextView);
-           //     if(resultCode == RESULT_OK)
-          //      {
-          //          String messageReturn = dataIntent.getStringExtra("message_return");
-           // //        textView.setText(messageReturn);
-           //     }
+            case TERM:
+                isSelected = termSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case OTHERATTRIBUTES:
+                isSelected = otherAttributesSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case SUBJECT:
+                isSelected = subjectSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case GURATTRIBUTES:
+                isSelected = gurAttributesSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case SITEATTRIBUTES:
+                isSelected = siteAttributesSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case INSTRUCTOR:
+                isSelected = InstructorSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case STARTHOUR:
+                isSelected = startHourSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case ENDHOUR:
+                isSelected = endHourSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+            case CREDITS:
+                isSelected = creditHourSelected;
+                updateSelected(isSelected,length, dataIntent);
+                break;
+        }
+
+    }
+
+    private void updateSelected(ArrayList<String> isSelected, int length, Intent dataIntent) {
+        isSelected.clear();
+        for(int i = 0; i < length; i++){
+            String name = dataIntent.getStringExtra("" + i);
+            isSelected.add(name);
         }
     }
+
     public void termButton(View view) {
         Set<String> keys = term.keySet();
-        callMenueList(keys,term.size(), view);
+        callMenuList(keys.toArray(new String[keys.size()]),term.size(), termSelected,TERM, defaultValues.get("" + 0),false);
     }
 
     public void GURattributesButton(View view) {
         Set<String> keys = gurAttributes.keySet();
-        callMenueList(keys,gurAttributes.size(), view);
+        callMenuList(keys.toArray(new String[keys.size()]),gurAttributes.size(),gurAttributesSelected,GURATTRIBUTES, defaultValues.get("" + 1),false);
     }
 
     public void otherAttributesButton(View view) {
         Set<String> keys = otherAttributes.keySet();
-        callMenueList(keys,otherAttributes.size(), view);
+        callMenuList(keys.toArray(new String[keys.size()]),otherAttributes.size(), otherAttributesSelected,OTHERATTRIBUTES, defaultValues.get("" + 2),false);
     }
 
     public void siteAttributesButton(View view) {
         Set<String> keys = siteAttributes.keySet();
-        callMenueList(keys,siteAttributes.size(), view);
+        callMenuList(keys.toArray(new String[keys.size()]),siteAttributes.size(),siteAttributesSelected ,SITEATTRIBUTES, defaultValues.get("" + 3),false);
     }
 
     public void subjectButton(View view) {
         Set<String> keys = subject.keySet();
-        callMenueList(keys,subject.size(), view);
+        callMenuList(keys.toArray(new String[keys.size()]),subject.size(), subjectSelected,SUBJECT, defaultValues.get("" + 4),false);
     }
 
     public void instructorButton(View view) {
         Set<String> keys = Instructor.keySet();
-        callMenueList(keys,Instructor.size(), view);
+        callMenuList(keys.toArray(new String[keys.size()]),Instructor.size(), InstructorSelected,INSTRUCTOR, defaultValues.get("" + 5),false);
+    }
+
+    public void resetFilters(View view) {
+        termSelected.clear();
+        otherAttributesSelected.clear();
+        subjectSelected.clear();
+        gurAttributesSelected.clear();
+        siteAttributesSelected.clear();
+        InstructorSelected.clear();
+        startHourSelected.clear();
+        endHourSelected.clear();
+        creditHourSelected.clear();
+        termSelected.add(defaultValues.get("" + 0));
+        gurAttributesSelected.add(defaultValues.get("" + 1));
+        otherAttributesSelected.add(defaultValues.get("" + 2));
+        siteAttributesSelected.add(defaultValues.get("" + 3));
+        subjectSelected.add(defaultValues.get("" + 4));
+        InstructorSelected.add(defaultValues.get("" + 5));
+        startHourSelected.add("All");
+        endHourSelected.add("All");
+        creditHourSelected.add("All");
+        mon.setChecked(true);
+        tue.setChecked(true);
+        wed.setChecked(true);
+        thu.setChecked(true);
+        fri.setChecked(true);
+        sat.setChecked(true);
+        sun.setChecked(true);
+        startAM.setChecked(false);
+        startPM.setChecked(false);
+        endPM.setChecked(false);
+        endAM.setChecked(false);
+        openSections.setChecked(false);
+        courseNumber.setText("");
+    }
+
+    public void search(View view) {
+    }
+
+    public void startHourButton(View view) {
+        String[] hours = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        callMenuList(hours,hours.length, startHourSelected,STARTHOUR,"All",true);
+    }
+
+    public void endHourButton(View view) {
+        String[] hours = {"All","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        callMenuList(hours,hours.length, endHourSelected,ENDHOUR, "All",true);
+    }
+
+    public void creditHoursButton(View view) {
+        String[] credits = {"All","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
+        callMenuList(credits, credits.length,creditHourSelected,CREDITS, "All",true);
     }
 
     //example async class for getting classes from classfinder
@@ -294,6 +479,25 @@ public class MainActivity extends AppCompatActivity {
             siteAttributes = result.get(3);
             subject = result.get(4);
             Instructor = result.get(5);
+            defaultValues = result.get(6);
+            termSelected = new ArrayList<>();
+            gurAttributesSelected = new ArrayList<>();
+            otherAttributesSelected = new ArrayList<>();
+            siteAttributesSelected = new ArrayList<>();
+            subjectSelected = new ArrayList<>();
+            InstructorSelected = new ArrayList<>();
+            startHourSelected = new ArrayList<>();
+            endHourSelected = new ArrayList<>();
+            creditHourSelected = new ArrayList<>();
+            termSelected.add(defaultValues.get("" + 0));
+            gurAttributesSelected.add(defaultValues.get("" + 1));
+            otherAttributesSelected.add(defaultValues.get("" + 2));
+            siteAttributesSelected.add(defaultValues.get("" + 3));
+            subjectSelected.add(defaultValues.get("" + 4));
+            InstructorSelected.add(defaultValues.get("" + 5));
+            startHourSelected.add("All");
+            endHourSelected.add("All");
+            creditHourSelected.add("All");
             filterView.setVisibility(View.VISIBLE);
         }
     }

@@ -5,9 +5,10 @@
     android:orientation="horizontal">
 
     <CheckBox
-        android:id="@+id/radioButton"
+        android:id="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="RadioButton" />
+        android:buttonTint="#0000FF"
+        android:text="checkbox" />
 </LinearLayout>
