@@ -234,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
         classList = new RecyclerWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
     }
 
+    //todo add on start and on stop with a bundle
+
     //get direction for animation
     private int getOpenDir(int oldPos, int newPos){
         if(oldPos < newPos)
@@ -354,18 +356,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateSelected(ArrayList<String> isSelected, int length, Intent dataIntent, Button button) {
-        isSelected.clear();
-        for(int i = 0; i < length; i++){
-            String name = dataIntent.getStringExtra("" + i);
-            isSelected.add(name);
-        }
-        if(length > 1) {
-            button.setText(length + " Selected");
-        }else if(length == 1){
-            String text = isSelected.get(0);
-            setButtonText(button, text);
-        }else{
-            button.setText("none");
+        if(isSelected != null) {
+            isSelected.clear();
+            for (int i = 0; i < length; i++) {
+                String name = dataIntent.getStringExtra("" + i);
+                isSelected.add(name);
+            }
+            if (length > 1) {
+                button.setText(length + " Selected");
+            } else if (length == 1) {
+                String text = isSelected.get(0);
+                setButtonText(button, text);
+            } else {
+                button.setText("none");
+            }
         }
     }
     private void setButtonText(Button button, String text){
@@ -378,22 +382,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void termButton(View view) {
         Set<String> keys = term.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),term.size(), termSelected,TERM, defaultValues.get("" + 0),false);
+        callMenuList(keys.toArray(new String[keys.size()]),term.size(), termSelected,TERM, defaultValues.get("" + 0),true);
     }
 
     public void GURattributesButton(View view) {
         Set<String> keys = gurAttributes.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),gurAttributes.size(),gurAttributesSelected,GURATTRIBUTES, defaultValues.get("" + 1),false);
+        callMenuList(keys.toArray(new String[keys.size()]),gurAttributes.size(),gurAttributesSelected,GURATTRIBUTES, defaultValues.get("" + 1),true);
     }
 
     public void otherAttributesButton(View view) {
         Set<String> keys = otherAttributes.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),otherAttributes.size(), otherAttributesSelected,OTHERATTRIBUTES, defaultValues.get("" + 2),false);
+        callMenuList(keys.toArray(new String[keys.size()]),otherAttributes.size(), otherAttributesSelected,OTHERATTRIBUTES, defaultValues.get("" + 2),true);
     }
 
     public void siteAttributesButton(View view) {
         Set<String> keys = siteAttributes.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),siteAttributes.size(),siteAttributesSelected ,SITEATTRIBUTES, defaultValues.get("" + 3),false);
+        callMenuList(keys.toArray(new String[keys.size()]),siteAttributes.size(),siteAttributesSelected ,SITEATTRIBUTES, defaultValues.get("" + 3),true);
     }
 
     public void subjectButton(View view) {
@@ -403,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void instructorButton(View view) {
         Set<String> keys = Instructor.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),Instructor.size(), InstructorSelected,INSTRUCTOR, defaultValues.get("" + 5),false);
+        callMenuList(keys.toArray(new String[keys.size()]),Instructor.size(), InstructorSelected,INSTRUCTOR, defaultValues.get("" + 5),true);
     }
 
     public void resetFilters(View view) {
