@@ -21,7 +21,7 @@ import java.util.List;
 public class SchedulesActivity extends AppCompatActivity {
 
     private String currEditText = null;
-    public CustomItems.ScheduleItem selectedSchedule;
+    public static CustomItems.ScheduleItem selectedSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -29,7 +29,7 @@ public class SchedulesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_layout);
 
-        View recyclerView = (RecyclerView) findViewById(R.id.item_list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
         assert recyclerView != null;
         SimpleItemRecyclerViewAdapter adapt = new SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
         recyclerView.setAdapter(adapt);
@@ -72,6 +72,7 @@ public class SchedulesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 CustomItems.ScheduleItem item = (CustomItems.ScheduleItem) view.getTag();
+                selectedSchedule = item;
                 Context context = view.getContext();
                 Intent intent = new Intent(context, SchedViewActivity.class);
                 intent.putExtra(SchedViewFragment.ARG_ITEM_ID, item.name);

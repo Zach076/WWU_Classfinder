@@ -1,8 +1,14 @@
 package com.csci412.classfinder;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -11,24 +17,40 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class SchedViewFragment extends AppCompatActivity {
+public class SchedViewFragment extends Fragment {
 
-    public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_ITEM_ID = "name";
+    private CustomItems.ScheduleItem mItem;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
-        CustomItems.ScheduleItem Sched = getParent().selectedSchedule;
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule_layout);
+
+        if (getArguments().containsKey(ARG_ITEM_ID)) {
+            mItem = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
+
+            Activity activity = this.getActivity();
+            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            if (appBarLayout != null) {
+                appBarLayout.setTitle("Schedules");
+            }
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
+
+        CustomItems.ScheduleItem Sched = SchedulesActivity.selectedSchedule;
 
         // GET THE MATRIX DIMENSIONS
         int columns=6;
         int rows=12;
 
         // INITIALISE YOUR GRID
-        GridView grid=(GridView)findViewById(R.id.grid);
+        GridView grid=(GridView)rootView.findViewById(R.id.grid);
         grid.setNumColumns(columns);
 
         List<String> irregularTimes = new ArrayList<>();
@@ -64,8 +86,8 @@ public class SchedViewFragment extends AppCompatActivity {
         int currentTime = 7;
         String[] timeSplit;
         boolean specialTime = false;
-        String theTime;
-        int theIndex;
+        String theTime = null;
+        int theIndex = 0;
 
         // ADD SOME CONTENTS TO EACH ITEM
         for (int i=1;i<rows;i++)
@@ -122,6 +144,6 @@ public class SchedViewFragment extends AppCompatActivity {
             }
         }
 
-
+        return rootView;
     }
 }

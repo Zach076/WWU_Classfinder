@@ -28,6 +28,8 @@ public class CustomItems {
 
     public static final List<ScheduleItem> SCHEDULES = new ArrayList<>();
 
+    public static final Map<String, ScheduleItem> SCHEDULE_MAP = new HashMap<String, ScheduleItem>();
+
     public static class ScheduleItem {
         public List<Course> classes;
         public String name;
@@ -39,7 +41,9 @@ public class CustomItems {
     }
 
     public static void addSchedule(String name) {
-        SCHEDULES.add(new ScheduleItem(name));
+        ScheduleItem item = new ScheduleItem(name);
+        SCHEDULES.add(item);
+        SCHEDULE_MAP.put(name, item);
     }
 
 }
