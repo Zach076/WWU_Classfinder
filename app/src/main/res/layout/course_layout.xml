@@ -5,234 +5,126 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/dept_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/deparmentHighlight"
-        android:gravity="center"
-        android:text=""
-        android:textColor="@android:color/black"
-        android:textSize="24sp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
+    <LinearLayout
+        android:id="@+id/col0"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/col1"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:stretchColumns="*"
-        android:background="@drawable/border"
-        android:padding="1dp"
+        <TextView
+            android:id="@+id/course_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/course_attributes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/course_crn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/course_times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/restrictions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/prerequisites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/dates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/col1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dept_label">
+        app:layout_constraintStart_toEndOf="@+id/col0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-        <TableRow
+        <TextView
+            android:id="@+id/course_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="" />
 
-            <TextView
-                android:id="@+id/course_number"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Class"
-                android:textColor="@color/blue" />
-
-            <TextView
-                android:id="@+id/course_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Title"
-                android:textColor="@color/blue" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/instructor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="" />
 
-            <TextView
-                android:id="@+id/course_attributes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Course Attributes"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:id="@+id/instructor"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Instructor"
-                android:textColor="@color/blue" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/course_credits"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="" />
 
-            <TextView
-                android:id="@+id/course_crn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Crn"
-                android:textColor="@color/purple" />
-
-            <TextView
-                android:id="@+id/course_credits"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Credits"
-                android:textColor="@android:color/black" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/location"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="" />
 
-            <TextView
-                android:id="@+id/course_times"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Time"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Location"
-                android:textColor="@android:color/black" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/available"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="" />
 
-            <TextView
-                android:id="@+id/restrictions"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Restrictions"
-                android:textColor="@color/red" />
-
-            <TextView
-                android:id="@+id/available"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Available Spots"
-                android:textColor="@color/green" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/charges"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:text="" />
 
-            <TextView
-                android:id="@+id/prerequisites"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Prerequisites"
-                android:textColor="@color/red" />
-
-            <TextView
-                android:id="@+id/charges"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Additional Charges"
-                android:textColor="@color/red" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/additional_details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/dates"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelLight"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Dates"
-                android:textColor="@color/blue" />
-
-            <TextView
-                android:id="@+id/additional_details"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@color/labelDark"
-                android:paddingStart="8dp"
-                android:paddingLeft="8dp"
-                android:paddingEnd="8dp"
-                android:paddingRight="8dp"
-                android:text="Additional Details"
-                android:textColor="@android:color/black" />
-        </TableRow>
-    </TableLayout>
+            android:layout_height="wrap_content"
+            android:text="" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

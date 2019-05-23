@@ -9,7 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +46,20 @@ public class SchedViewFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
         CustomItems.ScheduleItem Sched = SchedulesActivity.selectedSchedule;
+
+        TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
+        tv.setText(Sched.name);
+
+        Button deleteBtn = rootView.findViewById(R.id.deleteBtn);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomItems.removeSchedule(Sched);
+                tv.setTextColor(getResources().getColor(R.color.red));
+                tv.setText("deleted");
+
+            }
+        });
 
         // GET THE MATRIX DIMENSIONS
         int columns=6;

@@ -46,5 +46,10 @@ public class CustomItems {
         SCHEDULE_MAP.put(name, item);
     }
 
+    public static void removeSchedule(ScheduleItem item) {
+        SCHEDULES.remove(item);
+        SCHEDULE_MAP.remove(item.name);
+    }
+
 }
 

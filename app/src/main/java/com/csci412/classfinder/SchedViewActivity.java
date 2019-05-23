@@ -16,7 +16,7 @@ public class SchedViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.schedule_layout);
+        setContentView(R.layout.schedule_detail);
 
         if (savedInstanceState == null) {
             Bundle arguments = new Bundle();

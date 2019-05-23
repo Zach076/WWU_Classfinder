@@ -123,17 +123,6 @@ private int inactiveColor = Color.GRAY;
         llNav.addView(navi);
     }
 
-    public void changePosition(int position){
-        int oldPos = closeAll();
-
-        LinearLayout nav = (LinearLayout)getChildAt(1);
-        NavItem item = (NavItem)nav.getChildAt(position);
-        item.show();
-        mListener.OnClick(oldPos, position);
-
-        moveIndicator(position, mItems.size());
-    }
-
     //tries to close all navs and returns the pos of the opened nav
     private int closeAll() {
         LinearLayout nav = (LinearLayout)getChildAt(1);

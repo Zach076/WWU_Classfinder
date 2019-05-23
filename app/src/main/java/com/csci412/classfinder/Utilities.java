@@ -143,7 +143,6 @@ public class Utilities {
 
                 //parse and add this course
                 course = new Course();
-                course.dept = department;
 
                 Elements cols = row.select("td");
 

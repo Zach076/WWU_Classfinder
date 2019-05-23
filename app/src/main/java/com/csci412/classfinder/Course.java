@@ -1,15 +1,13 @@
 package com.csci412.classfinder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course implements Serializable {
+public class Course {
 
     //class info
     public String course = "";
     public String title = "";
-    public String dept = "";
     public String crn = "";
     public List<String> location = new ArrayList<>();
     public String instructor = "";
