@@ -50,17 +50,6 @@ public class SchedViewFragment extends Fragment {
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
 
-        Button deleteBtn = rootView.findViewById(R.id.deleteBtn);
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CustomItems.removeSchedule(Sched);
-                tv.setTextColor(getResources().getColor(R.color.red));
-                tv.setText("deleted");
-
-            }
-        });
-
         // GET THE MATRIX DIMENSIONS
         int columns=6;
         int rows=12;
@@ -159,6 +148,18 @@ public class SchedViewFragment extends Fragment {
                 x++;
             }
         }
+
+        grid.setNumColumns(columns);
+        MatrixAdapter matrixAdapter = new MatrixAdapter(getContext(), matrixList);
+        grid.setAdapter(matrixAdapter);
+        matrixAdapter.notifyDataSetChanged();
+
+        Button deleteBtn = rootView.findViewById(R.id.deleteBtn);
+        deleteBtn.setOnClickListener(view -> {
+            CustomItems.removeSchedule(Sched);
+            tv.setTextColor(getResources().getColor(R.color.red));
+            tv.setText("deleted");
+        });
 
         return rootView;
     }

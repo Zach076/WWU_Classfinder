@@ -1,9 +1,11 @@
 package com.csci412.classfinder;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -33,7 +35,17 @@ public class MatrixAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        View v=View.inflate(context,R.layout.schedule_griditem,null);
-        return v;
+        final CustomItems.MatrixItem matrixItem = matrixList.get(i);
+
+        if (view == null) {
+            final LayoutInflater layoutInflater = LayoutInflater.from(context);
+            view = layoutInflater.inflate(R.layout.schedule_griditem, null);
+        }
+
+        final TextView textView = (TextView)view.findViewById(R.id.griditem);
+
+        textView.setText(matrixItem.text);
+
+        return view;
     }
 }
