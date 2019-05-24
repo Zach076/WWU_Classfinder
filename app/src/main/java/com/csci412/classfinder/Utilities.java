@@ -97,7 +97,7 @@ public class Utilities {
             if (connection != null)
                 connection.disconnect();
         }
-
+        try {
         //get the correct table from the html
         Document doc = Jsoup.parse(result.toString());
         Elements tables = doc.select("table");
@@ -112,7 +112,7 @@ public class Utilities {
         List<Course> courses = null;
         Course course = null;
 
-        try {
+
             //remove all empty rows
             for(Element row : rows){
                 if(isEmptyRow(row)){
@@ -208,11 +208,12 @@ public class Utilities {
             }
 
             classes.put(department, courses);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+
 
         return classes;
+        } catch (Exception e){
+            return null;
+        }
     }
 
     public static List<HashMap<String, String>> getMenuAttributes(){
@@ -265,17 +266,15 @@ public class Utilities {
             }
 
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+
         } catch (Exception e){
-            e.printStackTrace();
+            return null;
         } finally {
             if (connection != null)
                 connection.disconnect();
-        }
 
+        }
+        try {
         //get the correct table from the html
         Document doc = Jsoup.parse(result.toString());
         Elements tables = doc.select("table");
@@ -290,7 +289,7 @@ public class Utilities {
             menuAttributes.add(new HashMap<>());
         }
 
-        try {
+
             //removing only removes from doc we need to re get rows
             tables = doc.select("table");
             attributes = tables.get(1);
@@ -326,11 +325,11 @@ public class Utilities {
                     j++;
                 }
             }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
 
         return menuAttributes;
+        } catch (Exception e){
+            return null;
+        }
     }
 
 

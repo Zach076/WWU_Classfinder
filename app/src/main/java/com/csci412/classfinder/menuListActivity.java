@@ -15,21 +15,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-/**
- * An activity representing a list of Items. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
+
 public class menuListActivity extends AppCompatActivity{
 
-    /**
-     * Whether or not the activity is in two-pane mode, i.e. running on a tablet
-     * device.
-     */
-    private boolean mTwoPane;
     private static boolean oneSelectMode; //only allows for one item to be selected at a time
     static ArrayList<item> content;
     static ArrayList<item> contentCopy;
@@ -62,20 +50,21 @@ public class menuListActivity extends AppCompatActivity{
         oneSelectMode = intent.getBooleanExtra("oneSelectMode",false);
         int length = intent.getIntExtra("length",l);
         String defaultName = intent.getStringExtra("default");
+        boolean isSelected = intent.getBooleanExtra("defaultSel",true);
+        item item = new item(defaultName ,isSelected);
+        content.add(item);
+        contentCopy.add(item);
+        defaultValue = item;
         for(int i = 0; i < length; i++){
             String name = intent.getStringExtra("0" + i);
-            boolean isSelected = false;
+            isSelected = false;
             String s = intent.getStringExtra(name);
             if(s != null && s.equals("s")){
                 isSelected = true;
             }
-            item item = new item(name ,isSelected);
+            item = new item(name ,isSelected);
             content.add(item);
             contentCopy.add(item);
-            if(name.equals(defaultName)){
-                System.out.println("assigned");
-                defaultValue = item;
-            }
         }
 
         View recyclerView = findViewById(R.id.item_list);
@@ -103,7 +92,7 @@ public class menuListActivity extends AppCompatActivity{
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        adapter = new menuRecyclerViewAdapter(this, content, mTwoPane);
+        adapter = new menuRecyclerViewAdapter(this, content);
         recyclerView.setAdapter(adapter);
     }
 
@@ -125,12 +114,10 @@ public class menuListActivity extends AppCompatActivity{
             extends RecyclerView.Adapter<menuRecyclerViewAdapter.ViewHolder> {
 
         private final menuListActivity mParentActivity;
-        private final boolean mTwoPane;
         private ArrayList<item> mValues;;
 
-        menuRecyclerViewAdapter(menuListActivity parent, ArrayList<item> items, boolean twoPane) {
+        menuRecyclerViewAdapter(menuListActivity parent, ArrayList<item> items) {
             mParentActivity = parent;
-            mTwoPane = twoPane;
             mValues = items;
 
         }

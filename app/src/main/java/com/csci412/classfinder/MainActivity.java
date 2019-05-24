@@ -23,15 +23,24 @@ import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
 import com.csci412.classfinder.classviewwidget.ClassViewWidget;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
+
+    //sort types
+    private final static int NONE = 0;
+    private final static int ALPHABET = 1;
+    private final static int YEAR = 2;
 
     //intent request codes
     private final static int TERM = 1;
@@ -68,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox sat;
     private CheckBox sun;
     private CheckBox openSections;
+
+    //reference to text view
+    private TextView noInternet;
 
     //reference to edit text
     private EditText courseNumber;
@@ -108,8 +120,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
         //intitalize all the menu options
         new getMenuAttributes().execute();
         super.onCreate(savedInstanceState);
@@ -149,6 +159,9 @@ public class MainActivity extends AppCompatActivity {
         sat = findViewById(R.id.Sat);
         sun = findViewById(R.id.Sun);
         openSections = findViewById(R.id.openSectionsCheck);
+
+        //reference to text view
+        noInternet = findViewById(R.id.noInternet);
 
         //reference to edit text
         courseNumber = findViewById(R.id.editCourseNumber);
@@ -260,7 +273,75 @@ public class MainActivity extends AppCompatActivity {
         classList = new ClassViewWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
     }
 
-    //todo add on start and on stop with a bundle
+
+    @Override
+    public void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+     /*   outState.putBoolean("created",true);
+        outState.putInt("termLength",termSelected.size());
+        for(int i = 0; i < termSelected.size(); i++){
+            outState.putString("t" + i,termSelected.get(i));
+        }
+        outState.putInt("gurAttributesLength",gurAttributesSelected.size());
+        for(int i = 0; i < gurAttributesSelected.size(); i++){
+            outState.putString("ga" + i,gurAttributesSelected.get(i));
+        }
+        outState.putInt("otherAttributesLength",otherAttributesSelected.size());
+        for(int i = 0; i < otherAttributesSelected.size(); i++){
+            outState.putString("oa" + i,otherAttributesSelected.get(i));
+        }
+        outState.putInt("subjectLength",subjectSelected.size());
+        for(int i = 0; i < subjectSelected.size(); i++){
+            outState.putString("s" + i,subjectSelected.get(i));
+        }
+        outState.putInt("siteAttributesLength",siteAttributesSelected.size());
+        for(int i = 0; i < siteAttributesSelected.size(); i++){
+            outState.putString("sa" + i,siteAttributesSelected.get(i));
+        }
+        outState.putInt("InstructorLength",InstructorSelected.size());
+        for(int i = 0; i < InstructorSelected.size(); i++){
+            outState.putString("i" + i,InstructorSelected.get(i));
+        }*/
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedState){
+        super.onRestoreInstanceState(savedState);
+     /*   termSelected = new ArrayList<>();
+        int termLength = savedState.getInt("termLength");
+        for(int i = 0; i < termLength; i++){
+            termSelected.add(savedState.getString("t" + i));
+        }
+        gurAttributesSelected = new ArrayList<>();
+        int gurAttributesLength = savedState.getInt("gurAttributesLength");
+        for(int i = 0; i < gurAttributesLength; i++){
+            gurAttributesSelected.add(savedState.getString("ga" + i));
+        }
+        siteAttributesSelected = new ArrayList<>();
+        int siteAttributesLength = savedState.getInt("siteAttributesLength");
+        for(int i = 0; i < siteAttributesLength; i++){
+            siteAttributesSelected.add(savedState.getString("sa" + i));
+        }
+        subjectSelected = new ArrayList<>();
+        int subjectLength = savedState.getInt("subjectLength");
+        for(int i = 0; i < subjectLength; i++){
+            subjectSelected.add(savedState.getString("s" + i));
+        }
+        otherAttributesSelected = new ArrayList<>();
+        int otherAttributesLength = savedState.getInt("otherAttributesLength");
+        for(int i = 0; i < otherAttributesLength; i++){
+            otherAttributesSelected.add(savedState.getString("oa" + i));
+        }
+        InstructorSelected = new ArrayList<>();
+        int InstructorLength = savedState.getInt("InstructorLength");
+        for(int i = 0; i < InstructorLength; i++){
+            InstructorSelected.add(savedState.getString("i" + i));
+        }*/
+    }
+
+
+
+
 
     //get direction for animation
     private int getOpenDir(int oldPos, int newPos){
@@ -326,8 +407,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode){
+    public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode, int sortType){
         Intent intent = new Intent(this, menuListActivity.class);
+        if(sortType == ALPHABET){
+            Arrays.sort(content);
+        }else if(sortType == YEAR){
+            Arrays.sort(content, new Comparator<String>() {
+
+                @Override
+                public int compare(String s1, String s2) {
+                    //return ORDER.indexOf(o1) -  ORDER.indexOf(o2) ;
+                    return Integer.parseInt(s2.split(" ")[1]) - Integer.parseInt(s1.split(" ")[1]);
+                }
+            });
+        }
+
         for(int i = 0; i < length; i++) {
             intent.putExtra("0" + i, content[i]);
             if(isSelected.contains(content[i])){
@@ -336,6 +430,7 @@ public class MainActivity extends AppCompatActivity {
         }
         intent.putExtra("length",length);
         intent.putExtra("default",defaultItem);
+        intent.putExtra("defaultSel",isSelected.contains(defaultItem));
         intent.putExtra("oneSelectMode",oneSelectMode);
         startActivityForResult(intent, requestCode);
     }
@@ -417,32 +512,38 @@ public class MainActivity extends AppCompatActivity {
 
     public void termButton(View view) {
         Set<String> keys = term.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),term.size(), termSelected,TERM, defaultValues.get("" + 0),true);
+        keys.remove(defaultValues.get("" + 0));
+        callMenuList(keys.toArray(new String[keys.size()]),term.size(), termSelected,TERM, defaultValues.get("" + 0),true,YEAR);
     }
 
     public void GURattributesButton(View view) {
         Set<String> keys = gurAttributes.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),gurAttributes.size(),gurAttributesSelected,GURATTRIBUTES, defaultValues.get("" + 1),true);
+        keys.remove(defaultValues.get("" + 1));
+        callMenuList(keys.toArray(new String[keys.size()]),gurAttributes.size(),gurAttributesSelected,GURATTRIBUTES, defaultValues.get("" + 1),true,ALPHABET);
     }
 
     public void otherAttributesButton(View view) {
         Set<String> keys = otherAttributes.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),otherAttributes.size(), otherAttributesSelected,OTHERATTRIBUTES, defaultValues.get("" + 2),true);
+        keys.remove(defaultValues.get("" + 2));
+        callMenuList(keys.toArray(new String[keys.size()]),otherAttributes.size(), otherAttributesSelected,OTHERATTRIBUTES, defaultValues.get("" + 2),true,ALPHABET);
     }
 
     public void siteAttributesButton(View view) {
         Set<String> keys = siteAttributes.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),siteAttributes.size(),siteAttributesSelected ,SITEATTRIBUTES, defaultValues.get("" + 3),true);
+        keys.remove(defaultValues.get("" + 3));
+        callMenuList(keys.toArray(new String[keys.size()]),siteAttributes.size(),siteAttributesSelected ,SITEATTRIBUTES, defaultValues.get("" + 3),true,ALPHABET);
     }
 
     public void subjectButton(View view) {
         Set<String> keys = subject.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),subject.size(), subjectSelected,SUBJECT, defaultValues.get("" + 4),false);
+        keys.remove(defaultValues.get("" + 4));
+        callMenuList(keys.toArray(new String[keys.size()]),subject.size(), subjectSelected,SUBJECT, defaultValues.get("" + 4),false,ALPHABET);
     }
 
     public void instructorButton(View view) {
         Set<String> keys = Instructor.keySet();
-        callMenuList(keys.toArray(new String[keys.size()]),Instructor.size(), InstructorSelected,INSTRUCTOR, defaultValues.get("" + 5),true);
+        keys.remove(defaultValues.get("" + 5));
+        callMenuList(keys.toArray(new String[keys.size()]),Instructor.size(), InstructorSelected,INSTRUCTOR, defaultValues.get("" + 5),true,ALPHABET);
     }
 
     public void resetFilters(View view) {
@@ -501,12 +602,12 @@ public class MainActivity extends AppCompatActivity {
         filter.sel_subj = subject.get(subjectSelected.get(0));
         filter.sel_inst = Instructor.get(InstructorSelected.get(0));
         filter.sel_crse = courseNumber.getText().toString();
-        if(startPM.isSelected()){
+        if(startPM.isChecked()){
             filter.begin_mi = "P";
         }else {
             filter.begin_mi = "A";
         }
-        if(endPM.isSelected()){
+        if(endPM.isChecked()){
             filter.end_mi = "P";
         }else {
             filter.end_mi = "A";
@@ -533,18 +634,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startHourButton(View view) {
-        String[] hours = {"All", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        callMenuList(hours,hours.length, startHourSelected,STARTHOUR,"All",true);
+        String[] hours = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        callMenuList(hours,hours.length, startHourSelected,STARTHOUR,"All",true,NONE);
     }
 
     public void endHourButton(View view) {
-        String[] hours = {"All","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        callMenuList(hours,hours.length, endHourSelected,ENDHOUR, "All",true);
+        String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        callMenuList(hours,hours.length, endHourSelected,ENDHOUR, "All",true,NONE);
     }
 
     public void creditHoursButton(View view) {
-        String[] credits = {"All","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
-        callMenuList(credits, credits.length,creditHourSelected,CREDITS, "All",true);
+        String[] credits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
+        callMenuList(credits, credits.length,creditHourSelected,CREDITS, "All",true,NONE);
     }
 
     //example async class for getting classes from classfinder
@@ -580,32 +681,37 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<HashMap<String, String>> result) {
-            term = result.get(0);
-            gurAttributes = result.get(1);
-            otherAttributes = result.get(2);
-            siteAttributes = result.get(3);
-            subject = result.get(4);
-            Instructor = result.get(5);
-            defaultValues = result.get(6);
-            termSelected = new ArrayList<>();
-            gurAttributesSelected = new ArrayList<>();
-            otherAttributesSelected = new ArrayList<>();
-            siteAttributesSelected = new ArrayList<>();
-            subjectSelected = new ArrayList<>();
-            InstructorSelected = new ArrayList<>();
-            startHourSelected = new ArrayList<>();
-            endHourSelected = new ArrayList<>();
-            creditHourSelected = new ArrayList<>();
-            termSelected.add(defaultValues.get("" + 0));
-            gurAttributesSelected.add(defaultValues.get("" + 1));
-            otherAttributesSelected.add(defaultValues.get("" + 2));
-            siteAttributesSelected.add(defaultValues.get("" + 3));
-            subjectSelected.add(defaultValues.get("" + 4));
-            InstructorSelected.add(defaultValues.get("" + 5));
-            startHourSelected.add("All");
-            endHourSelected.add("All");
-            creditHourSelected.add("All");
-            filterView.setVisibility(View.VISIBLE);
+            if(result == null){
+                noInternet.setVisibility(View.VISIBLE);
+                System.out.println("no internet");
+            }else {
+                term = result.get(0);
+                gurAttributes = result.get(1);
+                otherAttributes = result.get(2);
+                siteAttributes = result.get(3);
+                subject = result.get(4);
+                Instructor = result.get(5);
+                defaultValues = result.get(6);
+                termSelected = new ArrayList<>();
+                gurAttributesSelected = new ArrayList<>();
+                otherAttributesSelected = new ArrayList<>();
+                siteAttributesSelected = new ArrayList<>();
+                subjectSelected = new ArrayList<>();
+                InstructorSelected = new ArrayList<>();
+                startHourSelected = new ArrayList<>();
+                endHourSelected = new ArrayList<>();
+                creditHourSelected = new ArrayList<>();
+                termSelected.add(defaultValues.get("" + 0));
+                gurAttributesSelected.add(defaultValues.get("" + 1));
+                otherAttributesSelected.add(defaultValues.get("" + 2));
+                siteAttributesSelected.add(defaultValues.get("" + 3));
+                subjectSelected.add(defaultValues.get("" + 4));
+                InstructorSelected.add(defaultValues.get("" + 5));
+                startHourSelected.add("All");
+                endHourSelected.add("All");
+                creditHourSelected.add("All");
+                filterView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }
