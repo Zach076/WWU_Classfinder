@@ -2,6 +2,7 @@ package com.csci412.classfinder;
 
 import android.content.res.Resources;
 import android.support.v4.util.Pair;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,8 +32,7 @@ public class Utilities {
     public static HashMap<String, List<Course>> getClasses(List<Pair<String, String>> formData){
 
         HttpsURLConnection connection = null;
-        StringBuilder result = null;
-        int linecount = 0;
+        HashMap<String, List<Course>> classes;
 
         try{
             URL url = new URL("https://admin.wwu.edu/pls/wwis/wwsktime.ListClass");
@@ -56,13 +56,22 @@ public class Utilities {
 
             StringBuilder sbParams = new StringBuilder();
             sbParams.append("sel_subj=dummy&sel_subj=dummy&sel_gur=dummy&sel_gur=dummy&sel_attr=dummy&sel_site=dummy&sel_day=dummy&sel_open=dummy");
-            int i = 0;
+
             for (Pair<String, String> value : formData) {
-                sbParams.append("&");
-                sbParams.append(value.first)
-                        .append("=")
-                        .append(value.second);
-                i++;
+                if(value.second.contains(" ")){
+                  String[] vals = value.second.split(" ");
+                  for(String val : vals){
+                      sbParams.append("&");
+                      sbParams.append(value.first)
+                              .append("=")
+                              .append(val);
+                  }
+                } else {
+                    sbParams.append("&");
+                    sbParams.append(value.first)
+                            .append("=")
+                            .append(value.second);
+                }
             }
 
             //update content length
@@ -79,40 +88,25 @@ public class Utilities {
 
             InputStream inStream = new BufferedInputStream(connection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
-            result = new StringBuilder();
+            StringBuilder result = new StringBuilder();
             String line;
             while((line = reader.readLine()) != null){
-                linecount++;
                 result.append(line + "\n");
             }
 
+            connection.disconnect();
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        } finally {
-            if (connection != null)
-                connection.disconnect();
-        }
+            //get the correct table from the html
+            Document doc = Jsoup.parse(result.toString());
+            Elements tables = doc.select("table");
+            Element classTable = tables.get(1);
+            Elements rows = classTable.select("tr");
 
-        //get the correct table from the html
-        Document doc = Jsoup.parse(result.toString());
-        Elements tables = doc.select("table");
-        Element classTable = tables.get(1);
-        Elements rows = classTable.select("tr");
-
-        //todo handle no classes found
-
-        //data structures to store information in
-        HashMap<String, List<Course>> classes = new HashMap<>();
-        String department = null;
-        List<Course> courses = null;
-        Course course = null;
-
-        try {
+            //data structures to store information in
+            classes = new HashMap<>();
+            String department = null;
+            List<Course> courses = null;
+            Course course = null;
             //remove all empty rows
             for(Element row : rows){
                 if(isEmptyRow(row)){
@@ -143,6 +137,7 @@ public class Utilities {
 
                 //parse and add this course
                 course = new Course();
+                course.dept = department;
 
                 Elements cols = row.select("td");
 
@@ -208,9 +203,13 @@ public class Utilities {
 
             classes.put(department, courses);
         } catch (Exception e){
-            e.printStackTrace();
+            //no classes or some other error
+            //returning null will report no classes to a user
+            return null;
+        } finally {
+            if(connection != null)
+                connection.disconnect();
         }
-
         return classes;
     }
 
@@ -285,7 +284,7 @@ public class Utilities {
 
         //data structures to store information in
         List<HashMap<String, String>> menuAttributes = new ArrayList<HashMap<String,String>>();
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < 7; i++){
             menuAttributes.add(new HashMap<>());
         }
 
@@ -294,7 +293,7 @@ public class Utilities {
             tables = doc.select("table");
             attributes = tables.get(1);
             rows = attributes.select("tr");
-
+            int defaultValue = 0;
             //parse html
             //only go through the first 3 rows becasue those are the only ones that contain scrollable options
             for(int i = 0; i < 3; i++) {
@@ -306,6 +305,8 @@ public class Utilities {
                 int size = options.size();
                 int j = 0;
                 //adding all the options to the hash map
+                menuAttributes.get(6).put("" + defaultValue,options.get(j).text());
+                defaultValue++;
                 while(j < size) {
                     menuAttributes.get(i * 2).put(options.get(j).text(),options.get(j).val());
                     j++;
@@ -315,6 +316,8 @@ public class Utilities {
                 options = select.get(0).select("option");
                 size = options.size();
                 j = 0;
+                menuAttributes.get(6).put("" + defaultValue,options.get(j).text());
+                defaultValue++;
                 //adding all the options to the hash map
                 while(j < size) {
                     menuAttributes.get(i * 2 + 1).put(options.get(j).text(),options.get(j).val());
@@ -323,10 +326,14 @@ public class Utilities {
             }
         } catch (Exception e){
             e.printStackTrace();
+        } finally {
+            if (connection != null)
+                connection.disconnect();
         }
 
         return menuAttributes;
     }
+
 
 
     private static boolean isEndofClass(Element row) {
