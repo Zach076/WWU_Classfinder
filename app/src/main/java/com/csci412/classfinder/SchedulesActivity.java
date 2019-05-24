@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +98,13 @@ public class SchedulesActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
+            holder.itemView.setOnDragListener((view, event) -> {
+                if(event.getAction() == DragEvent.ACTION_DROP){
+                    Course x = (Course)event.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
+                    mValues.get(position).classes.add(x);
+                }
+                return true;
+            });
         }
 
         @Override
