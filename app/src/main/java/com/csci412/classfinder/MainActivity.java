@@ -224,22 +224,6 @@ public class MainActivity extends AppCompatActivity{
                     show(clsView, dir);
                     break;
                 case 2:
-                    show(scheView, dir);
-                    break;
-            }
-
-            //close old page
-            //todo handle any special needs when navigating away from a page
-            switch (oldPos) {
-                case 0:
-                    close(filterView, -dir);
-                    break;
-                case 1:
-                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
-                    rv.clearOnScrollListeners();
-                    close(clsView, -dir);
-                    break;
-                case 2:
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
                     assert recyclerView != null;
@@ -271,6 +255,22 @@ public class MainActivity extends AppCompatActivity{
                         }
                     });
 
+                    show(scheView, dir);
+                    break;
+            }
+
+            //close old page
+            //todo handle any special needs when navigating away from a page
+            switch (oldPos) {
+                case 0:
+                    close(filterView, -dir);
+                    break;
+                case 1:
+                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
+                    rv.clearOnScrollListeners();
+                    close(clsView, -dir);
+                    break;
+                case 2:
                     close(scheView, -dir);
                     break;
             }

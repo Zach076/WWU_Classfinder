@@ -32,13 +32,11 @@ public class SchedViewFragment extends Fragment {
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
-            /*
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle("Schedules");
             }
-            */
         }
     }
 
@@ -48,6 +46,15 @@ public class SchedViewFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
         CustomItems.ScheduleItem Sched = SchedulesActivity.selectedSchedule;
+
+        Button deleteBtn =(Button) rootView.findViewById(R.id.deleteBtn);
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomItems.removeSchedule(Sched);
+            }
+        });
 
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
@@ -64,18 +71,22 @@ public class SchedViewFragment extends Fragment {
 
         String startTime;
         for (Course course : Sched.classes) {
-            startTime = course.times.get(0);
-            int length = startTime.length();
-            if(startTime.toCharArray()[length-1] != 0 || startTime.toCharArray()[length-2] != 0) {
-                int count = 0;
-                for (String time : irregularTimes) {
-                    if(startTime.equals(time)) {
-                        count++;
+            for (int i = 0; i < course.times.size(); i++) {
+                startTime = course.times.get(i);
+                startTime = startTime.split(" ")[1];
+                startTime = startTime.split("-")[0];
+                int length = startTime.length();
+                if (startTime.toCharArray()[length - 1] != 0 || startTime.toCharArray()[length - 2] != 0) {
+                    int count = 0;
+                    for (String time : irregularTimes) {
+                        if (startTime.equals(time)) {
+                            count++;
+                        }
                     }
-                }
-                if(count == 0) {
-                    irregularTimes.add(startTime);
-                    rows++;
+                    if (count != 0) {
+                        irregularTimes.add(startTime);
+                        rows++;
+                    }
                 }
             }
         }
@@ -95,13 +106,14 @@ public class SchedViewFragment extends Fragment {
         boolean specialTime = false;
         String theTime = null;
         int theIndex = 0;
+        String days;
 
         // ADD SOME CONTENTS TO EACH ITEM
         for (int i=1;i<rows;i++)
         {
             for (int index=0; index < irregularTimes.size(); index++) {
                 timeSplit = irregularTimes.get(index).split(":");
-                if(Integer.parseInt(timeSplit[0].trim()) == currentTime - 1) {
+                if(Integer.parseInt(timeSplit[0]) == currentTime - 1) {
                     theTime = irregularTimes.get(index);
                     theIndex = index;
                     specialTime = true;
@@ -124,30 +136,36 @@ public class SchedViewFragment extends Fragment {
 
         for (Course course : Sched.classes) {
             int timeIndex = columns;
-            startTime = course.times.get(0);
-            while(!startTime.equals(matrixList.get(timeIndex))) {
-                timeIndex = timeIndex + columns;
-            }
-            int x = 0;
-            while(x < course.dates.length()) {
-                switch(course.dates.charAt(x)) {
-                    case 'M':
-                        matrixList.get(timeIndex + 1).text = course.course;
-                        break;
-                    case 'T':
-                        matrixList.get(timeIndex + 2).text = course.course;
-                        break;
-                    case 'W':
-                        matrixList.get(timeIndex + 3).text = course.course;
-                        break;
-                    case 'R':
-                        matrixList.get(timeIndex + 4).text = course.course;
-                        break;
-                    case 'F':
-                        matrixList.get(timeIndex + 5).text = course.course;
-                        break;
+            for (int i = 0; i < course.times.size(); i++) {
+                startTime = course.times.get(i);
+                timeIndex = columns;
+                days = startTime.split(" ")[0];
+                startTime = startTime.split(" ")[1];
+                startTime = startTime.split("-")[0];
+                while (!startTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
+                    timeIndex = timeIndex + columns;
                 }
-                x++;
+                int x = 0;
+                while (x < days.length()) {
+                    switch (days.charAt(x)) {
+                        case 'M':
+                            matrixList.get(timeIndex + 1).text = course.course;
+                            break;
+                        case 'T':
+                            matrixList.get(timeIndex + 2).text = course.course;
+                            break;
+                        case 'W':
+                            matrixList.get(timeIndex + 3).text = course.course;
+                            break;
+                        case 'R':
+                            matrixList.get(timeIndex + 4).text = course.course;
+                            break;
+                        case 'F':
+                            matrixList.get(timeIndex + 5).text = course.course;
+                            break;
+                    }
+                    x++;
+                }
             }
         }
 
@@ -155,13 +173,6 @@ public class SchedViewFragment extends Fragment {
         MatrixAdapter matrixAdapter = new MatrixAdapter(getContext(), matrixList);
         grid.setAdapter(matrixAdapter);
         matrixAdapter.notifyDataSetChanged();
-
-        Button deleteBtn = rootView.findViewById(R.id.deleteBtn);
-        deleteBtn.setOnClickListener(view -> {
-            CustomItems.removeSchedule(Sched);
-            tv.setTextColor(getResources().getColor(R.color.red));
-            tv.setText("deleted");
-        });
 
         return rootView;
     }
