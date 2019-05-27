@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_detail_container"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context="com.csci412.classfinder.SchedulesActivity">
+
+    <TextView
+        android:id="@+id/item_detail"
+        android:textSize="30sp"
+        android:text=""
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <GridView
+        android:layout_above="@+id/deleteBtn"
+        android:layout_below="@+id/item_detail"
+        android:id="@+id/grid"
+        android:background="@color/grey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </GridView>
+
+    <Button
+        android:layout_alignParentBottom="true"
+        android:id="@+id/deleteBtn"
+        android:text="DELETE SCHEDULE"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -1,31 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/schedules_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <GridView
-        android:id="@+id/grid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </GridView>
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context="com.csci412.classfinder.SchedulesActivity">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/title"
+        android:layout_below="@+id/app_bar"
+        android:text="TODO: edit this xml to be a drop-down of schedules and move gridviews to other xml, store classes in schedule names and build matrixes every click"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <FrameLayout
+        android:layout_below="@+id/title"
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/schedule_list" />
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/scheduleEditText"
+        android:layout_width="wrap_content"
+        android:hint="New Schedule Name here"
+        android:textColor="@color/black"
+        android:textColorHint="@color/grey"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@+id/newScheduleButton"
+        android:layout_alignParentLeft="true"/>
+
+    <Button
+        android:id="@+id/newScheduleButton"
+        android:layout_alignParentRight="true"
+        android:text="Add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="TODO: display tabs of all schedules a user has mocked up"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

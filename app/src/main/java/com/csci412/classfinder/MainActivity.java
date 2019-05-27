@@ -11,6 +11,8 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -106,6 +108,9 @@ public class MainActivity extends AppCompatActivity{
     private View filterView;
     private View clsView;
     private View scheView;
+
+    //editText to name schedules
+    private String currEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +224,37 @@ public class MainActivity extends AppCompatActivity{
                     show(clsView, dir);
                     break;
                 case 2:
+
+                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
+                    assert recyclerView != null;
+                    SchedulesActivity.SimpleItemRecyclerViewAdapter adapt = new SchedulesActivity.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
+                    recyclerView.setAdapter(adapt);
+
+                    Button newSchedBtn = findViewById(R.id.newScheduleButton);
+                    EditText newSchedET = findViewById(R.id.scheduleEditText);
+
+                    newSchedBtn.setOnClickListener(view -> {
+                        if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
+                            CustomItems.addSchedule(currEditText);
+                            adapt.notifyDataSetChanged();
+                        }
+                    });
+
+                    newSchedET.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            currEditText = charSequence.toString();
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+                        }
+                    });
+
                     show(scheView, dir);
                     break;
             }
