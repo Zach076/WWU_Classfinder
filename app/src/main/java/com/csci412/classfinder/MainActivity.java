@@ -2,8 +2,11 @@ package com.csci412.classfinder;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
+import android.gesture.Gesture;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
@@ -11,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +29,7 @@ import com.csci412.classfinder.classviewwidget.ClassViewWidget;
 
 import org.w3c.dom.Text;
 
+import java.io.FileReader;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     //sort types
     private final static int NONE = 0;
@@ -55,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ClassViewWidget classList;
     private BottomBar bottomView;
-    private HashMap<String, List<Course>> classes;
 
     //references to menu buttons
     private Button termButton;
@@ -126,7 +130,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //get content views
-        filterView = findViewById(R.id.filter_view);
+        //FragmentManager
+        filterView =  findViewById(R.id.filter_view);
         clsView = findViewById(R.id.classes_view);
         scheView = findViewById(R.id.schedule_view);
 
@@ -187,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
             //do nothing or refresh depending on page
             if (oldPos == newPos) {
                 if (newPos == 1) {
-                    if(clsView.findViewById(R.id.progressBar).getVisibility() == View.VISIBLE)
+                    if(classList.refresh.isRefreshing())
                         return;
                     updateClasses(getFilters(), true);
                 }
@@ -204,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     show(filterView, dir);
                     break;
                 case 1:
-                    if(clsView.findViewById(R.id.progressBar).getVisibility() == View.INVISIBLE) {
+                    if(!classList.refresh.isRefreshing()) {
                         updateClasses(getFilters(), false);
                     }
 
@@ -212,9 +217,7 @@ public class MainActivity extends AppCompatActivity {
                     View labels = clsView.findViewById(R.id.labels);
 
                     float height = labels.getMeasuredHeight();
-                    float transY = labels.getTranslationY();
-                    rv.setPadding(0, (int) height, 0, 0);
-                    rv.setClipToPadding(false);
+                    rv.setPadding(0, (int)(height-Math.abs(labels.getTranslationY())), 0, 0);
 
                     rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -226,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
                             newY = Math.min(newY, 0);
 
                             labels.setTranslationY(newY);
+                            rv.setPadding(0, (int)(height-Math.abs(newY)), 0, 0);
 
                             super.onScrolled(recyclerView, dx, dy);
                         }
@@ -271,6 +275,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpClasses(){
         classList = new ClassViewWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
+        classList.refresh.setOnRefreshListener(() -> {
+            updateClasses(activeFilter, true);
+        });
     }
 
 
@@ -401,7 +408,7 @@ public class MainActivity extends AppCompatActivity {
             TextView tv = clsView.findViewById(R.id.time);
             tv.setText("Valid as of: " + DateFormat.getTimeInstance().format(new Date()));
 
-            clsView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+            classList.refresh.setRefreshing(true);
 
             activeFilter = filter;
         }
@@ -660,13 +667,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(HashMap<String, List<Course>> result) {
-            classes = result;
-            ArrayList<Course> courses = new ArrayList<>();
-            for(List<Course> list : result.values()){
-                courses.addAll(list);
+            if(result != null) {
+                clsView.findViewById(R.id.no_classes).setVisibility(View.INVISIBLE);
+                ArrayList<Course> courses = new ArrayList<>();
+                for (List<Course> list : result.values()) {
+                    courses.addAll(list);
+                }
+                classList.updateClasses(courses);
+            } else {
+                clsView.findViewById(R.id.no_classes).setVisibility(View.VISIBLE);
+                classList.updateClasses(new ArrayList<>());
             }
-            classList.updateClasses(courses);
-            clsView.findViewById(R.id.progressBar).setVisibility(View.INVISIBLE);
+            classList.refresh.setRefreshing(false);
             ((RecyclerView)clsView.findViewById(R.id.course_recycler_view)).scrollToPosition(0);
             clsView.findViewById(R.id.labels).setTranslationY(0);
         }

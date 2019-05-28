@@ -42,6 +42,8 @@ public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
         return courses.size();
     }
 
+
+
     @Override
     public void onBindViewHolder(@NonNull ClassViewHolder holder, int position) {
         //finish setting up item and holder

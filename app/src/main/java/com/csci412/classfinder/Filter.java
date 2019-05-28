@@ -8,18 +8,19 @@ import java.util.List;
 public class Filter {
 
     private String sel_crn = "";
-    public String term;
-    public String sel_gur;
-    public String sel_attr;
-    public String sel_site;
-    public String sel_subj;
-    public String sel_inst;
-    public String sel_crse;
-    public String begin_hh;
-    public String begin_mi;
-    public String end_hh;
-    public String end_mi;
-    public String sel_cdts;
+    public String term = "";
+    public String sel_gur = "";
+    public String sel_attr = "";
+    public String sel_site = "";
+    public String sel_subj = "";
+    public String sel_inst = "";
+    public String sel_day = "";
+    public String sel_crse = "";
+    public String begin_hh = "";
+    public String begin_mi = "";
+    public String end_hh = "";
+    public String end_mi = "";
+    public String sel_cdts = "";
 
     public List<Pair<String, String>> getFormData(){
         List<Pair<String, String>> formData = new ArrayList<>();
@@ -30,6 +31,7 @@ public class Filter {
         formData.add(new Pair<>("sel_site", sel_site));
         formData.add(new Pair<>("sel_subj", sel_subj));
         formData.add(new Pair<>("sel_inst", sel_inst));
+        formData.add(new Pair<>("sel_day", sel_day));
         formData.add(new Pair<>("sel_crse", sel_crse));
         formData.add(new Pair<>("begin_hh", begin_hh));
         formData.add(new Pair<>("begin_mi", begin_mi));
