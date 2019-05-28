@@ -25,6 +25,7 @@ import android.widget.RadioButton;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
+import com.csci412.classfinder.classviewwidget.ClassViewWidget;
 import com.csci412.classfinder.pagefragments.CourseListFragment;
 
 import org.w3c.dom.Text;
@@ -227,17 +228,17 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         bottomView.build(start);
         switch(start){
             case 0:
-                filterView.setVisibility(View.VISIBLE);
+                filterLayout.getView().setVisibility(View.VISIBLE);
                 crseFrag.getView().setVisibility(View.INVISIBLE);
                 scheView.setVisibility(View.INVISIBLE);
                 break;
             case 1:
-                filterView.setVisibility(View.INVISIBLE);
+                filterLayout.getView().setVisibility(View.INVISIBLE);
                 crseFrag.getView().setVisibility(View.VISIBLE);
                 scheView.setVisibility(View.INVISIBLE);
                 break;
             case 2:
-                filterView.setVisibility(View.INVISIBLE);
+                filterLayout.getView().setVisibility(View.INVISIBLE);
                 crseFrag.getView().setVisibility(View.INVISIBLE);
                 scheView.setVisibility(View.VISIBLE);
                 break;
@@ -297,68 +298,8 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
             });
     }
 
-    public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode){
-        Intent intent = new Intent(this, menuListActivity.class);
-        for(int i = 0; i < length; i++) {
-            intent.putExtra("0" + i, content[i]);
-            if(isSelected.contains(content[i])){
-                intent.putExtra(content[i],"s");
-            }
-        }
-        intent.putExtra("length",length);
-        intent.putExtra("default",defaultItem);
-        intent.putExtra("oneSelectMode",oneSelectMode);
-        startActivityForResult(intent, requestCode);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
-        super.onActivityResult(requestCode, resultCode, dataIntent);
-
-        // The returned result data is identified by requestCode.
-        // The request code is specified in startActivityForResult(intent, REQUEST_CODE); method.
-        int length = dataIntent.getIntExtra("length",0);
-        ArrayList<String> isSelected = null;
-        switch (requestCode)
-        {
-            case TERM:
-                isSelected = termSelected;
-                updateSelected(isSelected,length, dataIntent,termButton);
-                break;
-            case OTHERATTRIBUTES:
-                isSelected = otherAttributesSelected;
-                updateSelected(isSelected,length, dataIntent, otherAttributesButton);
-                break;
-            case SUBJECT:
-                isSelected = subjectSelected;
-                updateSelected(isSelected,length, dataIntent, subjectButton);
-                break;
-            case GURATTRIBUTES:
-                isSelected = gurAttributesSelected;
-                updateSelected(isSelected,length, dataIntent,gurAttributesButton);
-                break;
-            case SITEATTRIBUTES:
-                isSelected = siteAttributesSelected;
-                updateSelected(isSelected,length, dataIntent, siteAttributesButton);
-                break;
-            case INSTRUCTOR:
-                isSelected = InstructorSelected;
-                updateSelected(isSelected,length, dataIntent, InstructorButton);
-                break;
-            case STARTHOUR:
-                isSelected = startHourSelected;
-                updateSelected(isSelected,length, dataIntent, startHourButton);
-                break;
-            case ENDHOUR:
-                isSelected = endHourSelected;
-                updateSelected(isSelected,length, dataIntent, endHourButton);
-                break;
-            case CREDITS:
-                isSelected = creditHourSelected;
-                updateSelected(isSelected,length, dataIntent, creditHourButton);
-                break;
-        }
-
+    public void searchFilter(){
+     bottomView.changePosition(1);
     }
 
     private Filter getFilters(){

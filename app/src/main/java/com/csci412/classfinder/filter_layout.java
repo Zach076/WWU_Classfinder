@@ -249,8 +249,7 @@ public class filter_layout extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Filter f = getFilters();
-                ((MainActivity) getActivity()).returnFilter(f);
+                ((MainActivity) getActivity()).searchFilter();
             }
         });
         resetButton = v.findViewById(R.id.reset);
