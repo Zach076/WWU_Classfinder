@@ -12,7 +12,7 @@
     <TextView
         android:id="@+id/title"
         android:layout_below="@+id/app_bar"
-        android:text="TODO: edit this xml to be a drop-down of schedules and move gridviews to other xml, store classes in schedule names and build matrixes every click"
+        android:text="Schedules"
         android:textSize="30sp"
         android:textColor="@color/black"
         android:layout_width="match_parent"
