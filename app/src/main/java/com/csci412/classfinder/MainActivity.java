@@ -2,16 +2,13 @@ package com.csci412.classfinder;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,21 +16,17 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
-import com.csci412.classfinder.classviewwidget.ClassViewWidget;
+import com.csci412.classfinder.pagefragments.CourseListFragment;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements CourseListFragment.OnFragmentInteractionListener {
 
     //intent request codes
     private final static int TERM = 1;
@@ -46,7 +39,6 @@ public class MainActivity extends AppCompatActivity{
     private final static int ENDHOUR = 8;
     private final static int CREDITS = 9;
 
-    private ClassViewWidget classList;
     private BottomBar bottomView;
 
     //references to menu buttons
@@ -100,11 +92,9 @@ public class MainActivity extends AppCompatActivity{
     private ArrayList<String> endHourSelected;
     private ArrayList<String> creditHourSelected;
 
-    Filter activeFilter;
-
     //content views
     private View filterView;
-    private View clsView;
+    private CourseListFragment crseFrag;
     private View scheView;
 
     @Override
@@ -116,16 +106,43 @@ public class MainActivity extends AppCompatActivity{
 
         //get content views
         filterView = findViewById(R.id.filter_view);
-        clsView = findViewById(R.id.classes_view);
+
+        crseFrag = (CourseListFragment) getFragmentManager().findFragmentById(R.id.classes_view);
+
         scheView = findViewById(R.id.schedule_view);
 
         //set references to menu items
         getMenuReferences();
 
         //setup up nav bar
-        setupBar();
-        //set up class view
-        setUpClasses();
+        if(savedInstanceState != null)
+            setupBar(savedInstanceState.getInt("page", 0));
+        else
+            setupBar(0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("page", bottomView.getCurrentPage());
+    }
+
+    //todo(nick) finish fling
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                System.out.println("show +1");
+                return false; // Right to left
+            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                System.out.println("show -1");
+                return false; // Left to right
+            }
+            return false;
+        }
     }
 
     private void getMenuReferences() {
@@ -159,7 +176,7 @@ public class MainActivity extends AppCompatActivity{
         endPM = findViewById(R.id.endPM);
     }
 
-    private void setupBar(){
+    private void setupBar(int start){
         //animated bottom bar
         //views for send activities
         bottomView = findViewById(R.id.bottomView);
@@ -173,9 +190,9 @@ public class MainActivity extends AppCompatActivity{
             //do nothing or refresh depending on page
             if (oldPos == newPos) {
                 if (newPos == 1) {
-                    if(classList.refresh.isRefreshing())
+                    if(crseFrag.isRefreshing())
                         return;
-                    updateClasses(getFilters(), true);
+                    crseFrag.updateClasses(getFilters(), true);
                 }
                 return;
             }
@@ -184,18 +201,18 @@ public class MainActivity extends AppCompatActivity{
             int dir = getOpenDir(oldPos, newPos);
 
             //open selected page
-            //todo handle any special needs when navigating to a page like loading all classes based on filters
+            //handle any special needs when navigating to a page like loading all classes based on filters
             switch (newPos) {
                 case 0:
                     show(filterView, dir);
                     break;
                 case 1:
-                    if(!classList.refresh.isRefreshing()) {
-                        updateClasses(getFilters(), false);
+                    if(!crseFrag.isRefreshing()) {
+                        crseFrag.updateClasses(getFilters(), false);
                     }
 
-                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
-                    View labels = clsView.findViewById(R.id.labels);
+                    RecyclerView rv = crseFrag.getView().findViewById(R.id.course_recycler_view);
+                    View labels = crseFrag.getView().findViewById(R.id.labels);
 
                     float height = labels.getMeasuredHeight();
                     rv.setPadding(0, (int)(height-Math.abs(labels.getTranslationY())), 0, 0);
@@ -216,7 +233,7 @@ public class MainActivity extends AppCompatActivity{
                         }
                     });
 
-                    show(clsView, dir);
+                    show(crseFrag.getView(), dir);
                     break;
                 case 2:
                     show(scheView, dir);
@@ -224,15 +241,15 @@ public class MainActivity extends AppCompatActivity{
             }
 
             //close old page
-            //todo handle any special needs when navigating away from a page
+            //handle any special needs when navigating away from a page
             switch (oldPos) {
                 case 0:
                     close(filterView, -dir);
                     break;
                 case 1:
-                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
+                    RecyclerView rv = crseFrag.getView().findViewById(R.id.course_recycler_view);
                     rv.clearOnScrollListeners();
-                    close(clsView, -dir);
+                    close(crseFrag.getView(), -dir);
                     break;
                 case 2:
                     close(scheView, -dir);
@@ -245,19 +262,29 @@ public class MainActivity extends AppCompatActivity{
         bottomView.addItem(new Item("Schedule"));
 
         //build nav bar
-        bottomView.build(0);
+        bottomView.build(start);
+        switch(start){
+            case 0:
+                filterView.setVisibility(View.VISIBLE);
+                crseFrag.getView().setVisibility(View.INVISIBLE);
+                scheView.setVisibility(View.INVISIBLE);
+                break;
+            case 1:
+                filterView.setVisibility(View.INVISIBLE);
+                crseFrag.getView().setVisibility(View.VISIBLE);
+                scheView.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                filterView.setVisibility(View.INVISIBLE);
+                crseFrag.getView().setVisibility(View.INVISIBLE);
+                scheView.setVisibility(View.VISIBLE);
+                break;
+        }
 
         //set up page change on drag
-        clsView.setOnDragListener((view, event) -> {
+        crseFrag.getView().setOnDragListener((view, event) -> {
             bottomView.changePosition(2);
             return true;
-        });
-    }
-
-    private void setUpClasses(){
-        classList = new ClassViewWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
-        classList.refresh.setOnRefreshListener(() -> {
-            updateClasses(activeFilter, true);
         });
     }
 
@@ -306,25 +333,6 @@ public class MainActivity extends AppCompatActivity{
                     view.setAlpha(1.0f);
                 }
             });
-    }
-
-
-    private void updateClasses(Filter filter, boolean force){
-
-        if(force || activeFilter == null || !activeFilter.equals(filter)) {
-            //actually gets and parses classes on a background thread using the filters provided
-            //when complete the classes field will be populated with classes from classfinder
-            GetClasses getClasses = new GetClasses();
-            getClasses.formData = filter.getFormData();
-            getClasses.execute();
-
-            TextView tv = clsView.findViewById(R.id.time);
-            tv.setText("Valid as of: " + DateFormat.getTimeInstance().format(new Date()));
-
-            classList.refresh.setRefreshing(true);
-
-            activeFilter = filter;
-        }
     }
 
     public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode){
@@ -548,35 +556,6 @@ public class MainActivity extends AppCompatActivity{
         callMenuList(credits, credits.length,creditHourSelected,CREDITS, "All",true);
     }
 
-    //example async class for getting classes from classfinder
-    private class GetClasses extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
-
-        List<Pair<String, String>> formData;
-
-        @Override
-        protected HashMap<String, List<Course>> doInBackground(String... unused) {
-            return Utilities.getClasses(formData);
-        }
-
-        @Override
-        protected void onPostExecute(HashMap<String, List<Course>> result) {
-            if(result != null) {
-                clsView.findViewById(R.id.no_classes).setVisibility(View.INVISIBLE);
-                ArrayList<Course> courses = new ArrayList<>();
-                for (List<Course> list : result.values()) {
-                    courses.addAll(list);
-                }
-                classList.updateClasses(courses);
-            } else {
-                clsView.findViewById(R.id.no_classes).setVisibility(View.VISIBLE);
-                classList.updateClasses(new ArrayList<>());
-            }
-            classList.refresh.setRefreshing(false);
-            ((RecyclerView)clsView.findViewById(R.id.course_recycler_view)).scrollToPosition(0);
-            clsView.findViewById(R.id.labels).setTranslationY(0);
-        }
-    }
-
     private class getMenuAttributes extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> >{
 
         @Override
@@ -611,7 +590,12 @@ public class MainActivity extends AppCompatActivity{
             startHourSelected.add("All");
             endHourSelected.add("All");
             creditHourSelected.add("All");
-            filterView.setVisibility(View.VISIBLE);
+            //filterView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //possible communication between fragment needed?
     }
 }

@@ -14,12 +14,13 @@ public class Filter {
     public String sel_site = "";
     public String sel_subj = "";
     public String sel_inst = "";
-    public String sel_day = "";
+    public String sel_day = null;
     public String sel_crse = "";
     public String begin_hh = "";
     public String begin_mi = "";
     public String end_hh = "";
     public String end_mi = "";
+    public String sel_open = null;
     public String sel_cdts = "";
 
     public List<Pair<String, String>> getFormData(){
@@ -31,12 +32,15 @@ public class Filter {
         formData.add(new Pair<>("sel_site", sel_site));
         formData.add(new Pair<>("sel_subj", sel_subj));
         formData.add(new Pair<>("sel_inst", sel_inst));
-        formData.add(new Pair<>("sel_day", sel_day));
+        if(sel_day != null)
+            formData.add(new Pair<>("sel_day", sel_day));
         formData.add(new Pair<>("sel_crse", sel_crse));
         formData.add(new Pair<>("begin_hh", begin_hh));
         formData.add(new Pair<>("begin_mi", begin_mi));
         formData.add(new Pair<>("end_hh", end_hh));
         formData.add(new Pair<>("end_mi", end_mi));
+        if(sel_open != null)
+            formData.add(new Pair<>("sel_open", sel_open));
         formData.add(new Pair<>("sel_cdts", sel_cdts));
         return formData;
     }

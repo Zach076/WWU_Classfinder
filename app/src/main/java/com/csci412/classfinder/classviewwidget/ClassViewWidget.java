@@ -50,4 +50,8 @@ public class ClassViewWidget {
         adapter.notifyDataSetChanged();
         rv.scrollTo(0, 0);
     }
+
+    public ArrayList<Course> getCourses(){
+        return courses;
+    }
 }
