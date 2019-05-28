@@ -5,8 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:textSize="20sp"
+        android:id="@+id/griditem"
+        android:textSize="14sp"
         android:gravity="center"
+        android:text=""
+        android:textColor="@color/black"
+        android:background="@color/white"
+        android:layout_margin="1dp"
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

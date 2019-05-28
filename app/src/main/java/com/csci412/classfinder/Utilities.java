@@ -58,19 +58,12 @@ public class Utilities {
             sbParams.append("sel_subj=dummy&sel_subj=dummy&sel_gur=dummy&sel_gur=dummy&sel_attr=dummy&sel_site=dummy&sel_day=dummy&sel_open=dummy");
 
             for (Pair<String, String> value : formData) {
-                if(value.second.contains(" ")){
-                  String[] vals = value.second.split(" ");
-                  for(String val : vals){
-                      sbParams.append("&");
-                      sbParams.append(value.first)
-                              .append("=")
-                              .append(val);
-                  }
-                } else {
-                    sbParams.append("&");
-                    sbParams.append(value.first)
-                            .append("=")
-                            .append(value.second);
+                String[] vals = value.second.split(" ");
+                for(String val : vals){
+                  sbParams.append("&");
+                  sbParams.append(value.first)
+                          .append("=")
+                          .append(val);
                 }
             }
 

@@ -76,6 +76,7 @@ private int inactiveColor = Color.GRAY;
 
     //called when everything is set up to build the nav bar
     public void build(int start) {
+        System.out.println(start);
         createNavigationItems();
 
         setBackgroundColor(bgColor);
@@ -141,6 +142,17 @@ private int inactiveColor = Color.GRAY;
             NavItem item = (NavItem)nav.getChildAt(i);
             if (item.statusOpened) {
                 item.close();
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public int getCurrentPage(){
+        LinearLayout nav = (LinearLayout)getChildAt(1);
+        for (int i = 0; i < nav.getChildCount(); i++) {
+            NavItem item = (NavItem)nav.getChildAt(i);
+            if (item.statusOpened) {
                 return i;
             }
         }
