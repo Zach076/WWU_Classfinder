@@ -49,10 +49,10 @@ public class MainActivity extends AppCompatActivity{
     Filter f;
 
     //content views
-    private View filterView;
     private View clsView;
     private View scheView;
     private filter_layout filterLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //intitalize all the menu options
@@ -60,11 +60,10 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        filterLayout = new filter_layout();
-        //filter.getMenuReferences();
+
 
         //get content views
-        filterView =  findViewById(R.id.filter_view);
+        filterLayout =  (filter_layout) getFragmentManager().findFragmentById(R.id.filter_view);
         clsView = findViewById(R.id.classes_view);
         scheView = findViewById(R.id.schedule_view);
 
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity{
             //todo handle any special needs when navigating to a page like loading all classes based on filters
             switch (newPos) {
                 case 0:
-                    show(filterView, dir);
+                    show(filterLayout.getView(), dir);
                     break;
                 case 1:
                     if(!classList.refresh.isRefreshing()) {
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity{
             //todo handle any special needs when navigating away from a page
             switch (oldPos) {
                 case 0:
-                    close(filterView, -dir);
+                    close(filterLayout.getView(), -dir);
                     break;
                 case 1:
                     RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
@@ -249,12 +248,11 @@ public class MainActivity extends AppCompatActivity{
 
     public void returnFilter(Filter filter){
         f = filter;
-        System.out.println(f.sel_subj);
         bottomView.changePosition(1);
     }
 
     private Filter getFilters(){
-        return f;
+        return filterLayout.getFilters();
     }
 
     public void termButton(View view) {

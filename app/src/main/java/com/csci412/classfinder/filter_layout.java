@@ -1,11 +1,11 @@
 package com.csci412.classfinder;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
@@ -99,6 +99,9 @@ public class filter_layout extends Fragment {
     public ArrayList<String> creditHourSelected;
 
     View v;
+
+    boolean initilized = false;
+    Bundle savedInstance;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -128,9 +131,8 @@ public class filter_layout extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        savedInstance = savedInstanceState;
         new getMenuAttributes().execute();
-        //getMenuReferences();
-
     }
 
     @Override
@@ -152,6 +154,17 @@ public class filter_layout extends Fragment {
         super.onDetach();
     }
 
+    public void updateButton(Button button,ArrayList<String> isSelected){
+        int length = isSelected.size();
+        if (length > 1) {
+            button.setText(length + " Selected");
+        } else if (length == 1) {
+            String text = isSelected.get(0);
+            setButtonText(button, text);
+        } else {
+            button.setText("none");
+        }
+    }
     public void getMenuReferences() {
         termButton = v.findViewById(R.id.termButton);
         termButton.setOnClickListener(new View.OnClickListener() {
@@ -299,41 +312,24 @@ public class filter_layout extends Fragment {
         for(int i = 0; i < InstructorSelected.size(); i++){
             outState.putString("i" + i,InstructorSelected.get(i));
         }
+        outState.putInt("startLength",startHourSelected.size());
+        for(int i = 0; i < startHourSelected.size(); i++){
+            outState.putString("sh" + i,startHourSelected.get(i));
+        }
+        outState.putInt("endLength",endHourSelected.size());
+        for(int i = 0; i < endHourSelected.size(); i++){
+            outState.putString("eh" + i,endHourSelected.get(i));
+        }
+        outState.putInt("creditLength", creditHourSelected.size());
+        for(int i = 0; i < creditHourSelected.size(); i++){
+            outState.putString("c" + i,creditHourSelected.get(i));
+        }
     }
 
    /*  @Override
     public void onRestoreInstanceState(Bundle savedState){
         super.onRestoreInstanceState(savedState);
-       termSelected = new ArrayList<>();
-        int termLength = savedState.getInt("termLength");
-        for(int i = 0; i < termLength; i++){
-            termSelected.add(savedState.getString("t" + i));
-        }
-        gurAttributesSelected = new ArrayList<>();
-        int gurAttributesLength = savedState.getInt("gurAttributesLength");
-        for(int i = 0; i < gurAttributesLength; i++){
-            gurAttributesSelected.add(savedState.getString("ga" + i));
-        }
-        siteAttributesSelected = new ArrayList<>();
-        int siteAttributesLength = savedState.getInt("siteAttributesLength");
-        for(int i = 0; i < siteAttributesLength; i++){
-            siteAttributesSelected.add(savedState.getString("sa" + i));
-        }
-        subjectSelected = new ArrayList<>();
-        int subjectLength = savedState.getInt("subjectLength");
-        for(int i = 0; i < subjectLength; i++){
-            subjectSelected.add(savedState.getString("s" + i));
-        }
-        otherAttributesSelected = new ArrayList<>();
-        int otherAttributesLength = savedState.getInt("otherAttributesLength");
-        for(int i = 0; i < otherAttributesLength; i++){
-            otherAttributesSelected.add(savedState.getString("oa" + i));
-        }
-        InstructorSelected = new ArrayList<>();
-        int InstructorLength = savedState.getInt("InstructorLength");
-        for(int i = 0; i < InstructorLength; i++){
-            InstructorSelected.add(savedState.getString("i" + i));
-        }
+
     }*/
 
     public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode, int sortType){
@@ -482,15 +478,89 @@ public class filter_layout extends Fragment {
         creditHourButton.setText("All");
     }
 
+    public String getSubjects(){
+        String subjects = "";
+        for(int i = 0; i < subjectSelected.size(); i++){
+            if(i == 0){
+                subjects = subject.get(subjectSelected.get(i));
+            }else {
+                subjects += " " + subject.get(subjectSelected.get(i));
+            }
+        }
+        return subjects;
+    }
+
+    public String getDays(){
+        String days = "";
+        boolean first = true;
+        if(mon.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "m";
+        }
+        if(tue.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "t";
+        }
+        if(wed.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "w";
+        }
+        if(thu.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "r";
+        }
+        if(fri.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "f";
+        }
+        if(sat.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "s";
+        }
+        if(sun.isChecked()){
+            if(!first){
+                days += " ";
+            }else{
+                first = false;
+            }
+            days += "u";
+        }
+        return days;
+    }
     public Filter getFilters(){
         Filter filter = new Filter();
         filter.term = term.get(termSelected.get(0));
         filter.sel_gur = gurAttributes.get(gurAttributesSelected.get(0));
         filter.sel_attr = otherAttributes.get(otherAttributesSelected.get(0));
         filter.sel_site = siteAttributes.get(siteAttributesSelected.get(0));
-        filter.sel_subj = subject.get(subjectSelected.get(0));
+        filter.sel_subj = getSubjects();
         filter.sel_inst = Instructor.get(InstructorSelected.get(0));
         filter.sel_crse = courseNumber.getText().toString();
+        filter.sel_day = getDays();
         if(startPM.isChecked()){
             filter.begin_mi = "P";
         }else {
@@ -542,26 +612,85 @@ public class filter_layout extends Fragment {
                 subject = result.get(4);
                 Instructor = result.get(5);
                 defaultValues = result.get(6);
-                termSelected = new ArrayList<>();
-                gurAttributesSelected = new ArrayList<>();
-                otherAttributesSelected = new ArrayList<>();
-                siteAttributesSelected = new ArrayList<>();
-                subjectSelected = new ArrayList<>();
-                InstructorSelected = new ArrayList<>();
-                startHourSelected = new ArrayList<>();
-                endHourSelected = new ArrayList<>();
-                creditHourSelected = new ArrayList<>();
-                termSelected.add(defaultValues.get("" + 0));
-                gurAttributesSelected.add(defaultValues.get("" + 1));
-                otherAttributesSelected.add(defaultValues.get("" + 2));
-                siteAttributesSelected.add(defaultValues.get("" + 3));
-                subjectSelected.add(defaultValues.get("" + 4));
-                InstructorSelected.add(defaultValues.get("" + 5));
-                startHourSelected.add("All");
-                endHourSelected.add("All");
-                creditHourSelected.add("All");
+                if(savedInstance == null) {
+                    termSelected = new ArrayList<>();
+                    gurAttributesSelected = new ArrayList<>();
+                    otherAttributesSelected = new ArrayList<>();
+                    siteAttributesSelected = new ArrayList<>();
+                    subjectSelected = new ArrayList<>();
+                    InstructorSelected = new ArrayList<>();
+                    startHourSelected = new ArrayList<>();
+                    endHourSelected = new ArrayList<>();
+                    creditHourSelected = new ArrayList<>();
+                    termSelected.add(defaultValues.get("" + 0));
+                    gurAttributesSelected.add(defaultValues.get("" + 1));
+                    otherAttributesSelected.add(defaultValues.get("" + 2));
+                    siteAttributesSelected.add(defaultValues.get("" + 3));
+                    subjectSelected.add(defaultValues.get("" + 4));
+                    InstructorSelected.add(defaultValues.get("" + 5));
+                    startHourSelected.add("All");
+                    endHourSelected.add("All");
+                    creditHourSelected.add("All");
+                }
                 v = getView();
                 getMenuReferences();
+                if(savedInstance != null){
+                    initilized = true;
+                    termSelected = new ArrayList<>();
+                    int termLength = savedInstance.getInt("termLength");
+                    for(int i = 0; i < termLength; i++){
+                        termSelected.add(savedInstance.getString("t" + i));
+                    }
+                    updateButton(termButton,termSelected);
+                    gurAttributesSelected = new ArrayList<>();
+                    int gurAttributesLength = savedInstance.getInt("gurAttributesLength");
+                    for(int i = 0; i < gurAttributesLength; i++){
+                        gurAttributesSelected.add(savedInstance.getString("ga" + i));
+                    }
+                    updateButton(gurAttributesButton,gurAttributesSelected);
+                    siteAttributesSelected = new ArrayList<>();
+                    int siteAttributesLength = savedInstance.getInt("siteAttributesLength");
+                    for(int i = 0; i < siteAttributesLength; i++){
+                        siteAttributesSelected.add(savedInstance.getString("sa" + i));
+                    }
+                    updateButton(siteAttributesButton,siteAttributesSelected);
+                    subjectSelected = new ArrayList<>();
+                    int subjectLength = savedInstance.getInt("subjectLength");
+                    for(int i = 0; i < subjectLength; i++){
+                        subjectSelected.add(savedInstance.getString("s" + i));
+                    }
+                    updateButton(subjectButton,subjectSelected);
+                    otherAttributesSelected = new ArrayList<>();
+                    int otherAttributesLength = savedInstance.getInt("otherAttributesLength");
+                    for(int i = 0; i < otherAttributesLength; i++){
+                        otherAttributesSelected.add(savedInstance.getString("oa" + i));
+                    }
+                    updateButton(otherAttributesButton,otherAttributesSelected);
+                    InstructorSelected = new ArrayList<>();
+                    int InstructorLength = savedInstance.getInt("InstructorLength");
+                    for(int i = 0; i < InstructorLength; i++){
+                        InstructorSelected.add(savedInstance.getString("i" + i));
+                    }
+                    updateButton(InstructorButton,InstructorSelected);
+                    startHourSelected = new ArrayList<>();
+                    int startLength = savedInstance.getInt("startLength");
+                    for(int i = 0; i < startLength; i++){
+                        startHourSelected.add(savedInstance.getString("sh" + i));
+                    }
+                    updateButton(startHourButton,startHourSelected);
+                    endHourSelected = new ArrayList<>();
+                    int endLength = savedInstance.getInt("endLength");
+                    for(int i = 0; i < endLength; i++){
+                        endHourSelected.add(savedInstance.getString("eh" + i));
+                    }
+                    updateButton(endHourButton,endHourSelected);
+                    creditHourSelected = new ArrayList<>();
+                    int creditLength = savedInstance.getInt("creditLength");
+                    for(int i = 0; i < creditLength; i++){
+                        creditHourSelected.add(savedInstance.getString("c" + i));
+                    }
+                    updateButton(creditHourButton,creditHourSelected);
+                }
                 v.setVisibility(View.VISIBLE);
             }
         }

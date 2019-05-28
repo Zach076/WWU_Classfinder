@@ -190,7 +190,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Mon"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -202,7 +201,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Tue"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/mon"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -214,7 +212,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Wed"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Tue"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -226,7 +223,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Thu"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Wed"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -238,7 +234,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Fri"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Thu"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -250,7 +245,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Sat"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Fri"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -262,7 +256,6 @@
             android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Sun"
-            android:checked="true"
             android:buttonTint="#0000FF"
             app:layout_constraintStart_toEndOf="@+id/Sat"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
