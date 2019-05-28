@@ -1,11 +1,15 @@
 package com.csci412.classfinder;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +59,12 @@ public class SchedViewFragment extends Fragment {
                 CustomItems.removeSchedule(Sched);
             }
         });
+
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
+        assert recyclerView != null;
+        SchedViewFragment.SimpleItemRecyclerViewAdapter classAdapt = new SchedViewFragment.SimpleItemRecyclerViewAdapter(rootView, Sched.classes);
+        recyclerView.setAdapter(classAdapt);
+        classAdapt.notifyDataSetChanged();
 
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
@@ -175,5 +185,57 @@ public class SchedViewFragment extends Fragment {
         matrixAdapter.notifyDataSetChanged();
 
         return rootView;
+    }
+
+    public static class SimpleItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder> {
+
+        private final View mParentActivity;
+        private final List<Course> mValues;
+        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Course item = (Course) view.getTag();
+                mValues.remove(item);
+            }
+        };
+
+        SimpleItemRecyclerViewAdapter(View parent,
+                                      List<Course> items) {
+            mValues = items;
+            mParentActivity = parent;
+        }
+
+        @Override
+        public SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.schedule_list_content, parent, false);
+            return new SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
+            holder.mIdView.setText(mValues.get(position).title);
+            holder.mContentView.setText("");
+
+            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setOnClickListener(mOnClickListener);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView mIdView;
+            final TextView mContentView;
+
+            ViewHolder(View view) {
+                super(view);
+                mIdView = (TextView) view.findViewById(R.id.id_text);
+                mContentView = (TextView) view.findViewById(R.id.content);
+            }
+        }
     }
 }
