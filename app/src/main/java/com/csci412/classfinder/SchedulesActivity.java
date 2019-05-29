@@ -64,6 +64,17 @@ public class SchedulesActivity extends AppCompatActivity {
 
         private final MainActivity mParentActivity;
         private final List<CustomItems.ScheduleItem> mValues;
+        private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
+            @Override
+            public boolean onDrag(View view, DragEvent dragEvent) {
+                CustomItems.ScheduleItem item = (CustomItems.ScheduleItem) view.getTag();
+                if(dragEvent.getAction() == DragEvent.ACTION_DROP){
+                    Course x = (Course)dragEvent.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
+                    item.classes.add(x);
+                }
+                return true;
+            }
+        };
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,16 +109,7 @@ public class SchedulesActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
-            holder.itemView.setOnDragListener(new View.OnDragListener() {
-                @Override
-                public boolean onDrag(View view, DragEvent dragEvent) {
-                    if(dragEvent.getAction() == DragEvent.ACTION_DROP){
-                        Course x = (Course)dragEvent.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
-                        mValues.get(position).classes.add(x);
-                    }
-                    return true;
-                }
-            });
+            holder.itemView.setOnDragListener(mOnDragListener);
         }
 
         @Override
