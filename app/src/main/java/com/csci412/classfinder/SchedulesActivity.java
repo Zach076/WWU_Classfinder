@@ -98,12 +98,15 @@ public class SchedulesActivity extends AppCompatActivity {
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
-            holder.itemView.setOnDragListener((view, event) -> {
-                if(event.getAction() == DragEvent.ACTION_DROP){
-                    Course x = (Course)event.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
-                    mValues.get(position).classes.add(x);
+            holder.itemView.setOnDragListener(new View.OnDragListener() {
+                @Override
+                public boolean onDrag(View view, DragEvent dragEvent) {
+                    if(dragEvent.getAction() == DragEvent.ACTION_DROP){
+                        Course x = (Course)dragEvent.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
+                        mValues.get(position).classes.add(x);
+                    }
+                    return true;
                 }
-                return true;
             });
         }
 

@@ -216,7 +216,7 @@ public class SchedViewFragment extends Fragment {
         @Override
         public void onBindViewHolder(final SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).title);
-            holder.mContentView.setText("");
+            holder.mContentView.setText(mValues.get(position).crn);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

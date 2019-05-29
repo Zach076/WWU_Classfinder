@@ -176,24 +176,20 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
                     Button newSchedBtn = findViewById(R.id.newScheduleButton);
                     EditText newSchedET = findViewById(R.id.scheduleEditText);
-
                     newSchedBtn.setOnClickListener(view -> {
                         if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
                             CustomItems.addSchedule(currEditText);
                             adapt.notifyDataSetChanged();
                         }
                     });
-
                     newSchedET.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         }
-
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                             currEditText = charSequence.toString();
                         }
-
                         @Override
                         public void afterTextChanged(Editable editable) {
                         }
