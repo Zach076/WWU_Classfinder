@@ -93,7 +93,7 @@ public class SchedViewFragment extends Fragment {
                             count++;
                         }
                     }
-                    if (count != 0) {
+                    if (count == 0) {
                         irregularTimes.add(startTime);
                         rows++;
                     }
@@ -197,6 +197,7 @@ public class SchedViewFragment extends Fragment {
             public void onClick(View view) {
                 Course item = (Course) view.getTag();
                 mValues.remove(item);
+                notifyDataSetChanged();
             }
         };
 
@@ -215,7 +216,7 @@ public class SchedViewFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).title);
+            holder.mIdView.setText(mValues.get(position).course);
             holder.mContentView.setText(mValues.get(position).crn);
 
             holder.itemView.setTag(mValues.get(position));
