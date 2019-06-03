@@ -146,7 +146,7 @@ public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
 
 
         courseView.findViewById(R.id.tableLayout).setOnLongClickListener((view) -> {
-            CustomItems.SCHEDULES.get(0).classes.add(course);
+            //CustomItems.SCHEDULES.get(0).classes.add(course);
             Intent intent = new Intent();
             intent.putExtra("course", course);
             ClipData dragData = ClipData.newIntent("data", intent);
