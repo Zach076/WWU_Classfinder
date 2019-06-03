@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.csci412.classfinder.Course;
+import com.csci412.classfinder.CustomItems;
 import com.csci412.classfinder.R;
 import com.csci412.classfinder.Utilities;
 

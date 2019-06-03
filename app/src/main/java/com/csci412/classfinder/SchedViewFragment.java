@@ -35,12 +35,6 @@ public class SchedViewFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = null;//(CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle("Schedules");
-            }
         }
     }
 
@@ -49,7 +43,7 @@ public class SchedViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
-        CustomItems.ScheduleItem Sched = SchedulesActivity.selectedSchedule;
+        CustomItems.ScheduleItem Sched = CustomItems.selectedSchedule;
 
         Button deleteBtn =(Button) rootView.findViewById(R.id.deleteBtn);
 
@@ -93,7 +87,7 @@ public class SchedViewFragment extends Fragment {
                             count++;
                         }
                     }
-                    if (count != 0) {
+                    if (count == 0) {
                         irregularTimes.add(startTime);
                         rows++;
                     }
@@ -197,6 +191,7 @@ public class SchedViewFragment extends Fragment {
             public void onClick(View view) {
                 Course item = (Course) view.getTag();
                 mValues.remove(item);
+                notifyDataSetChanged();
             }
         };
 
@@ -215,7 +210,7 @@ public class SchedViewFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(final SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).title);
+            holder.mIdView.setText(mValues.get(position).course);
             holder.mContentView.setText(mValues.get(position).crn);
 
             holder.itemView.setTag(mValues.get(position));
