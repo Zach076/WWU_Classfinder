@@ -79,8 +79,11 @@ public class SchedViewFragment extends Fragment {
                 startTime = course.times.get(i);
                 startTime = startTime.split(" ")[1];
                 startTime = startTime.split("-")[0];
+                if(startTime.charAt(0) == '0') {
+                    startTime = startTime.substring(1);
+                }
                 int length = startTime.length();
-                if (startTime.toCharArray()[length - 1] != 0 || startTime.toCharArray()[length - 2] != 0) {
+                if (startTime.toCharArray()[length - 1] != '0' || startTime.toCharArray()[length - 2] != '0') {
                     int count = 0;
                     for (String time : irregularTimes) {
                         if (startTime.equals(time)) {
@@ -146,6 +149,9 @@ public class SchedViewFragment extends Fragment {
                 days = startTime.split(" ")[0];
                 startTime = startTime.split(" ")[1];
                 startTime = startTime.split("-")[0];
+                if(startTime.charAt(0) == '0') {
+                    startTime = startTime.substring(1);
+                }
                 while (!startTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
                     timeIndex = timeIndex + columns;
                 }
