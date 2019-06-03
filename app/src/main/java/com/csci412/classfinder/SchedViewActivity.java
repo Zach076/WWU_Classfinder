@@ -29,13 +29,4 @@ public class SchedViewActivity extends AppCompatActivity {
                     .commit();
         }
     }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            NavUtils.navigateUpTo(this, new Intent(this, SchedulesActivity.class));
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

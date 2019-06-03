@@ -35,12 +35,6 @@ public class SchedViewFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = null;//(CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle("Schedules");
-            }
         }
     }
 
@@ -49,7 +43,7 @@ public class SchedViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
-        CustomItems.ScheduleItem Sched = SchedulesActivity.selectedSchedule;
+        CustomItems.ScheduleItem Sched = CustomItems.selectedSchedule;
 
         Button deleteBtn =(Button) rootView.findViewById(R.id.deleteBtn);
 
