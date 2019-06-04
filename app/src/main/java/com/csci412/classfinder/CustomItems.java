@@ -41,6 +41,8 @@ public class CustomItems {
 
     public static ScheduleItem selectedSchedule;
 
+    public static RecyclerView rv;
+
     public static class ScheduleItem {
         public List<Course> classes;
         public String name;
@@ -55,11 +57,13 @@ public class CustomItems {
         ScheduleItem item = new ScheduleItem(name);
         SCHEDULES.add(item);
         SCHEDULE_MAP.put(name, item);
+        rv.getAdapter().notifyDataSetChanged();
     }
 
     public static void removeSchedule(ScheduleItem item) {
         SCHEDULES.remove(item);
         SCHEDULE_MAP.remove(item.name);
+        rv.getAdapter().notifyDataSetChanged();
     }
 
     public static class SimpleItemRecyclerViewAdapter
@@ -74,6 +78,7 @@ public class CustomItems {
                 if(dragEvent.getAction() == DragEvent.ACTION_DROP){
                     Course x = (Course)dragEvent.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
                     item.classes.add(x);
+                    view.setBackgroundColor(view.getResources().getColor(R.color.white));
                 }else if(dragEvent.getAction() == DragEvent.ACTION_DRAG_ENTERED){
                     view.setBackgroundColor(view.getResources().getColor(R.color.deparmentHighlight));
                 }else if(dragEvent.getAction() == DragEvent.ACTION_DRAG_EXITED){

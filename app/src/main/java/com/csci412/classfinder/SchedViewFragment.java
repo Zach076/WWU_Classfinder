@@ -27,6 +27,7 @@ public class SchedViewFragment extends Fragment {
 
     public static final String ARG_ITEM_ID = "name";
     private CustomItems.ScheduleItem mItem;
+    public CustomItems.ScheduleItem Sched;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -43,13 +44,15 @@ public class SchedViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
-        CustomItems.ScheduleItem Sched = CustomItems.selectedSchedule;
+        Sched = CustomItems.selectedSchedule;
 
         Button deleteBtn =(Button) rootView.findViewById(R.id.deleteBtn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("delete");
+                getActivity().onBackPressed();
                 CustomItems.removeSchedule(Sched);
             }
         });

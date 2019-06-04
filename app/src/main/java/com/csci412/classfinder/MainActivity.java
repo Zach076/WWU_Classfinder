@@ -177,13 +177,13 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     assert recyclerView != null;
                     CustomItems.SimpleItemRecyclerViewAdapter adapt = new CustomItems.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
                     recyclerView.setAdapter(adapt);
+                    CustomItems.rv = recyclerView;
 
                     Button newSchedBtn = findViewById(R.id.newScheduleButton);
                     EditText newSchedET = findViewById(R.id.scheduleEditText);
                     newSchedBtn.setOnClickListener(view -> {
                         if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
                             CustomItems.addSchedule(currEditText);
-                            adapt.notifyDataSetChanged();
                         }
                     });
                     newSchedET.addTextChangedListener(new TextWatcher() {
