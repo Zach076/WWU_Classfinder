@@ -18,6 +18,7 @@ import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -44,7 +45,7 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity implements CourseListFragment.OnFragmentInteractionListener {
 
     private ClassViewWidget classList;
-    private BottomBar bottomView;
+    public static BottomBar bottomView;
 
     Filter activeFilter;
     Filter f;
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
             setupBar(savedInstanceState.getInt("page", 0));
         else
             setupBar(0);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
@@ -240,11 +244,6 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                 break;
         }
 
-        //set up page change on drag
-        crseFrag.getView().setOnDragListener((view, event) -> {
-            bottomView.changePosition(2);
-            return true;
-        });
     }
 
     //todo add on start and on stop with a bundle

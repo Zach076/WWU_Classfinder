@@ -74,6 +74,10 @@ public class CustomItems {
                 if(dragEvent.getAction() == DragEvent.ACTION_DROP){
                     Course x = (Course)dragEvent.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
                     item.classes.add(x);
+                }else if(dragEvent.getAction() == DragEvent.ACTION_DRAG_ENTERED){
+                    view.setBackgroundColor(view.getResources().getColor(R.color.deparmentHighlight));
+                }else if(dragEvent.getAction() == DragEvent.ACTION_DRAG_EXITED){
+                    view.setBackgroundColor(view.getResources().getColor(R.color.white));
                 }
                 return true;
             }
