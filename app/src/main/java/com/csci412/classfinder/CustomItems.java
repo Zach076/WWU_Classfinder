@@ -65,6 +65,11 @@ public class CustomItems {
         rv.getAdapter().notifyDataSetChanged();
     }
 
+    public static void addSchedule(ScheduleItem x) {
+        SCHEDULES.add(x);
+        SCHEDULE_MAP.put(x.name, x);
+    }
+
     public static void removeSchedule(ScheduleItem item) {
         SCHEDULES.remove(item);
         SCHEDULE_MAP.remove(item.name);
@@ -80,7 +85,7 @@ public class CustomItems {
             try {
                 JSONArray ja = new JSONArray();
                 for (Course c: schedItem.classes) {
-                    ja.put(putCourseIntoJSON(c));
+                    ja.put(new JSONObject(putCourseIntoJSON(c)));
                 }
                 obj.put("classes", ja);
                 obj.put("name", schedItem.name);
@@ -95,7 +100,7 @@ public class CustomItems {
 
     public static List<ScheduleItem> getFromSharedPrefs(Context context) {
         SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        List<ScheduleItem> x = new ArrayList<ScheduleItem>();
+        List<ScheduleItem> x = new ArrayList<>();
 
         String json = appSharedPrefs.getString("json", "");
         try {
@@ -110,12 +115,12 @@ public class CustomItems {
                 classes = jo.getJSONArray("classes");
                 name = jo.getString("name");
                 ScheduleItem item = new ScheduleItem(name);
-                x.add(item);
                 for (int y = 0; y < classes.length(); y++) {
                     classO = classes.getJSONObject(y);
                     Course course = getCourseFromJSON(classO);
                     item.classes.add(course);
                 }
+                x.add(item);
             }
         } catch (Exception e) {
             e.printStackTrace();

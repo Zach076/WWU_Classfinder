@@ -74,6 +74,10 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         crseFrag = (CourseListFragment) getFragmentManager().findFragmentById(R.id.classes_view);
 
         scheView = findViewById(R.id.schedule_view);
+        List<CustomItems.ScheduleItem> schedules= CustomItems.getFromSharedPrefs(getApplicationContext());
+        for (CustomItems.ScheduleItem item : schedules) {
+            CustomItems.addSchedule(item);
+        }
 
         //set references to menu items
 
@@ -85,6 +89,18 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
+    protected void onStop() {
+        CustomItems.saveToSharedPrefs(getApplicationContext());
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        CustomItems.saveToSharedPrefs(getApplicationContext());
+        super.onDestroy();
     }
 
     @Override
