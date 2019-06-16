@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.csci412.classfinder.Course;
 import com.csci412.classfinder.CustomItems;
+import com.csci412.classfinder.MainActivity;
 import com.csci412.classfinder.R;
 import com.csci412.classfinder.Utilities;
 
@@ -146,7 +147,7 @@ public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
 
 
         courseView.findViewById(R.id.tableLayout).setOnLongClickListener((view) -> {
-            CustomItems.SCHEDULES.get(0).classes.add(course);
+            MainActivity.bottomView.changePosition(2);
             Intent intent = new Intent();
             intent.putExtra("course", course);
             ClipData dragData = ClipData.newIntent("data", intent);

@@ -41,6 +41,7 @@
         android:id="@+id/deleteBtn"
         android:text="DELETE SCHEDULE"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="deleteSche"/>
 
 </RelativeLayout>
