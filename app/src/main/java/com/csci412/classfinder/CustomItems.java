@@ -31,12 +31,14 @@ public class CustomItems {
         public int row;
         public int col;
         public String text;
+        public int color;
 
         public MatrixItem(int row, int col, String text) {
             this.id = (row*10) + col;
             this.row = row;
             this.col = col;
             this.text = text;
+            this.color = 0;
         }
     }
 
@@ -188,14 +190,14 @@ public class CustomItems {
             jo.put("attrs", c.attrs);
             JSONArray times = new JSONArray();
             for (int i = 0; i < c.times.size(); i++) {
-                location.put(c.times.get(i));
+                times.put(c.times.get(i));
             }
             jo.put("times", times);
             jo.put("prereq", c.prereq);
             jo.put("restrictions", c.restrictions);
             JSONArray additional = new JSONArray();
             for (int i = 0; i < c.additional.size(); i++) {
-                location.put(c.additional.get(i));
+                additional.put(c.additional.get(i));
             }
             jo.put("additional", additional);
             jo.put("waitlist", c.waitlist);

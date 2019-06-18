@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
     <TextView
         android:id="@+id/griditem"
-        android:textSize="14sp"
+        android:textSize="10dp"
         android:gravity="center"
         android:text=""
         android:textColor="@color/black"

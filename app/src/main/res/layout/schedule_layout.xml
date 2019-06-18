@@ -35,6 +35,7 @@
         android:textColorHint="@color/grey"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/blue"
         android:layout_toLeftOf="@+id/newScheduleButton"
         android:layout_alignParentLeft="true"/>
 

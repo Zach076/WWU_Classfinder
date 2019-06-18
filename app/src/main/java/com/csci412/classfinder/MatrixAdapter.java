@@ -45,6 +45,9 @@ public class MatrixAdapter extends BaseAdapter {
         final TextView textView = (TextView)view.findViewById(R.id.griditem);
 
         textView.setText(matrixItem.text);
+        if(matrixItem.color == 1) {
+            textView.setTextColor(context.getResources().getColor(R.color.red));
+        }
 
         return view;
     }
