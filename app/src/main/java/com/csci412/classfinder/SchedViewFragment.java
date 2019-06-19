@@ -88,9 +88,11 @@ public class SchedViewFragment extends Fragment {
                 if(startTime.charAt(0) == '0') {
                     startTime = startTime.substring(1);
                 }
+                /*
                 if(endTime.charAt(3) == '5') {
                     endTime = endTime.substring(0,3)+"00";
                 }
+                */
                 if(endTime.charAt(0) == '0') {
                     endTime = endTime.substring(1);
                 }
@@ -185,18 +187,18 @@ public class SchedViewFragment extends Fragment {
                 if (startTime.charAt(0) == '0') {
                     startTime = startTime.substring(1);
                 }
+                /*
                 if(endTime.charAt(3) == '5') {
                     endTime = endTime.substring(0,3)+"00";
                 }
+                */
                 if (endTime.charAt(0) == '0') {
                     endTime = endTime.substring(1);
                 }
                 while (!startTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
                     timeIndex = timeIndex + columns;
                 }
-                timeIndex = timeIndex - columns;
-                while (!endTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
-                    timeIndex = timeIndex + columns;
+                while (!endTime.equals(matrixList.get(timeIndex - columns).text) && timeIndex < matrixList.size()) {
                     int x = 0;
                     while (x < days.length()) {
                         switch (days.charAt(x)) {
@@ -233,6 +235,7 @@ public class SchedViewFragment extends Fragment {
                         }
                         x++;
                     }
+                    timeIndex = timeIndex + columns;
                 }
             }
         }
