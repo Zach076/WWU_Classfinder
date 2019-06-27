@@ -1,11 +1,15 @@
 package com.csci412.classfinder;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +27,7 @@ public class SchedViewFragment extends Fragment {
 
     public static final String ARG_ITEM_ID = "name";
     private CustomItems.ScheduleItem mItem;
+    public CustomItems.ScheduleItem Sched;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -31,12 +36,6 @@ public class SchedViewFragment extends Fragment {
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             mItem = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
-
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = null;//(CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle("Schedules");
-            }
         }
     }
 
@@ -45,16 +44,24 @@ public class SchedViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
-        CustomItems.ScheduleItem Sched = SchedulesActivity.selectedSchedule;
+        Sched = CustomItems.selectedSchedule;
 
         Button deleteBtn =(Button) rootView.findViewById(R.id.deleteBtn);
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("delete");
+                getActivity().onBackPressed();
                 CustomItems.removeSchedule(Sched);
             }
         });
+
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
+        assert recyclerView != null;
+        SchedViewFragment.SimpleItemRecyclerViewAdapter classAdapt = new SchedViewFragment.SimpleItemRecyclerViewAdapter(rootView, Sched.classes);
+        recyclerView.setAdapter(classAdapt);
+        classAdapt.notifyDataSetChanged();
 
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
@@ -75,15 +82,18 @@ public class SchedViewFragment extends Fragment {
                 startTime = course.times.get(i);
                 startTime = startTime.split(" ")[1];
                 startTime = startTime.split("-")[0];
+                if(startTime.charAt(0) == '0') {
+                    startTime = startTime.substring(1);
+                }
                 int length = startTime.length();
-                if (startTime.toCharArray()[length - 1] != 0 || startTime.toCharArray()[length - 2] != 0) {
+                if (startTime.toCharArray()[length - 1] != '0' || startTime.toCharArray()[length - 2] != '0') {
                     int count = 0;
                     for (String time : irregularTimes) {
                         if (startTime.equals(time)) {
                             count++;
                         }
                     }
-                    if (count != 0) {
+                    if (count == 0) {
                         irregularTimes.add(startTime);
                         rows++;
                     }
@@ -142,6 +152,9 @@ public class SchedViewFragment extends Fragment {
                 days = startTime.split(" ")[0];
                 startTime = startTime.split(" ")[1];
                 startTime = startTime.split("-")[0];
+                if(startTime.charAt(0) == '0') {
+                    startTime = startTime.substring(1);
+                }
                 while (!startTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
                     timeIndex = timeIndex + columns;
                 }
@@ -175,5 +188,58 @@ public class SchedViewFragment extends Fragment {
         matrixAdapter.notifyDataSetChanged();
 
         return rootView;
+    }
+
+    public static class SimpleItemRecyclerViewAdapter
+            extends RecyclerView.Adapter<SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder> {
+
+        private final View mParentActivity;
+        private final List<Course> mValues;
+        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Course item = (Course) view.getTag();
+                mValues.remove(item);
+                notifyDataSetChanged();
+            }
+        };
+
+        SimpleItemRecyclerViewAdapter(View parent,
+                                      List<Course> items) {
+            mValues = items;
+            mParentActivity = parent;
+        }
+
+        @Override
+        public SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.schedule_list_content, parent, false);
+            return new SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
+            holder.mIdView.setText(mValues.get(position).course);
+            holder.mContentView.setText(mValues.get(position).crn);
+
+            holder.itemView.setTag(mValues.get(position));
+            holder.itemView.setOnClickListener(mOnClickListener);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mValues.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final TextView mIdView;
+            final TextView mContentView;
+
+            ViewHolder(View view) {
+                super(view);
+                mIdView = (TextView) view.findViewById(R.id.id_text);
+                mContentView = (TextView) view.findViewById(R.id.content);
+            }
+        }
     }
 }

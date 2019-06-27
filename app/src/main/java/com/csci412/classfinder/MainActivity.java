@@ -18,6 +18,7 @@ import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -44,7 +45,7 @@ import java.util.Set;
 public class MainActivity extends AppCompatActivity implements CourseListFragment.OnFragmentInteractionListener {
 
     private ClassViewWidget classList;
-    private BottomBar bottomView;
+    public static BottomBar bottomView;
 
     Filter activeFilter;
     Filter f;
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
             setupBar(savedInstanceState.getInt("page", 0));
         else
             setupBar(0);
+
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
@@ -171,29 +175,25 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
                     assert recyclerView != null;
-                    SchedulesActivity.SimpleItemRecyclerViewAdapter adapt = new SchedulesActivity.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
+                    CustomItems.SimpleItemRecyclerViewAdapter adapt = new CustomItems.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
                     recyclerView.setAdapter(adapt);
+                    CustomItems.rv = recyclerView;
 
                     Button newSchedBtn = findViewById(R.id.newScheduleButton);
                     EditText newSchedET = findViewById(R.id.scheduleEditText);
-
                     newSchedBtn.setOnClickListener(view -> {
                         if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
                             CustomItems.addSchedule(currEditText);
-                            adapt.notifyDataSetChanged();
                         }
                     });
-
                     newSchedET.addTextChangedListener(new TextWatcher() {
                         @Override
                         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         }
-
                         @Override
                         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                             currEditText = charSequence.toString();
                         }
-
                         @Override
                         public void afterTextChanged(Editable editable) {
                         }
@@ -244,11 +244,6 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                 break;
         }
 
-        //set up page change on drag
-        crseFrag.getView().setOnDragListener((view, event) -> {
-            bottomView.changePosition(2);
-            return true;
-        });
     }
 
     //todo add on start and on stop with a bundle

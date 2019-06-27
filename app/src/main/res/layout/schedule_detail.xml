@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context="com.csci412.classfinder.SchedulesActivity">
+    tools:context="com.csci412.classfinder.MainActivity">
 
     <TextView
         android:id="@+id/item_detail"
@@ -19,20 +19,29 @@
         android:layout_height="wrap_content"/>
 
     <GridView
-        android:layout_above="@+id/deleteBtn"
         android:layout_below="@+id/item_detail"
         android:id="@+id/grid"
         android:background="@color/grey"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-
     </GridView>
+
+    <FrameLayout
+        android:layout_below="@+id/grid"
+        android:layout_above="@+id/deleteBtn"
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/schedule_list" />
+    </FrameLayout>
 
     <Button
         android:layout_alignParentBottom="true"
         android:id="@+id/deleteBtn"
         android:text="DELETE SCHEDULE"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:onClick="deleteSche"/>
 
 </RelativeLayout>
