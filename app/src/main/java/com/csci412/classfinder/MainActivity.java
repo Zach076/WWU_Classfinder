@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity{
 
     public void returnFilter(Filter filter){
         f = filter;
-        System.out.println(f.sel_subj);
         bottomView.changePosition(1);
     }
 
