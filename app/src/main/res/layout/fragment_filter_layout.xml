@@ -193,7 +193,7 @@
 
     <LinearLayout
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical">
 
@@ -214,82 +214,170 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
 
-            <CheckBox
-                android:id="@+id/mon"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_weight="1"
-                android:text="Mon"
-                android:buttonTint="#0000FF"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                android:layout_gravity="center"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mon"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <CheckBox
+                    android:id="@+id/mon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="#0000FF"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Tue"/>
 
             <CheckBox
                 android:id="@+id/Tue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Tue"
                 android:buttonTint="#0000FF"
                 app:layout_constraintStart_toEndOf="@+id/mon"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Wed"/>
             <CheckBox
                 android:id="@+id/Wed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Wed"
+                android:text=""
                 android:buttonTint="#0000FF"
                 app:layout_constraintStart_toEndOf="@+id/Tue"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Thu"/>
             <CheckBox
                 android:id="@+id/Thu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Thu"
+                android:text=""
                 android:buttonTint="#0000FF"
                 app:layout_constraintStart_toEndOf="@+id/Wed"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Fri"/>
             <CheckBox
                 android:id="@+id/Fri"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Fri"
                 android:buttonTint="#0000FF"
                 app:layout_constraintStart_toEndOf="@+id/Thu"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15dp"
+                    android:text="Sat"/>
             <CheckBox
                 android:id="@+id/Sat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Sat"
                 android:buttonTint="#0000FF"
                 app:layout_constraintStart_toEndOf="@+id/Fri"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
+        </LinearLayout>
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15dp"
+                    android:text="Sun"/>
             <CheckBox
                 android:id="@+id/Sun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_weight="1"
-                android:text="Sun"
                 android:buttonTint="#0000FF"
                 app:layout_constraintStart_toEndOf="@+id/Sat"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
+    </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 
@@ -300,6 +388,7 @@
 
         <LinearLayout
             android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
             android:layout_column="0"
             android:orientation="vertical">
 
@@ -337,7 +426,7 @@
 
             <Button
                 android:id="@+id/startHour"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="startHourButton"
@@ -349,6 +438,7 @@
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_column="1"
+            android:layout_columnWeight="1"
             android:orientation="vertical">
         <TextView
             android:id="@+id/end"
@@ -389,7 +479,7 @@
 
             <Button
                 android:id="@+id/endHour"
-                android:layout_width="match_parent"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:onClick="endHourButton"
@@ -419,9 +509,10 @@
                 android:text="Course Number"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+
             <EditText
                 android:id="@+id/editCourseNumber"
-                android:layout_width="136dp"
+                android:layout_width="100dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
@@ -477,7 +568,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
                 android:text="Credit Hours"
+                android:layout_gravity="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
 
@@ -488,7 +581,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
                 android:onClick="creditHoursButton"
+                android:layout_gravity="center"
                 android:text="All"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/creditHours" />
@@ -496,37 +591,56 @@
         </LinearLayout>
 
     </GridLayout>
-    <FrameLayout
-        android:layout_height="wrap_content"
+    <GridLayout
+        android:layout_height="64dp"
         android:layout_width="match_parent"
+        android:columnCount="2"
+        android:layout_marginTop="8dp"
+        android:background="@color/blue"
         android:orientation="horizontal">
+        <GridLayout
+            android:layout_height="match_parent"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:onClick="resetFilters" >
+
         <Button
             android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:text="Reset"
-            android:layout_gravity="left"
-            android:onClick="resetFilters" />
+            android:background="@color/white"
+            android:layout_gravity="center"
+            android:textColor="@color/blue"
+            android:textSize="12dp"
+            />
+        </GridLayout>
 
-    <Button
-        android:id="@+id/search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_gravity="right"
-        android:text="Search" />
+        <GridLayout
+            android:layout_height="match_parent"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:onClick="search"
+            android:orientation="vertical">
 
+            <Button
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:text="Search"
+                android:textColor="@color/blue"
+                android:textSize="12dp" />
 
+        </GridLayout>
 
-
-    </FrameLayout>
+    </GridLayout>
 
 
 </LinearLayout>
