@@ -6,13 +6,14 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -21,11 +22,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
 import com.csci412.classfinder.classviewwidget.ClassViewWidget;
+import com.csci412.classfinder.pagefragments.CourseListFragment;
 
 import org.w3c.dom.Text;
 
@@ -40,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements CourseListFragment.OnFragmentInteractionListener {
 
     private ClassViewWidget classList;
     private BottomBar bottomView;
@@ -49,10 +50,14 @@ public class MainActivity extends AppCompatActivity{
     Filter f;
 
     //content views
-    private View filterView;
     private View clsView;
+    private CourseListFragment crseFrag;
     private View scheView;
     private filter_layout filterLayout;
+
+    //editText to name schedules
+    private String currEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //intitalize all the menu options
@@ -60,24 +65,50 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        filterLayout = new filter_layout();
-        //filter.getMenuReferences();
+
 
         //get content views
-        filterView =  findViewById(R.id.filter_view);
+        filterLayout =  (filter_layout) getFragmentManager().findFragmentById(R.id.filter_view);
         clsView = findViewById(R.id.classes_view);
+        crseFrag = (CourseListFragment) getFragmentManager().findFragmentById(R.id.classes_view);
+
         scheView = findViewById(R.id.schedule_view);
 
         //set references to menu items
 
         //setup up nav bar
-        setupBar();
-        //set up class view
-        setUpClasses();
+        if(savedInstanceState != null)
+            setupBar(savedInstanceState.getInt("page", 0));
+        else
+            setupBar(0);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("page", bottomView.getCurrentPage());
+    }
+
+    //todo(nick) finish fling
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                System.out.println("show +1");
+                return false; // Right to left
+            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                System.out.println("show -1");
+                return false; // Left to right
+            }
+            return false;
+        }
     }
 
 
-    private void setupBar(){
+    private void setupBar(int start){
         //animated bottom bar
         //views for send activities
         bottomView = findViewById(R.id.bottomView);
@@ -91,9 +122,9 @@ public class MainActivity extends AppCompatActivity{
             //do nothing or refresh depending on page
             if (oldPos == newPos) {
                 if (newPos == 1) {
-                    if(classList.refresh.isRefreshing())
+                    if(crseFrag.isRefreshing())
                         return;
-                    updateClasses(getFilters(), true);
+                    crseFrag.updateClasses(getFilters(), true);
                 }
                 return;
             }
@@ -102,18 +133,18 @@ public class MainActivity extends AppCompatActivity{
             int dir = getOpenDir(oldPos, newPos);
 
             //open selected page
-            //todo handle any special needs when navigating to a page like loading all classes based on filters
+            //handle any special needs when navigating to a page like loading all classes based on filters
             switch (newPos) {
                 case 0:
-                    show(filterView, dir);
+                    show(filterLayout.getView(), dir);
                     break;
                 case 1:
-                    if(!classList.refresh.isRefreshing()) {
-                        updateClasses(getFilters(), false);
+                    if(!crseFrag.isRefreshing()) {
+                        crseFrag.updateClasses(getFilters(), false);
                     }
 
-                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
-                    View labels = clsView.findViewById(R.id.labels);
+                    RecyclerView rv = crseFrag.getView().findViewById(R.id.course_recycler_view);
+                    View labels = crseFrag.getView().findViewById(R.id.labels);
 
                     float height = labels.getMeasuredHeight();
                     rv.setPadding(0, (int)(height-Math.abs(labels.getTranslationY())), 0, 0);
@@ -134,23 +165,54 @@ public class MainActivity extends AppCompatActivity{
                         }
                     });
 
-                    show(clsView, dir);
+                    show(crseFrag.getView(), dir);
                     break;
                 case 2:
+
+                    RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
+                    assert recyclerView != null;
+                    SchedulesActivity.SimpleItemRecyclerViewAdapter adapt = new SchedulesActivity.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
+                    recyclerView.setAdapter(adapt);
+
+                    Button newSchedBtn = findViewById(R.id.newScheduleButton);
+                    EditText newSchedET = findViewById(R.id.scheduleEditText);
+
+                    newSchedBtn.setOnClickListener(view -> {
+                        if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
+                            CustomItems.addSchedule(currEditText);
+                            adapt.notifyDataSetChanged();
+                        }
+                    });
+
+                    newSchedET.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            currEditText = charSequence.toString();
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+                        }
+                    });
+
                     show(scheView, dir);
                     break;
             }
 
             //close old page
-            //todo handle any special needs when navigating away from a page
+            //handle any special needs when navigating away from a page
             switch (oldPos) {
                 case 0:
-                    close(filterView, -dir);
+                    close(filterLayout.getView(), -dir);
                     break;
                 case 1:
-                    RecyclerView rv = clsView.findViewById(R.id.course_recycler_view);
+                    RecyclerView rv = crseFrag.getView().findViewById(R.id.course_recycler_view);
                     rv.clearOnScrollListeners();
-                    close(clsView, -dir);
+                    close(crseFrag.getView(), -dir);
                     break;
                 case 2:
                     close(scheView, -dir);
@@ -163,25 +225,33 @@ public class MainActivity extends AppCompatActivity{
         bottomView.addItem(new Item("Schedule"));
 
         //build nav bar
-        bottomView.build(0);
+        bottomView.build(start);
+        switch(start){
+            case 0:
+                filterLayout.getView().setVisibility(View.VISIBLE);
+                crseFrag.getView().setVisibility(View.INVISIBLE);
+                scheView.setVisibility(View.INVISIBLE);
+                break;
+            case 1:
+                filterLayout.getView().setVisibility(View.INVISIBLE);
+                crseFrag.getView().setVisibility(View.VISIBLE);
+                scheView.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                filterLayout.getView().setVisibility(View.INVISIBLE);
+                crseFrag.getView().setVisibility(View.INVISIBLE);
+                scheView.setVisibility(View.VISIBLE);
+                break;
+        }
 
         //set up page change on drag
-        clsView.setOnDragListener((view, event) -> {
+        crseFrag.getView().setOnDragListener((view, event) -> {
             bottomView.changePosition(2);
             return true;
         });
     }
 
-    private void setUpClasses(){
-        classList = new ClassViewWidget(findViewById(R.id.course_recycler_layout), new ArrayList<>());
-        classList.refresh.setOnRefreshListener(() -> {
-            updateClasses(activeFilter, true);
-        });
-    }
-
-
-
-
+    //todo add on start and on stop with a bundle
 
     //get direction for animation
     private int getOpenDir(int oldPos, int newPos){
@@ -228,32 +298,12 @@ public class MainActivity extends AppCompatActivity{
             });
     }
 
-
-    private void updateClasses(Filter filter, boolean force){
-
-        if(force || activeFilter == null || !activeFilter.equals(filter)) {
-            //actually gets and parses classes on a background thread using the filters provided
-            //when complete the classes field will be populated with classes from classfinder
-            GetClasses getClasses = new GetClasses();
-            getClasses.formData = filter.getFormData();
-            getClasses.execute();
-
-            TextView tv = clsView.findViewById(R.id.time);
-            tv.setText("Valid as of: " + DateFormat.getTimeInstance().format(new Date()));
-
-            classList.refresh.setRefreshing(true);
-
-            activeFilter = filter;
-        }
-    }
-
-    public void returnFilter(Filter filter){
-        f = filter;
-        bottomView.changePosition(1);
+    public void searchFilter(){
+     bottomView.changePosition(1);
     }
 
     private Filter getFilters(){
-        return f;
+        return filterLayout.getFilters();
     }
 
     public void termButton(View view) {
@@ -301,33 +351,8 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-    //example async class for getting classes from classfinder
-    private class GetClasses extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
-
-        List<Pair<String, String>> formData;
-
-        @Override
-        protected HashMap<String, List<Course>> doInBackground(String... unused) {
-            return Utilities.getClasses(formData);
-        }
-
-        @Override
-        protected void onPostExecute(HashMap<String, List<Course>> result) {
-            if(result != null) {
-                clsView.findViewById(R.id.no_classes).setVisibility(View.INVISIBLE);
-                ArrayList<Course> courses = new ArrayList<>();
-                for (List<Course> list : result.values()) {
-                    courses.addAll(list);
-                }
-                classList.updateClasses(courses);
-            } else {
-                clsView.findViewById(R.id.no_classes).setVisibility(View.VISIBLE);
-                classList.updateClasses(new ArrayList<>());
-            }
-            classList.refresh.setRefreshing(false);
-            ((RecyclerView)clsView.findViewById(R.id.course_recycler_view)).scrollToPosition(0);
-            clsView.findViewById(R.id.labels).setTranslationY(0);
-        }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        //possible communication between fragment needed?
     }
-
 }
