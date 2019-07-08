@@ -301,50 +301,6 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         return filterLayout.getFilters();
     }
 
-    public void termButton(View view) {
-        //filterLayout.termButton(view);
-    }
-
-    public void GURattributesButton(View view) {
-        //filterLayout.GURattributesButton(view);
-    }
-
-    public void otherAttributesButton(View view) {
-       // filterLayout.otherAttributesButton(view);
-    }
-
-    public void siteAttributesButton(View view) {
-       // filterLayout.siteAttributesButton(view);
-    }
-
-    public void subjectButton(View view) {
-      //  filterLayout.subjectButton(view);
-    }
-
-    public void instructorButton(View view) {
-      //  filterLayout.instructorButton(view);
-    }
-
-    public void startHourButton(View view) {
-      //  filterLayout.startHourButton(view);
-    }
-
-    public void endHourButton(View view) {
-       // filterLayout.endHourButton(view);
-    }
-
-    public void creditHoursButton(View view) {
-      //  filterLayout.creditHoursButton(view);
-    }
-
-    public void resetFilters(View view) {
-      //  filterLayout.resetFilters(view);
-    }
-
-    public void search(View view) {
-      ///  bottomView.changePosition(1);
-    }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
