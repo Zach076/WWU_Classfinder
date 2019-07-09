@@ -2,9 +2,11 @@ package com.csci412.classfinder;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -22,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
@@ -197,9 +200,44 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
                     Button newSchedBtn = findViewById(R.id.newScheduleButton);
                     EditText newSchedET = findViewById(R.id.scheduleEditText);
+                    /*
                     newSchedBtn.setOnClickListener(view -> {
                         if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
                             CustomItems.addSchedule(currEditText);
+                        }
+                    });
+                    */
+                    newSchedBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            //add alert dialog
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setTitle("Enter new schedule name");
+
+                            String currEditText;
+
+                            final EditText input = new EditText(MainActivity.this);
+                            builder.setView(input);
+
+                            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    //clone schedule
+                                    if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
+                                        CustomItems.addSchedule(input.getText().toString());
+                                    }
+                                }
+                            });
+
+                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+
+                            builder.show();
                         }
                     });
                     newSchedET.addTextChangedListener(new TextWatcher() {

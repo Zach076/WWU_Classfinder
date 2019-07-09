@@ -69,19 +69,13 @@ public class SchedViewFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                getActivity().onBackPressed();
-
                 //add alert dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Enter new schedule name");
 
                 String currEditText;
 
-                final EditText input = new EditText(getContext());
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                input.setLayoutParams(lp);
+                final EditText input = new EditText(getActivity());
                 builder.setView(input);
 
                 builder.setPositiveButton("Clone", new DialogInterface.OnClickListener() {
@@ -99,7 +93,7 @@ public class SchedViewFragment extends Fragment {
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //close alertDialog
+                        dialogInterface.cancel();
                     }
                 });
 
