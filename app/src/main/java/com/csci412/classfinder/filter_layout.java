@@ -297,7 +297,8 @@ public class filter_layout extends Fragment {
     private void InstructorOnClick() {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
-        Set<String> keys= Instructor.keySet();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(Instructor.clone())).keySet();
         keys.remove(defaultValues.get("" + 5));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
@@ -308,7 +309,8 @@ public class filter_layout extends Fragment {
     private void siteAttributesOnClick() {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
-        Set<String> keys= siteAttributes.keySet();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(siteAttributes.clone())).keySet();
         keys.remove(defaultValues.get("" + 3));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
@@ -319,7 +321,8 @@ public class filter_layout extends Fragment {
     private void gurAttributesButtonOnClick() {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
-        Set<String> keys= gurAttributes.keySet();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(gurAttributes.clone())).keySet();
         keys.remove(defaultValues.get("" + 1));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
@@ -330,9 +333,11 @@ public class filter_layout extends Fragment {
     private void subjectButtonOnClick() {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
-        Set<String> keys= subject.keySet();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(subject.clone())).keySet();
         keys.remove(defaultValues.get("" + 4));
         String[] names = keys.toArray(new String[keys.size()]);
+
         Arrays.sort(names);
         menuListDialogue alertDialog = menuListDialogue.newInstance("Subject", names, subjectSelected, defaultValues.get("" + 4), false, fragment, SUBJECT);
         alertDialog.show(fm, "fragment_alert");
@@ -341,7 +346,8 @@ public class filter_layout extends Fragment {
     private void otherAttributesButtonOnClick() {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
-        Set<String> keys= otherAttributes.keySet();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(otherAttributes.clone())).keySet();
         keys.remove(defaultValues.get("" + 2));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
@@ -352,7 +358,8 @@ public class filter_layout extends Fragment {
     private void termButtonOnClick() {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
-        Set<String> keys= term.keySet();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(term.clone())).keySet();
         keys.remove(defaultValues.get("" + 0));
         String[] names = keys.toArray(new String[keys.size()]);
         //sort by year
@@ -444,44 +451,34 @@ public class filter_layout extends Fragment {
     }
 
     public void onDialogDismiss(int requestCode, Bundle resultData) {
-        ArrayList<String> isSelected;
         switch (requestCode)
         {
             case TERM:
-                isSelected = termSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData,termButton);
+                updateSelected(termSelected,resultData.getInt("length"), resultData,termButton);
                 break;
             case OTHERATTRIBUTES:
-                isSelected = otherAttributesSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, otherAttributesButton);
+                updateSelected(otherAttributesSelected,resultData.getInt("length"), resultData, otherAttributesButton);
                 break;
             case SUBJECT:
-                isSelected = subjectSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, subjectButton);
+                updateSelected(subjectSelected,resultData.getInt("length"), resultData, subjectButton);
                 break;
             case GURATTRIBUTES:
-                isSelected = gurAttributesSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData,gurAttributesButton);
+                updateSelected(gurAttributesSelected,resultData.getInt("length"), resultData,gurAttributesButton);
                 break;
             case SITEATTRIBUTES:
-                isSelected = siteAttributesSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, siteAttributesButton);
+                updateSelected(siteAttributesSelected,resultData.getInt("length"), resultData, siteAttributesButton);
                 break;
             case INSTRUCTOR:
-                isSelected = InstructorSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, InstructorButton);
+                updateSelected(InstructorSelected,resultData.getInt("length"), resultData, InstructorButton);
                 break;
             case STARTHOUR:
-                isSelected = startHourSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, startHourButton);
+                updateSelected(startHourSelected,resultData.getInt("length"), resultData, startHourButton);
                 break;
             case ENDHOUR:
-                isSelected = endHourSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, endHourButton);
+                updateSelected(endHourSelected,resultData.getInt("length"), resultData, endHourButton);
                 break;
             case CREDITS:
-                isSelected = creditHourSelected;
-                updateSelected(isSelected,resultData.getInt("length"), resultData, creditHourButton);
+                updateSelected(creditHourSelected,resultData.getInt("length"), resultData, creditHourButton);
                 break;
         }
 
@@ -491,7 +488,6 @@ public class filter_layout extends Fragment {
             isSelected.clear();
             for (int i = 0; i < length; i++) {
                 String name = resultData.getString("" + i);
-                System.out.println(name);
                 isSelected.add(name);
             }
             if (length > 1) {
@@ -560,6 +556,8 @@ public class filter_layout extends Fragment {
         for(int i = 0; i < subjectSelected.size(); i++){
             if(i == 0){
                 subjects = subject.get(subjectSelected.get(i));
+                System.out.println(subjectSelected.get(i));
+                System.out.println(subjects);
             }else {
                 subjects += " " + subject.get(subjectSelected.get(i));
             }
@@ -667,6 +665,10 @@ public class filter_layout extends Fragment {
         }else{
             filter.sel_cdts = creditHour;
         }
+        if(openSections.isChecked()){
+            filter.sel_open = "Y";
+        }
+
         return filter;
     }
 
@@ -713,6 +715,7 @@ public class filter_layout extends Fragment {
                 v = getView();
                 getMenuReferences();
                 if(savedInstance != null){
+                    System.out.println("savedInstance state not null");
                     termSelected = new ArrayList<>();
                     int termLength = savedInstance.getInt("termLength");
                     for(int i = 0; i < termLength; i++){

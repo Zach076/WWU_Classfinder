@@ -286,7 +286,7 @@ public class Utilities {
             rows = attributes.select("tr");
             int defaultValue = 0;
             //parse html
-            //only go through the first 3 rows becasue those are the only ones that contain scrollable options
+            //only go through the first 3 rows because those are the only ones that contain scrollable options
             for(int i = 0; i < 3; i++) {
                 Element row = rows.get(i);
                 Elements td = row.select("td");
