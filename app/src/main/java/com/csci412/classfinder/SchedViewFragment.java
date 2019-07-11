@@ -70,12 +70,12 @@ public class SchedViewFragment extends Fragment {
             public void onClick(View view) {
 
                 //add alert dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setTitle("Enter new schedule name");
 
                 String currEditText;
 
-                final EditText input = new EditText(getActivity());
+                final EditText input = new EditText(view.getContext());
                 builder.setView(input);
 
                 builder.setPositiveButton("Clone", new DialogInterface.OnClickListener() {

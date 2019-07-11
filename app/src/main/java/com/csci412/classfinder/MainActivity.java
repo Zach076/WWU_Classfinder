@@ -8,6 +8,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
@@ -198,59 +199,23 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     recyclerView.setAdapter(adapt);
                     CustomItems.rv = recyclerView;
 
-                    Button newSchedBtn = findViewById(R.id.newScheduleButton);
-                    EditText newSchedET = findViewById(R.id.scheduleEditText);
-                    /*
+                    Button newSchedBtn = (Button) findViewById(R.id.newScheduleButton);
                     newSchedBtn.setOnClickListener(view -> {
-                        if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
-                            CustomItems.addSchedule(currEditText);
-                        }
-                    });
-                    */
-                    newSchedBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Enter new schedule name");
 
-                            //add alert dialog
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                            builder.setTitle("Enter new schedule name");
+                        final EditText input = new EditText(MainActivity.this);
+                        builder.setView(input);
 
-                            String currEditText;
+                        builder.setPositiveButton("Add", (dialogInterface, i) -> {
+                            if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
+                                CustomItems.addSchedule(input.getText().toString());
+                            }
+                        });
 
-                            final EditText input = new EditText(MainActivity.this);
-                            builder.setView(input);
+                        builder.setNeutralButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
 
-                            builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    //clone schedule
-                                    if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
-                                        CustomItems.addSchedule(input.getText().toString());
-                                    }
-                                }
-                            });
-
-                            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            });
-
-                            builder.show();
-                        }
-                    });
-                    newSchedET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        }
-                        @Override
-                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            currEditText = charSequence.toString();
-                        }
-                        @Override
-                        public void afterTextChanged(Editable editable) {
-                        }
+                        builder.show();
                     });
 
                     show(scheView, dir);
