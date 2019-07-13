@@ -22,6 +22,15 @@
         android:layout_margin="8dp"
         android:textColor="@color/black"
         android:textAppearance="?attr/textAppearanceListItem"
+        android:layout_alignRight="@+id/avail"/>
+
+    <TextView
+        android:id="@+id/avail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textColor="@color/black"
+        android:textAppearance="?attr/textAppearanceListItem"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"/>
 </RelativeLayout>

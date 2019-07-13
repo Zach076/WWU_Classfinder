@@ -107,6 +107,22 @@ public class SchedViewFragment extends Fragment {
         recyclerView.setAdapter(classAdapt);
         classAdapt.notifyDataSetChanged();
 
+        Button checkBtn = rootView.findViewById(R.id.checkBtn);
+
+        checkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Course c : Sched.classes) {
+                    Filter f = CustomItems.getFilter(c);
+                    CustomItems.getAvail a = new CustomItems.getAvail();
+                    a.formData = f.getFormData();
+                    a.execute();
+                }
+                classAdapt.notifyDataSetChanged();
+                CustomItems.avail.clear();
+            }
+        });
+
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
 
@@ -323,6 +339,9 @@ public class SchedViewFragment extends Fragment {
         public void onBindViewHolder(final SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).course);
             holder.mContentView.setText(mValues.get(position).crn);
+            if(CustomItems.avail.size() > 0) {
+                holder.mAvailView.setText(CustomItems.avail.get(position).avail);
+            }
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -336,11 +355,13 @@ public class SchedViewFragment extends Fragment {
         class ViewHolder extends RecyclerView.ViewHolder {
             final TextView mIdView;
             final TextView mContentView;
+            final TextView mAvailView;
 
             ViewHolder(View view) {
                 super(view);
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
+                mAvailView = (TextView) view.findViewById(R.id.avail);
             }
         }
     }

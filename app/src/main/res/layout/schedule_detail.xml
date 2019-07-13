@@ -50,4 +50,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/checkBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CHECK AVAILABILITY"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>

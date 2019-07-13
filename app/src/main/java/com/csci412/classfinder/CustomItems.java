@@ -3,9 +3,11 @@ package com.csci412.classfinder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -284,6 +286,73 @@ public class CustomItems {
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
+        }
+    }
+
+    private static Filter filter = new Filter();
+
+    public static Filter getFilter(Course c){
+        Filter f = new Filter();
+        f.term = filter.term;
+        f.sel_gur = filter.sel_gur;
+        f.sel_attr = filter.sel_attr;
+        f.sel_site = filter.sel_site;
+        f.sel_subj = filter.sel_subj;
+        f.sel_inst = filter.sel_inst;
+        f.sel_crse = c.crn;
+        f.sel_day = "m t w r f s u";
+        f.begin_mi = "A";
+        f.end_mi = "A";
+        f.begin_hh = "0";
+        f.end_hh = "0";
+        f.sel_cdts = "%25";
+        return f;
+    }
+
+    private class refreshFilter extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> > {
+
+        @Override
+        protected List<HashMap<String, String>> doInBackground(List<Pair<String, String>>... list) {
+            return Utilities.getMenuAttributes();
+        }
+
+        @Override
+        protected void onPostExecute(List<HashMap<String, String>> result) {
+            if(result == null){
+                System.out.println("no internet");
+            }else {
+                filter.term = result.get(0).get(result.get(6).get("" + 0));
+                filter.sel_gur = result.get(1).get(result.get(6).get("" + 1));
+                filter.sel_attr = result.get(2).get(result.get(6).get("" + 2));
+                filter.sel_site = result.get(3).get(result.get(6).get("" + 3));
+                filter.sel_subj = result.get(4).get(result.get(6).get("" + 4));
+                filter.sel_inst = result.get(5).get(result.get(6).get("" + 5));
+                filter.sel_crse = "";
+                filter.sel_day = "m t w r f s u";
+                filter.begin_mi = "A";
+                filter.end_mi = "A";
+                filter.begin_hh = "0";
+                filter.end_hh = "0";
+                filter.sel_cdts = "%25";
+            }
+        }
+    }
+
+    public static ArrayList<Course> avail = new ArrayList();
+
+    public static class getAvail extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
+
+        List<Pair<String, String>> formData;
+
+        @Override
+        protected HashMap<String, List<Course>> doInBackground(String... unused) {
+            return Utilities.getClasses(formData);
+        }
+
+        @Override
+        protected void onPostExecute(HashMap<String, List<Course>> result) {
+            Course c = result.values().iterator().next().get(0);
+            avail.add(c);
         }
     }
 }
