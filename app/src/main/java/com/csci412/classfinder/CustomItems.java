@@ -80,6 +80,10 @@ public class CustomItems {
         rv.getAdapter().notifyDataSetChanged();
     }
 
+    public static void updateClassList() {
+        SchedViewFragment.classAdapt.notifyDataSetChanged();
+    }
+
     public static void saveToSharedPrefs(Context context) {
         SharedPreferences appSharedPrefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
         SharedPreferences.Editor prefsEditor = appSharedPrefs.edit();
@@ -289,18 +293,23 @@ public class CustomItems {
         }
     }
 
-    private static Filter filter = new Filter();
+    private static String currTerm;
+
+    public static void getTerm() {
+        currTerm = filter_layout.term.get(filter_layout.termSelected.get(0));
+    }
 
     public static Filter getFilter(Course c){
         Filter f = new Filter();
-        f.term = filter.term;
-        f.sel_gur = filter.sel_gur;
-        f.sel_attr = filter.sel_attr;
-        f.sel_site = filter.sel_site;
-        f.sel_subj = filter.sel_subj;
-        f.sel_inst = filter.sel_inst;
-        f.sel_crse = c.crn;
-        f.sel_day = "m t w r f s u";
+        f.term = currTerm;
+        f.sel_gur = "All";
+        f.sel_attr = "All";
+        f.sel_site = "All";
+        f.sel_subj = c.course.split(" ")[0];
+        f.sel_inst = "ANY";
+        //f.sel_crse = c.crn;
+        f.sel_crse = "";
+        f.sel_day = "";
         f.begin_mi = "A";
         f.end_mi = "A";
         f.begin_hh = "0";
@@ -309,40 +318,12 @@ public class CustomItems {
         return f;
     }
 
-    private class refreshFilter extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> > {
-
-        @Override
-        protected List<HashMap<String, String>> doInBackground(List<Pair<String, String>>... list) {
-            return Utilities.getMenuAttributes();
-        }
-
-        @Override
-        protected void onPostExecute(List<HashMap<String, String>> result) {
-            if(result == null){
-                System.out.println("no internet");
-            }else {
-                filter.term = result.get(0).get(result.get(6).get("" + 0));
-                filter.sel_gur = result.get(1).get(result.get(6).get("" + 1));
-                filter.sel_attr = result.get(2).get(result.get(6).get("" + 2));
-                filter.sel_site = result.get(3).get(result.get(6).get("" + 3));
-                filter.sel_subj = result.get(4).get(result.get(6).get("" + 4));
-                filter.sel_inst = result.get(5).get(result.get(6).get("" + 5));
-                filter.sel_crse = "";
-                filter.sel_day = "m t w r f s u";
-                filter.begin_mi = "A";
-                filter.end_mi = "A";
-                filter.begin_hh = "0";
-                filter.end_hh = "0";
-                filter.sel_cdts = "%25";
-            }
-        }
-    }
-
     public static ArrayList<Course> avail = new ArrayList();
 
     public static class getAvail extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
 
         List<Pair<String, String>> formData;
+        String crn;
 
         @Override
         protected HashMap<String, List<Course>> doInBackground(String... unused) {
@@ -351,8 +332,14 @@ public class CustomItems {
 
         @Override
         protected void onPostExecute(HashMap<String, List<Course>> result) {
-            Course c = result.values().iterator().next().get(0);
-            avail.add(c);
+            List<Course> c = result.values().iterator().next();
+            for (int i = 0; i < c.size(); i++) {
+                if(c.get(i).crn.equals(crn)) {
+                    avail.add(c.get(i));
+                    i = c.size();
+                }
+            }
+            updateClassList();
         }
     }
 }

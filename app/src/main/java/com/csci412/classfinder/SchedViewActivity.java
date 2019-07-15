@@ -1,11 +1,14 @@
 package com.csci412.classfinder;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.GridView;
 
 import java.util.ArrayList;
@@ -37,5 +40,50 @@ public class SchedViewActivity extends AppCompatActivity {
         System.out.println("delete");
         onBackPressed();
         CustomItems.removeSchedule(fragment.Sched);
+    }
+
+    public void cloneSche(View view) {
+
+        //add alert dialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Enter new schedule name");
+
+        String currEditText;
+
+        final EditText input = new EditText(view.getContext());
+        builder.setView(input);
+
+        builder.setPositiveButton("Clone", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //clone schedule
+                if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
+                    CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString());
+                    item.classes = fragment.Sched.classes;
+                    CustomItems.SCHEDULES.add(item);
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    public void checkSche(View view) {
+        System.out.println("check");
+        for (Course c : fragment.Sched.classes) {
+            Filter f = CustomItems.getFilter(c);
+            CustomItems.getAvail a = new CustomItems.getAvail();
+            a.crn = c.crn;
+            a.formData = f.getFormData();
+            a.execute();
+        }
+        view.findViewById(R.id.checkBtn).setVisibility(View.GONE);
     }
 }

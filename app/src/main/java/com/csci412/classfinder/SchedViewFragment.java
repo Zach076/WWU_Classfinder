@@ -35,6 +35,8 @@ public class SchedViewFragment extends Fragment {
     private CustomItems.ScheduleItem mItem;
     public CustomItems.ScheduleItem Sched;
 
+    public static SimpleItemRecyclerViewAdapter classAdapt;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -52,76 +54,15 @@ public class SchedViewFragment extends Fragment {
 
         Sched = CustomItems.selectedSchedule;
 
-        Button deleteBtn =(Button) rootView.findViewById(R.id.deleteBtn);
+        CustomItems.avail.clear();
 
-        deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println("delete");
-                getActivity().onBackPressed();
-                CustomItems.removeSchedule(Sched);
-            }
-        });
-
-        Button cloneBtn = (Button) rootView.findViewById(R.id.cloneBtn);
-
-        cloneBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //add alert dialog
-                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setTitle("Enter new schedule name");
-
-                String currEditText;
-
-                final EditText input = new EditText(view.getContext());
-                builder.setView(input);
-
-                builder.setPositiveButton("Clone", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //clone schedule
-                        if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
-                            CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString());
-                            item.classes = Sched.classes;
-                            CustomItems.SCHEDULES.add(item);
-                        }
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-
-                builder.show();
-            }
-        });
+        //button logic is through xml and SchedViewActivity
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
         assert recyclerView != null;
-        SchedViewFragment.SimpleItemRecyclerViewAdapter classAdapt = new SchedViewFragment.SimpleItemRecyclerViewAdapter(rootView, Sched.classes);
+        classAdapt = new SchedViewFragment.SimpleItemRecyclerViewAdapter(rootView, Sched.classes);
         recyclerView.setAdapter(classAdapt);
         classAdapt.notifyDataSetChanged();
-
-        Button checkBtn = rootView.findViewById(R.id.checkBtn);
-
-        checkBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                for (Course c : Sched.classes) {
-                    Filter f = CustomItems.getFilter(c);
-                    CustomItems.getAvail a = new CustomItems.getAvail();
-                    a.formData = f.getFormData();
-                    a.execute();
-                }
-                classAdapt.notifyDataSetChanged();
-                CustomItems.avail.clear();
-            }
-        });
 
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
@@ -203,34 +144,49 @@ public class SchedViewFragment extends Fragment {
 
         int currentTime = 7;
         String[] timeSplit;
+
         boolean specialTime = false;
         String theTime = null;
         int theIndex = 0;
         String days;
+        boolean skip = false;
 
         //populate times
         for (int i=1;i<rows;i++)
         {
+            skip = false;
             for (int index=0; index < irregularTimes.size(); index++) {
                 timeSplit = irregularTimes.get(index).split(":");
                 if(Integer.parseInt(timeSplit[0]) == currentTime - 1) {
-                    theTime = irregularTimes.get(index);
-                    theIndex = index;
-                    specialTime = true;
+                    if(theTime != null && Integer.parseInt(theTime.split(":")[0]) == currentTime - 1 ) {
+                        if(Integer.parseInt(theTime.split(":")[1]) > Integer.parseInt(timeSplit[1])) {
+                            theTime = irregularTimes.get(index);
+                            theIndex = index;
+                            specialTime = true;
+                        }
+                    } else {
+                        theTime = irregularTimes.get(index);
+                        theIndex = index;
+                        specialTime = true;
+                    }
                 }
             }
             if(specialTime){
                 matrixList.add(new CustomItems.MatrixItem(i,0,theTime));
                 irregularTimes.remove(theIndex);
                 specialTime = false;
+                theTime = null;
+            } else if(currentTime == 13) {
+                currentTime = currentTime % 12;
+                skip = true;
             } else {
                 matrixList.add(new CustomItems.MatrixItem(i,0,Integer.toString(currentTime) + ":00"));
-                currentTime = currentTime % 12;
                 currentTime++;
             }
-            for (int j=1;j<columns;j++)
-            {
-                matrixList.add(new CustomItems.MatrixItem(i,j,null));
+            if(!skip) {
+                for (int j = 1; j < columns; j++) {
+                    matrixList.add(new CustomItems.MatrixItem(i, j, null));
+                }
             }
         }
 

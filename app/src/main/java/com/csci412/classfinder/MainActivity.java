@@ -192,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     show(crseFrag.getView(), dir);
                     break;
                 case 2:
-
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
                     assert recyclerView != null;
                     CustomItems.SimpleItemRecyclerViewAdapter adapt = new CustomItems.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
