@@ -11,9 +11,9 @@ import java.util.List;
 
 public class MatrixAdapter extends BaseAdapter {
     Context context;
-    List<CustomItems.MatrixItem> matrixList;
+    List<SchedViewFragment.MatrixItem> matrixList;
 
-    public MatrixAdapter(Context context, List<CustomItems.MatrixItem> matrixList) {
+    public MatrixAdapter(Context context, List<SchedViewFragment.MatrixItem> matrixList) {
         this.context = context;
         this.matrixList = matrixList;
     }
@@ -35,7 +35,7 @@ public class MatrixAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        final CustomItems.MatrixItem matrixItem = matrixList.get(i);
+        final SchedViewFragment.MatrixItem matrixItem = matrixList.get(i);
 
         if (view == null) {
             final LayoutInflater layoutInflater = LayoutInflater.from(context);
@@ -45,6 +45,9 @@ public class MatrixAdapter extends BaseAdapter {
         final TextView textView = (TextView)view.findViewById(R.id.griditem);
 
         textView.setText(matrixItem.text);
+        if(matrixItem.color == 1) {
+            textView.setTextColor(context.getResources().getColor(R.color.red));
+        }
 
         return view;
     }

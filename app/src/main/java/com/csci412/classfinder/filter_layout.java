@@ -84,7 +84,7 @@ public class filter_layout extends Fragment {
     private RadioButton endPM;
 
     //menu attributes
-    public HashMap<String, String> term;
+    public static HashMap<String, String> term;
     public HashMap<String, String> otherAttributes;
     public HashMap<String, String> subject;
     public HashMap<String, String> gurAttributes;
@@ -93,7 +93,7 @@ public class filter_layout extends Fragment {
     public HashMap<String, String> defaultValues;
 
     //things that are selected in the menu attributes
-    public ArrayList<String> termSelected;
+    public static ArrayList<String> termSelected;
     public ArrayList<String> otherAttributesSelected;
     public ArrayList<String> subjectSelected;
     public ArrayList<String> gurAttributesSelected;
@@ -742,6 +742,7 @@ public class filter_layout extends Fragment {
                 v.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 v.setVisibility(View.VISIBLE);
             }
+            CustomItems.getTerm();
         }
     }
 

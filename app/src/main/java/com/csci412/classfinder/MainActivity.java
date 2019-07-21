@@ -2,10 +2,13 @@ package com.csci412.classfinder;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.util.Pair;
@@ -22,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
@@ -74,6 +78,10 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         crseFrag = (CourseListFragment) getFragmentManager().findFragmentById(R.id.classes_view);
 
         scheView = findViewById(R.id.schedule_view);
+        List<CustomItems.ScheduleItem> schedules= CustomItems.getFromSharedPrefs(getApplicationContext());
+        for (CustomItems.ScheduleItem item : schedules) {
+            CustomItems.addSchedule(item);
+        }
 
         //set references to menu items
 
@@ -85,6 +93,18 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    @Override
+    protected void onStop() {
+        CustomItems.saveToSharedPrefs(getApplicationContext());
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        CustomItems.saveToSharedPrefs(getApplicationContext());
+        super.onDestroy();
     }
 
     @Override
@@ -178,31 +198,29 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     show(crseFrag.getView(), dir);
                     break;
                 case 2:
-
                     RecyclerView recyclerView = (RecyclerView) findViewById(R.id.item_list);
                     assert recyclerView != null;
                     CustomItems.SimpleItemRecyclerViewAdapter adapt = new CustomItems.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
                     recyclerView.setAdapter(adapt);
-                    CustomItems.rv = recyclerView;
+                    CustomItems.rva = adapt;
 
-                    Button newSchedBtn = findViewById(R.id.newScheduleButton);
-                    EditText newSchedET = findViewById(R.id.scheduleEditText);
+                    Button newSchedBtn = (Button) findViewById(R.id.newScheduleButton);
                     newSchedBtn.setOnClickListener(view -> {
-                        if(currEditText != null && CustomItems.SCHEDULE_MAP.get(currEditText) == null) {
-                            CustomItems.addSchedule(currEditText);
-                        }
-                    });
-                    newSchedET.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        }
-                        @Override
-                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                            currEditText = charSequence.toString();
-                        }
-                        @Override
-                        public void afterTextChanged(Editable editable) {
-                        }
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Enter new schedule name");
+
+                        final EditText input = new EditText(MainActivity.this);
+                        builder.setView(input);
+
+                        builder.setPositiveButton("Add", (dialogInterface, i) -> {
+                            if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
+                                CustomItems.addSchedule(input.getText().toString());
+                            }
+                        });
+
+                        builder.setNeutralButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel());
+
+                        builder.show();
                     });
 
                     show(scheView, dir);
