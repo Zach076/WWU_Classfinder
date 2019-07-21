@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"/>
 
     <GridView
-        android:layout_below="@+id/item_detail"
+        android:layout_below="@+id/deleteBtn"
         android:id="@+id/grid"
         android:background="@color/grey"
         android:layout_width="wrap_content"
@@ -28,7 +28,6 @@
 
     <FrameLayout
         android:layout_below="@+id/grid"
-        android:layout_above="@+id/deleteBtn"
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,11 +36,28 @@
     </FrameLayout>
 
     <Button
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
         android:id="@+id/deleteBtn"
-        android:text="DELETE SCHEDULE"
-        android:layout_width="match_parent"
+        android:text="DELETE"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="deleteSche"/>
+
+    <Button
+        android:layout_toLeftOf="@+id/deleteBtn"
+        android:id="@+id/cloneBtn"
+        android:text="CLONE"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="cloneSche"/>
+
+    <Button
+        android:id="@+id/checkBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CHECK AVAILABILITY"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:onClick="checkSche"/>
 
 </RelativeLayout>
