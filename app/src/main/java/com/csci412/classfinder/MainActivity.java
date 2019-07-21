@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     assert recyclerView != null;
                     CustomItems.SimpleItemRecyclerViewAdapter adapt = new CustomItems.SimpleItemRecyclerViewAdapter(this, CustomItems.SCHEDULES);
                     recyclerView.setAdapter(adapt);
-                    CustomItems.rv = recyclerView;
+                    CustomItems.rva = adapt;
 
                     Button newSchedBtn = (Button) findViewById(R.id.newScheduleButton);
                     newSchedBtn.setOnClickListener(view -> {

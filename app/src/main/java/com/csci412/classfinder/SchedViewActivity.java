@@ -37,14 +37,29 @@ public class SchedViewActivity extends AppCompatActivity {
     }
 
     public void deleteSche(View view){
-        System.out.println("delete");
-        onBackPressed();
-        CustomItems.removeSchedule(fragment.Sched);
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle("Are you sure you want to delete this schedule?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                System.out.println("delete");
+                onBackPressed();
+                CustomItems.removeSchedule(fragment.Sched);
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     public void cloneSche(View view) {
-
-        //add alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle("Enter new schedule name");
 
@@ -56,7 +71,6 @@ public class SchedViewActivity extends AppCompatActivity {
         builder.setPositiveButton("Clone", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //clone schedule
                 if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
                     CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString());
                     item.classes = fragment.Sched.classes;

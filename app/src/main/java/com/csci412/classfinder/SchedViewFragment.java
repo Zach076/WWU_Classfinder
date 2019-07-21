@@ -31,8 +31,23 @@ import java.util.ListIterator;
 
 public class SchedViewFragment extends Fragment {
 
+    public class MatrixItem {
+        public int id;
+        public int row;
+        public int col;
+        public String text;
+        public int color;
+
+        public MatrixItem(int row, int col, String text) {
+            this.id = (row*10) + col;
+            this.row = row;
+            this.col = col;
+            this.text = text;
+            this.color = 0;
+        }
+    }
+
     public static final String ARG_ITEM_ID = "name";
-    private CustomItems.ScheduleItem mItem;
     public CustomItems.ScheduleItem Sched;
 
     public static SimpleItemRecyclerViewAdapter classAdapt;
@@ -43,7 +58,7 @@ public class SchedViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments().containsKey(ARG_ITEM_ID)) {
-            mItem = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            Sched = CustomItems.SCHEDULE_MAP.get(getArguments().getString(ARG_ITEM_ID));
         }
     }
 
@@ -52,26 +67,22 @@ public class SchedViewFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.schedule_detail, container, false);
 
-        Sched = CustomItems.selectedSchedule;
-
         CustomItems.avail.clear();
 
         //button logic is through xml and SchedViewActivity
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.item_list);
         assert recyclerView != null;
-        classAdapt = new SchedViewFragment.SimpleItemRecyclerViewAdapter(rootView, Sched.classes);
+        classAdapt = new SimpleItemRecyclerViewAdapter(rootView, Sched.classes);
         recyclerView.setAdapter(classAdapt);
         classAdapt.notifyDataSetChanged();
 
         TextView tv = (TextView)rootView.findViewById(R.id.item_detail);
         tv.setText(Sched.name);
 
-        // GET THE MATRIX DIMENSIONS
         int columns=6;
         int rows=12;
 
-        // INITIALISE YOUR GRID
         GridView grid=(GridView)rootView.findViewById(R.id.grid);
         grid.setNumColumns(columns);
 
@@ -90,6 +101,7 @@ public class SchedViewFragment extends Fragment {
                     startTime = startTime.substring(1);
                 }
                 /*
+                //If we dont want rows showing times ending at X:50
                 if(endTime.charAt(3) == '5') {
                     endTime = endTime.substring(0,3)+"00";
                 }
@@ -131,16 +143,16 @@ public class SchedViewFragment extends Fragment {
         }
 
         //create adapter and it's respective list
-        List<CustomItems.MatrixItem> matrixList=new ArrayList<>();
+        List<MatrixItem> matrixList=new ArrayList<>();
         MatrixAdapter matrixAdapter = new MatrixAdapter(getContext(), matrixList);
 
         //populate days
-        matrixList.add(new CustomItems.MatrixItem(0,0,null));
-        matrixList.add(new CustomItems.MatrixItem(0,1,"Monday"));
-        matrixList.add(new CustomItems.MatrixItem(0,2,"Tuesday"));
-        matrixList.add(new CustomItems.MatrixItem(0,3,"Wednesday"));
-        matrixList.add(new CustomItems.MatrixItem(0,4,"Thursday"));
-        matrixList.add(new CustomItems.MatrixItem(0,5,"Friday"));
+        matrixList.add(new MatrixItem(0,0,null));
+        matrixList.add(new MatrixItem(0,1,"Monday"));
+        matrixList.add(new MatrixItem(0,2,"Tuesday"));
+        matrixList.add(new MatrixItem(0,3,"Wednesday"));
+        matrixList.add(new MatrixItem(0,4,"Thursday"));
+        matrixList.add(new MatrixItem(0,5,"Friday"));
 
         int currentTime = 7;
         String[] timeSplit;
@@ -172,7 +184,7 @@ public class SchedViewFragment extends Fragment {
                 }
             }
             if(specialTime){
-                matrixList.add(new CustomItems.MatrixItem(i,0,theTime));
+                matrixList.add(new MatrixItem(i,0,theTime));
                 irregularTimes.remove(theIndex);
                 specialTime = false;
                 theTime = null;
@@ -180,12 +192,12 @@ public class SchedViewFragment extends Fragment {
                 currentTime = currentTime % 12;
                 skip = true;
             } else {
-                matrixList.add(new CustomItems.MatrixItem(i,0,Integer.toString(currentTime) + ":00"));
+                matrixList.add(new MatrixItem(i,0,Integer.toString(currentTime) + ":00"));
                 currentTime++;
             }
             if(!skip) {
                 for (int j = 1; j < columns; j++) {
-                    matrixList.add(new CustomItems.MatrixItem(i, j, null));
+                    matrixList.add(new MatrixItem(i, j, null));
                 }
             }
         }
@@ -204,6 +216,7 @@ public class SchedViewFragment extends Fragment {
                     startTime = startTime.substring(1);
                 }
                 /*
+                //If we dont want rows showing times ending at X:50
                 if(endTime.charAt(3) == '5') {
                     endTime = endTime.substring(0,3)+"00";
                 }
@@ -257,17 +270,15 @@ public class SchedViewFragment extends Fragment {
         }
 
         grid.setNumColumns(columns);
-        //MatrixAdapter matrixAdapter = new MatrixAdapter(getContext(), matrixList);
         grid.setAdapter(matrixAdapter);
         matrixAdapter.notifyDataSetChanged();
 
         return rootView;
     }
 
-    public static class SimpleItemRecyclerViewAdapter
+    public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final View mParentActivity;
         private final List<Course> mValues;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
@@ -281,7 +292,6 @@ public class SchedViewFragment extends Fragment {
         SimpleItemRecyclerViewAdapter(View parent,
                                       List<Course> items) {
             mValues = items;
-            mParentActivity = parent;
         }
 
         @Override

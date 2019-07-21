@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class CustomItems {
 
-    public static class MatrixItem {
+    public class MatrixItem {
         public int id;
         public int row;
         public int col;
@@ -48,9 +48,7 @@ public class CustomItems {
 
     public static final Map<String, ScheduleItem> SCHEDULE_MAP = new HashMap<String, ScheduleItem>();
 
-    public static ScheduleItem selectedSchedule;
-
-    public static RecyclerView rv;
+    public static SimpleItemRecyclerViewAdapter rva;
 
     public static class ScheduleItem {
         public List<Course> classes;
@@ -66,7 +64,7 @@ public class CustomItems {
         ScheduleItem item = new ScheduleItem(name);
         SCHEDULES.add(item);
         SCHEDULE_MAP.put(name, item);
-        rv.getAdapter().notifyDataSetChanged();
+        rva.notifyDataSetChanged();
     }
 
     public static void addSchedule(ScheduleItem x) {
@@ -77,7 +75,7 @@ public class CustomItems {
     public static void removeSchedule(ScheduleItem item) {
         SCHEDULES.remove(item);
         SCHEDULE_MAP.remove(item.name);
-        rv.getAdapter().notifyDataSetChanged();
+        rva.notifyDataSetChanged();
     }
 
     public static void updateClassList() {
@@ -221,12 +219,11 @@ public class CustomItems {
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<CustomItems.SimpleItemRecyclerViewAdapter.ViewHolder> {
 
-        private final MainActivity mParentActivity;
-        private final List<CustomItems.ScheduleItem> mValues;
+        private final List<ScheduleItem> mValues;
         private final View.OnDragListener mOnDragListener = new View.OnDragListener() {
             @Override
             public boolean onDrag(View view, DragEvent dragEvent) {
-                CustomItems.ScheduleItem item = (CustomItems.ScheduleItem) view.getTag();
+                ScheduleItem item = (ScheduleItem) view.getTag();
                 if(dragEvent.getAction() == DragEvent.ACTION_DROP){
                     Course x = (Course)dragEvent.getClipData().getItemAt(0).getIntent().getSerializableExtra("course");
                     item.classes.add(x);
@@ -242,8 +239,7 @@ public class CustomItems {
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CustomItems.ScheduleItem item = (CustomItems.ScheduleItem) view.getTag();
-                selectedSchedule = item;
+                ScheduleItem item = (ScheduleItem) view.getTag();
 
                 Context context = view.getContext();
                 Intent intent = new Intent(context, SchedViewActivity.class);
@@ -254,20 +250,19 @@ public class CustomItems {
         };
 
         SimpleItemRecyclerViewAdapter(MainActivity parent,
-                                      List<CustomItems.ScheduleItem> items) {
+                                      List<ScheduleItem> items) {
             mValues = items;
-            mParentActivity = parent;
         }
 
         @Override
-        public CustomItems.SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public SimpleItemRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.schedule_list_content, parent, false);
-            return new CustomItems.SimpleItemRecyclerViewAdapter.ViewHolder(view);
+            return new SimpleItemRecyclerViewAdapter.ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final CustomItems.SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
+        public void onBindViewHolder(final SimpleItemRecyclerViewAdapter.ViewHolder holder, int position) {
             holder.mIdView.setText(mValues.get(position).name);
             holder.mContentView.setText("");
 
