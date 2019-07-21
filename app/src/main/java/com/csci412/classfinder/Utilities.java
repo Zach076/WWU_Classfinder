@@ -114,7 +114,7 @@ public class Utilities {
             //parse html
             int size = rows.size();
             int i = 0;
-            while (i < size) {
+            while (i < size - 5) {
                 Element row = rows.get(i);
                 //add department and classes to map
                 //clear courses and get new department
@@ -197,7 +197,8 @@ public class Utilities {
             classes.put(department, courses);
         } catch (Exception e){
             //no classes or some other error
-            //returning null will report no classes to a user
+            //returning null will report no classes to a
+            System.out.println(e);
             return null;
         } finally {
             if(connection != null)

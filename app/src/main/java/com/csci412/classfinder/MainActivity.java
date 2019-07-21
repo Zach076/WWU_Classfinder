@@ -128,7 +128,10 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                 if (newPos == 1) {
                     if(crseFrag.isRefreshing())
                         return;
-                    crseFrag.updateClasses(getFilters(), true);
+                    Filter filter = getFilters();
+                    if(filter != null) {
+                        crseFrag.updateClasses(filter, true);
+                    }
                 }
                 return;
             }
@@ -144,7 +147,10 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     break;
                 case 1:
                     if(!crseFrag.isRefreshing()) {
-                        crseFrag.updateClasses(getFilters(), false);
+                        Filter filter = getFilters();
+                        if(filter != null) {
+                            crseFrag.updateClasses(filter, false);
+                        }
                     }
 
                     RecyclerView rv = crseFrag.getView().findViewById(R.id.course_recycler_view);

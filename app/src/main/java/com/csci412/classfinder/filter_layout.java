@@ -210,8 +210,6 @@ public class filter_layout extends Fragment {
             @Override
             public void onClick(View view) {
                 startHourOnClick();
-                String[] hours = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-                callMenuList(hours,hours.length, startHourSelected,STARTHOUR,"All",true,NONE);
             }
         });
         endHourButton = v.findViewById(R.id.endHour);
@@ -219,8 +217,6 @@ public class filter_layout extends Fragment {
             @Override
             public void onClick(View view) {
                 endHourOnClick();
-                String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-                callMenuList(hours,hours.length, endHourSelected,ENDHOUR, "All",true,NONE);
             }
         });
         creditHourButton = v.findViewById(R.id.creditHoursButton);
@@ -228,8 +224,6 @@ public class filter_layout extends Fragment {
             @Override
             public void onClick(View view) {
                 creditHourOnClick();
-                String[] credits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
-                callMenuList(credits, credits.length, creditHourSelected, CREDITS, "All", true, NONE);
             }
         });
         searchButton = v.findViewById(R.id.search);
@@ -274,7 +268,7 @@ public class filter_layout extends Fragment {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
         String[] credits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Credit Hours", credits, creditHourSelected, "All", true, fragment, CREDITS);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Credit Hours", credits, creditHourSelected, "All", true, false, fragment, CREDITS);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -282,7 +276,7 @@ public class filter_layout extends Fragment {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
         String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        menuListDialogue alertDialog = menuListDialogue.newInstance("End Hour", hours, endHourSelected, "All", true, fragment, ENDHOUR);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("End Hour", hours, endHourSelected, "All", true, false, fragment, ENDHOUR);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -290,7 +284,7 @@ public class filter_layout extends Fragment {
         filter_layout fragment  = this;
         FragmentManager fm = getFragmentManager();
         String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Start Hour", hours, startHourSelected, "All", true, fragment, STARTHOUR);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Start Hour", hours, startHourSelected, "All", true, false, fragment, STARTHOUR);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -302,7 +296,7 @@ public class filter_layout extends Fragment {
         keys.remove(defaultValues.get("" + 5));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Instructor", names, InstructorSelected, defaultValues.get("" + 5), true, fragment, INSTRUCTOR);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Instructor", names, InstructorSelected, defaultValues.get("" + 5), true, false, fragment, INSTRUCTOR);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -314,7 +308,7 @@ public class filter_layout extends Fragment {
         keys.remove(defaultValues.get("" + 3));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Site Attributes", names, siteAttributesSelected, defaultValues.get("" + 3), true, fragment, SITEATTRIBUTES);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Site Attributes", names, siteAttributesSelected, defaultValues.get("" + 3), true, false, fragment, SITEATTRIBUTES);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -326,7 +320,7 @@ public class filter_layout extends Fragment {
         keys.remove(defaultValues.get("" + 1));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
-        menuListDialogue alertDialog = menuListDialogue.newInstance("GUR Attributes", names, gurAttributesSelected, defaultValues.get("" + 1), true, fragment, GURATTRIBUTES);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("GUR Attributes", names, gurAttributesSelected, defaultValues.get("" + 1), true, false, fragment, GURATTRIBUTES);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -339,7 +333,7 @@ public class filter_layout extends Fragment {
         String[] names = keys.toArray(new String[keys.size()]);
 
         Arrays.sort(names);
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Subject", names, subjectSelected, defaultValues.get("" + 4), false, fragment, SUBJECT);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Subject", names, subjectSelected, defaultValues.get("" + 4), false, true, fragment, SUBJECT);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -351,7 +345,7 @@ public class filter_layout extends Fragment {
         keys.remove(defaultValues.get("" + 2));
         String[] names = keys.toArray(new String[keys.size()]);
         Arrays.sort(names);
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Other Attributes", names, otherAttributesSelected, defaultValues.get("" + 2), true, fragment, OTHERATTRIBUTES);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Other Attributes", names, otherAttributesSelected, defaultValues.get("" + 2), true, false, fragment, OTHERATTRIBUTES);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -370,7 +364,7 @@ public class filter_layout extends Fragment {
                 return Integer.parseInt(s2.split(" ")[1]) - Integer.parseInt(s1.split(" ")[1]);
             }
         });
-        menuListDialogue alertDialog = menuListDialogue.newInstance("Term", names, termSelected, defaultValues.get("" + 0), true, fragment, TERM);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Term", names, termSelected, defaultValues.get("" + 0), true, false, fragment, TERM);
         alertDialog.show(fm, "fragment_alert");
     }
 
@@ -422,33 +416,6 @@ public class filter_layout extends Fragment {
 
     }*/
 
-    public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode, int sortType){
-        Intent intent = new Intent(v.getContext(), menuListActivity.class);
-        if(sortType == ALPHABET){
-            Arrays.sort(content);
-        }else if(sortType == YEAR){
-            Arrays.sort(content, new Comparator<String>() {
-
-                @Override
-                public int compare(String s1, String s2) {
-                    //return ORDER.indexOf(o1) -  ORDER.indexOf(o2) ;
-                    return Integer.parseInt(s2.split(" ")[1]) - Integer.parseInt(s1.split(" ")[1]);
-                }
-            });
-        }
-
-        for(int i = 0; i < length; i++) {
-            intent.putExtra("0" + i, content[i]);
-            if(isSelected.contains(content[i])){
-                intent.putExtra(content[i],"s");
-            }
-        }
-        intent.putExtra("length",length);
-        intent.putExtra("default",defaultItem);
-        intent.putExtra("defaultSel",isSelected.contains(defaultItem));
-        intent.putExtra("oneSelectMode",oneSelectMode);
-        startActivityForResult(intent, requestCode);
-    }
 
     public void onDialogDismiss(int requestCode, Bundle resultData) {
         switch (requestCode)
@@ -556,8 +523,6 @@ public class filter_layout extends Fragment {
         for(int i = 0; i < subjectSelected.size(); i++){
             if(i == 0){
                 subjects = subject.get(subjectSelected.get(i));
-                System.out.println(subjectSelected.get(i));
-                System.out.println(subjects);
             }else {
                 subjects += " " + subject.get(subjectSelected.get(i));
             }
@@ -629,48 +594,53 @@ public class filter_layout extends Fragment {
 
     public Filter getFilters(){
         Filter filter = new Filter();
-        filter.term = term.get(termSelected.get(0));
-        filter.sel_gur = gurAttributes.get(gurAttributesSelected.get(0));
-        filter.sel_attr = otherAttributes.get(otherAttributesSelected.get(0));
-        filter.sel_site = siteAttributes.get(siteAttributesSelected.get(0));
-        filter.sel_subj = getSubjects();
-        filter.sel_inst = Instructor.get(InstructorSelected.get(0));
-        filter.sel_crse = courseNumber.getText().toString();
-        filter.sel_day = getDays();
-        if(startPM.isChecked()){
-            filter.begin_mi = "P";
-        }else {
-            filter.begin_mi = "A";
+        try {
+            filter.term = term.get(termSelected.get(0));
+            filter.sel_gur = gurAttributes.get(gurAttributesSelected.get(0));
+            filter.sel_attr = otherAttributes.get(otherAttributesSelected.get(0));
+            filter.sel_site = siteAttributes.get(siteAttributesSelected.get(0));
+            filter.sel_subj = getSubjects();
+            filter.sel_inst = Instructor.get(InstructorSelected.get(0));
+            filter.sel_crse = courseNumber.getText().toString();
+            filter.sel_day = getDays();
+            if (startPM.isChecked()) {
+                filter.begin_mi = "P";
+            } else {
+                filter.begin_mi = "A";
+            }
+            if (endPM.isChecked()) {
+                filter.end_mi = "P";
+            } else {
+                filter.end_mi = "A";
+            }
+            String startHour = startHourSelected.get(0);
+            if (startHour.equals("All")) {
+                filter.begin_hh = "0";
+            } else {
+                filter.begin_hh = startHour;
+            }
+            String endHour = endHourSelected.get(0);
+            if (startHour.equals("All")) {
+                filter.end_hh = "0";
+            } else {
+                filter.end_hh = endHour;
+            }
+            String creditHour = creditHourSelected.get(0);
+            if (creditHour.equals("All")) {
+                filter.sel_cdts = "%25";
+            } else {
+                filter.sel_cdts = creditHour;
+            }
+            if (openSections.isChecked()) {
+                filter.sel_open = "Y";
+            }
+        }catch (Exception e){
+            //filter is either loading or errored
+            return null;
         }
-        if(endPM.isChecked()){
-            filter.end_mi = "P";
-        }else {
-            filter.end_mi = "A";
-        }
-        String startHour = startHourSelected.get(0);
-        if(startHour.equals("All")) {
-            filter.begin_hh = "0";
-        }else{
-            filter.begin_hh = startHour;
-        }
-        String endHour = endHourSelected.get(0);
-        if(startHour.equals("All")) {
-            filter.end_hh = "0";
-        }else{
-            filter.end_hh = endHour;
-        }
-        String creditHour = creditHourSelected.get(0);
-        if(creditHour.equals("All")) {
-            filter.sel_cdts = "%25";
-        }else{
-            filter.sel_cdts = creditHour;
-        }
-        if(openSections.isChecked()){
-            filter.sel_open = "Y";
-        }
-
         return filter;
     }
+
 
     private class getMenuAttributes extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> > {
 
@@ -683,7 +653,6 @@ public class filter_layout extends Fragment {
         protected void onPostExecute(List<HashMap<String, String>> result) {
             if(result == null){
                 noInternet.setVisibility(View.VISIBLE);
-                System.out.println("no internet");
             }else {
                 term = result.get(0);
                 gurAttributes = result.get(1);
@@ -715,7 +684,6 @@ public class filter_layout extends Fragment {
                 v = getView();
                 getMenuReferences();
                 if(savedInstance != null){
-                    System.out.println("savedInstance state not null");
                     termSelected = new ArrayList<>();
                     int termLength = savedInstance.getInt("termLength");
                     for(int i = 0; i < termLength; i++){
@@ -771,6 +739,7 @@ public class filter_layout extends Fragment {
                     }
                     updateButton(creditHourButton,creditHourSelected);
                 }
+                v.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 v.setVisibility(View.VISIBLE);
             }
         }

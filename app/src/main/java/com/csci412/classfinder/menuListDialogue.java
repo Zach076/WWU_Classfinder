@@ -29,9 +29,10 @@ public class menuListDialogue extends DialogFragment {
     private static int REQUEST_CODE;
 
     private static boolean oneSelectMode; //only allows for one item to be selected at a time
+    private static boolean isSubjects;
     static ArrayList<item> content;
     static ArrayList<item> contentCopy;
-    private item defaultValue;
+    private static item defaultValue;
     private static menuRecyclerViewAdapter adapter;
     private SearchView search;
     private static filter_layout parentFragment;
@@ -43,10 +44,11 @@ public class menuListDialogue extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static menuListDialogue newInstance(String title, String[] names, ArrayList<String> isSelected, String defaultVal, Boolean oneSelect, filter_layout parent, int requestcode) {
+    public static menuListDialogue newInstance(String title, String[] names, ArrayList<String> isSelected, String defaultVal, Boolean oneSelect, Boolean isSubeject, filter_layout parent, int requestcode) {
         REQUEST_CODE = requestcode;
         parentFragment = parent;
         oneSelectMode = oneSelect;
+        isSubjects = isSubeject;
         menuListDialogue frag = new menuListDialogue();
         Bundle args = new Bundle();
         args.putString("title", title);
@@ -142,71 +144,6 @@ public class menuListDialogue extends DialogFragment {
         return dialog;
     }
 
-    /*@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_list);
-        search = findViewById(R.id.searchView);
-        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                adapter.filter(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.filter(newText);
-                return true;
-            }
-        });
-        content = new ArrayList<>();
-        contentCopy = new ArrayList<>();
-        Intent intent = getIntent();
-        int l = 0;
-        oneSelectMode = intent.getBooleanExtra("oneSelectMode",false);
-        int length = intent.getIntExtra("length",l);
-        String defaultName = intent.getStringExtra("default");
-        boolean isSelected = intent.getBooleanExtra("defaultSel",true);
-        item item = new item(defaultName ,isSelected);
-        content.add(item);
-        contentCopy.add(item);
-        defaultValue = item;
-        for(int i = 0; i < length; i++){
-            String name = intent.getStringExtra("0" + i);
-            isSelected = false;
-            String s = intent.getStringExtra(name);
-            if(s != null && s.equals("s")){
-                isSelected = true;
-            }
-            item = new item(name ,isSelected);
-            content.add(item);
-            contentCopy.add(item);
-        }
-
-        View recyclerView = findViewById(R.id.item_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
-    }
-
-
-
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        int size = 0;
-        for(int i = 0; i < content.size(); i++){
-            item item = content.get(i);
-            if(item.selected) {
-                intent.putExtra("" + size, item.text);
-                size++;
-            }
-        }
-        intent.putExtra("length",size);
-        setResult(RESULT_OK, intent);
-        finish();
-    }*/
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         adapter = new menuRecyclerViewAdapter(this, content);
@@ -273,6 +210,11 @@ public class menuListDialogue extends DialogFragment {
                             }
                             adapter.notifyDataSetChanged();
                         }
+                    }else if(isSubjects){
+                         if(defaultValue.selected){
+                             defaultValue.setSelected(false);
+                             adapter.notifyDataSetChanged();
+                         }
                     }
                     i.setSelected(isChecked);
                 }

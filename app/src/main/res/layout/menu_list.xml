@@ -40,7 +40,7 @@
         android:layout_weight="2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context=".menuListActivity"
+        tools:context=".menuListDialogue"
         tools:listitem="@layout/menu_list_content" />
     <LinearLayout
         android:layout_height="wrap_content"
