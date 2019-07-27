@@ -101,6 +101,7 @@ public class menuListDialogue extends DialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
+        super.onDismiss(dialogInterface);
         Bundle resultData = new Bundle();
         int size = 0;
         for(int i = 0; i < content.size(); i++){

@@ -371,50 +371,49 @@ public class filter_layout extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putBoolean("created",true);
-        outState.putInt("termLength",termSelected.size());
-        for(int i = 0; i < termSelected.size(); i++){
-            outState.putString("t" + i,termSelected.get(i));
-        }
-        outState.putInt("gurAttributesLength",gurAttributesSelected.size());
-        for(int i = 0; i < gurAttributesSelected.size(); i++){
-            outState.putString("ga" + i,gurAttributesSelected.get(i));
-        }
-        outState.putInt("otherAttributesLength",otherAttributesSelected.size());
-        for(int i = 0; i < otherAttributesSelected.size(); i++){
-            outState.putString("oa" + i,otherAttributesSelected.get(i));
-        }
-        outState.putInt("subjectLength",subjectSelected.size());
-        for(int i = 0; i < subjectSelected.size(); i++){
-            outState.putString("s" + i,subjectSelected.get(i));
-        }
-        outState.putInt("siteAttributesLength",siteAttributesSelected.size());
-        for(int i = 0; i < siteAttributesSelected.size(); i++){
-            outState.putString("sa" + i,siteAttributesSelected.get(i));
-        }
-        outState.putInt("InstructorLength",InstructorSelected.size());
-        for(int i = 0; i < InstructorSelected.size(); i++){
-            outState.putString("i" + i,InstructorSelected.get(i));
-        }
-        outState.putInt("startLength",startHourSelected.size());
-        for(int i = 0; i < startHourSelected.size(); i++){
-            outState.putString("sh" + i,startHourSelected.get(i));
-        }
-        outState.putInt("endLength",endHourSelected.size());
-        for(int i = 0; i < endHourSelected.size(); i++){
-            outState.putString("eh" + i,endHourSelected.get(i));
-        }
-        outState.putInt("creditLength", creditHourSelected.size());
-        for(int i = 0; i < creditHourSelected.size(); i++){
-            outState.putString("c" + i,creditHourSelected.get(i));
+        try {
+            outState.putBoolean("created", true);
+            outState.putInt("termLength", termSelected.size());
+            for (int i = 0; i < termSelected.size(); i++) {
+                outState.putString("t" + i, termSelected.get(i));
+            }
+            outState.putInt("gurAttributesLength", gurAttributesSelected.size());
+            for (int i = 0; i < gurAttributesSelected.size(); i++) {
+                outState.putString("ga" + i, gurAttributesSelected.get(i));
+            }
+            outState.putInt("otherAttributesLength", otherAttributesSelected.size());
+            for (int i = 0; i < otherAttributesSelected.size(); i++) {
+                outState.putString("oa" + i, otherAttributesSelected.get(i));
+            }
+            outState.putInt("subjectLength", subjectSelected.size());
+            for (int i = 0; i < subjectSelected.size(); i++) {
+                outState.putString("s" + i, subjectSelected.get(i));
+            }
+            outState.putInt("siteAttributesLength", siteAttributesSelected.size());
+            for (int i = 0; i < siteAttributesSelected.size(); i++) {
+                outState.putString("sa" + i, siteAttributesSelected.get(i));
+            }
+            outState.putInt("InstructorLength", InstructorSelected.size());
+            for (int i = 0; i < InstructorSelected.size(); i++) {
+                outState.putString("i" + i, InstructorSelected.get(i));
+            }
+            outState.putInt("startLength", startHourSelected.size());
+            for (int i = 0; i < startHourSelected.size(); i++) {
+                outState.putString("sh" + i, startHourSelected.get(i));
+            }
+            outState.putInt("endLength", endHourSelected.size());
+            for (int i = 0; i < endHourSelected.size(); i++) {
+                outState.putString("eh" + i, endHourSelected.get(i));
+            }
+            outState.putInt("creditLength", creditHourSelected.size());
+            for (int i = 0; i < creditHourSelected.size(); i++) {
+                outState.putString("c" + i, creditHourSelected.get(i));
+            }
+        }catch (Exception e){
+            System.out.println("filters not initialized yet");
         }
     }
 
-   /*  @Override
-    public void onRestoreInstanceState(Bundle savedState){
-        super.onRestoreInstanceState(savedState);
-
-    }*/
 
 
     public void onDialogDismiss(int requestCode, Bundle resultData) {

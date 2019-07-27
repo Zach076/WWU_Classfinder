@@ -161,6 +161,7 @@ public class Utilities {
                     course.chrgs = cols.get(5).text();
 
                 course.times.add(cols.get(2).text());
+                System.out.println(cols.get(2).text());
 
                 i++;
                 row = rows.get(i);
@@ -170,6 +171,7 @@ public class Utilities {
                     if (!cols.get(0).hasText() || cols.get(0).text().equals("")) {
                         if (cols.size() > 3) {
                             course.times.add(cols.get(1).text());
+                            System.out.println("added");
                             course.location.add(cols.get(2).text());
                         } else if (cols.size() > 2) {
                             course.prereq.concat(cols.get(2).text());
@@ -190,7 +192,7 @@ public class Utilities {
                     row = rows.get(i);
                     cols = row.select("td");
                 }
-
+                System.out.println("-------------------------------------");
                 courses.add(course);
             }
 

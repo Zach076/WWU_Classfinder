@@ -87,56 +87,57 @@ public class SchedViewFragment extends Fragment {
         grid.setNumColumns(columns);
 
         List<String> irregularTimes = new ArrayList<>();
-
         //parsing start and end times
         String startTime;
         String endTime;
         for (Course course : Sched.classes) {
             for (int i = 0; i < course.times.size(); i++) {
-                startTime = course.times.get(i);
-                startTime = startTime.split(" ")[1];
-                endTime = startTime.split("-")[1];
-                startTime = startTime.split("-")[0];
-                if(startTime.charAt(0) == '0') {
-                    startTime = startTime.substring(1);
-                }
+                if (!course.times.get(i).equals("")) {
+                    startTime = course.times.get(i);
+                    startTime = startTime.split(" ")[1];
+                    endTime = startTime.split("-")[1];
+                    startTime = startTime.split("-")[0];
+                    if (startTime.charAt(0) == '0') {
+                        startTime = startTime.substring(1);
+                    }
                 /*
                 //If we dont want rows showing times ending at X:50
                 if(endTime.charAt(3) == '5') {
                     endTime = endTime.substring(0,3)+"00";
                 }
                 */
-                if(endTime.charAt(0) == '0') {
-                    endTime = endTime.substring(1);
-                }
+                    if (endTime.charAt(0) == '0') {
+                        endTime = endTime.substring(1);
+                    }
 
-                //checking for irregular start times
-                int length = startTime.length();
-                if (startTime.toCharArray()[length - 1] != '0' || startTime.toCharArray()[length - 2] != '0') {
-                    int count = 0;
-                    for (String time : irregularTimes) {
-                        if (startTime.equals(time)) {
-                            count++;
+                    //checking for irregular start times
+                    int length = startTime.length();
+                    if (startTime.toCharArray()[length - 1] != '0' || startTime.toCharArray()[length - 2] != '0') {
+                        int count = 0;
+                        for (String time : irregularTimes) {
+                            if (startTime.equals(time)) {
+                                count++;
+                            }
+                        }
+                        if (count == 0) {
+                            irregularTimes.add(startTime);
+                            rows++;
                         }
                     }
-                    if (count == 0) {
-                        irregularTimes.add(startTime);
-                        rows++;
-                    }
-                }
 
-                //checking for irregular end times
-                length = endTime.length();
-                if (endTime.toCharArray()[length - 1] != '0' || endTime.toCharArray()[length - 2] != '0') {
-                    int count = 0;
-                    for (String time : irregularTimes) {
-                        if (endTime.equals(time)) {
-                            count++;
+                    //checking for irregular end times
+                    length = endTime.length();
+                    if (endTime.toCharArray()[length - 1] != '0' || endTime.toCharArray()[length - 2] != '0') {
+                        int count = 0;
+                        for (String time : irregularTimes) {
+                            if (endTime.equals(time)) {
+                                count++;
+                            }
                         }
-                    }
-                    if (count == 0) {
-                        irregularTimes.add(endTime);
-                        rows++;
+                        if (count == 0) {
+                            irregularTimes.add(endTime);
+                            rows++;
+                        }
                     }
                 }
             }
@@ -206,65 +207,67 @@ public class SchedViewFragment extends Fragment {
         for (Course course : Sched.classes) {
             int timeIndex = columns;
             for (int i = 0; i < course.times.size(); i++) {
-                startTime = course.times.get(i);
-                timeIndex = columns;
-                days = startTime.split(" ")[0];
-                startTime = startTime.split(" ")[1];
-                endTime = startTime.split("-")[1];
-                startTime = startTime.split("-")[0];
-                if (startTime.charAt(0) == '0') {
-                    startTime = startTime.substring(1);
-                }
+                if (!course.times.get(i).equals("")) {
+                    startTime = course.times.get(i);
+                    timeIndex = columns;
+                    days = startTime.split(" ")[0];
+                    startTime = startTime.split(" ")[1];
+                    endTime = startTime.split("-")[1];
+                    startTime = startTime.split("-")[0];
+                    if (startTime.charAt(0) == '0') {
+                        startTime = startTime.substring(1);
+                    }
                 /*
                 //If we dont want rows showing times ending at X:50
                 if(endTime.charAt(3) == '5') {
                     endTime = endTime.substring(0,3)+"00";
                 }
                 */
-                if (endTime.charAt(0) == '0') {
-                    endTime = endTime.substring(1);
-                }
-                while (!startTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
-                    timeIndex = timeIndex + columns;
-                }
-                while (!endTime.equals(matrixList.get(timeIndex - columns).text) && timeIndex < matrixList.size()) {
-                    int x = 0;
-                    while (x < days.length()) {
-                        switch (days.charAt(x)) {
-                            case 'M':
-                                if (matrixList.get(timeIndex + 1).text != null) {
-                                    matrixList.get(timeIndex + 1).color = 1;
-                                }
-                                matrixList.get(timeIndex + 1).text = course.course;
-                                break;
-                            case 'T':
-                                if (matrixList.get(timeIndex + 2).text != null) {
-                                    matrixList.get(timeIndex + 2).color = 1;
-                                }
-                                matrixList.get(timeIndex + 2).text = course.course;
-                                break;
-                            case 'W':
-                                if (matrixList.get(timeIndex + 3).text != null) {
-                                    matrixList.get(timeIndex + 3).color = 1;
-                                }
-                                matrixList.get(timeIndex + 3).text = course.course;
-                                break;
-                            case 'R':
-                                if (matrixList.get(timeIndex + 4).text != null) {
-                                    matrixList.get(timeIndex + 4).color = 1;
-                                }
-                                matrixList.get(timeIndex + 4).text = course.course;
-                                break;
-                            case 'F':
-                                if (matrixList.get(timeIndex + 5).text != null) {
-                                    matrixList.get(timeIndex + 5).color = 1;
-                                }
-                                matrixList.get(timeIndex + 5).text = course.course;
-                                break;
-                        }
-                        x++;
+                    if (endTime.charAt(0) == '0') {
+                        endTime = endTime.substring(1);
                     }
-                    timeIndex = timeIndex + columns;
+                    while (!startTime.equals(matrixList.get(timeIndex).text) && timeIndex < matrixList.size()) {
+                        timeIndex = timeIndex + columns;
+                    }
+                    while (!endTime.equals(matrixList.get(timeIndex - columns).text) && timeIndex < matrixList.size()) {
+                        int x = 0;
+                        while (x < days.length()) {
+                            switch (days.charAt(x)) {
+                                case 'M':
+                                    if (matrixList.get(timeIndex + 1).text != null) {
+                                        matrixList.get(timeIndex + 1).color = 1;
+                                    }
+                                    matrixList.get(timeIndex + 1).text = course.course;
+                                    break;
+                                case 'T':
+                                    if (matrixList.get(timeIndex + 2).text != null) {
+                                        matrixList.get(timeIndex + 2).color = 1;
+                                    }
+                                    matrixList.get(timeIndex + 2).text = course.course;
+                                    break;
+                                case 'W':
+                                    if (matrixList.get(timeIndex + 3).text != null) {
+                                        matrixList.get(timeIndex + 3).color = 1;
+                                    }
+                                    matrixList.get(timeIndex + 3).text = course.course;
+                                    break;
+                                case 'R':
+                                    if (matrixList.get(timeIndex + 4).text != null) {
+                                        matrixList.get(timeIndex + 4).color = 1;
+                                    }
+                                    matrixList.get(timeIndex + 4).text = course.course;
+                                    break;
+                                case 'F':
+                                    if (matrixList.get(timeIndex + 5).text != null) {
+                                        matrixList.get(timeIndex + 5).color = 1;
+                                    }
+                                    matrixList.get(timeIndex + 5).text = course.course;
+                                    break;
+                            }
+                            x++;
+                        }
+                        timeIndex = timeIndex + columns;
+                    }
                 }
             }
         }
