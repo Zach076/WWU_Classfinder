@@ -74,7 +74,8 @@ public class SchedViewActivity extends AppCompatActivity {
                 if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
                     CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString());
                     item.classes = fragment.Sched.classes;
-                    CustomItems.SCHEDULES.add(item);
+                    CustomItems.addSchedule(item);
+                    CustomItems.rva.notifyDataSetChanged();
                 }
             }
         });
