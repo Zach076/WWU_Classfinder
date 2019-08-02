@@ -23,6 +23,7 @@ public class Course implements Serializable {
     public String prereq = "";
     public String restrictions = "";
     public List<String> additional = new ArrayList<>();
+    public String term = "";
 
     //class space
     public boolean waitlist = false;

@@ -29,6 +29,67 @@ public class Utilities {
         return dp * (int) Resources.getSystem().getDisplayMetrics().density;
     }
 
+    public static Pair<String, String> getClassInfo (String term, String course){
+
+        HttpsURLConnection connection = null;
+        Pair<String, String> classInfo = null;//(class title, class description
+
+        try{
+            URL url = new URL("https://admin.wwu.edu/pls/wwis/wwsktime.SelText");
+            connection = (HttpsURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            StringBuilder sbParams = new StringBuilder();
+            sbParams.append("subj_crse=");
+            sbParams.append(term);
+            sbParams.append(course);
+
+            //update content length
+            connection.setRequestProperty("Content-Length", Integer.toString(sbParams.toString().getBytes().length));
+
+            connection.setReadTimeout(3000);
+            connection.setConnectTimeout(5000);
+            connection.connect();
+
+            DataOutputStream outStream = new DataOutputStream(connection.getOutputStream());
+            outStream.writeBytes(sbParams.toString());
+            outStream.flush();
+            outStream.close();
+
+            InputStream inStream = new BufferedInputStream(connection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inStream));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while((line = reader.readLine()) != null){
+                response.append(line + "\n");
+            }
+
+            connection.disconnect();
+
+            //response processing
+            String result = response.toString();
+            int i = result.indexOf("<br />");
+            result = result.substring(i);
+            i = result.indexOf("<center>");
+            result = result.substring(0, i-1);
+            result = result.replaceAll("<br />", "");
+            result = result.replaceAll("\n", "");
+
+            classInfo = new Pair<>(course, result);
+        } catch (Exception e){
+            //no classes or some other error
+            //return null
+            System.out.println(e);
+            return null;
+        } finally {
+            if(connection != null)
+                connection.disconnect();
+        }
+        return classInfo;
+    }
+
     public static HashMap<String, List<Course>> getClasses(List<Pair<String, String>> formData){
 
         HttpsURLConnection connection = null;
@@ -130,6 +191,7 @@ public class Utilities {
 
                 //parse and add this course
                 course = new Course();
+                course.term = formData.get(1).second;
                 course.dept = department;
 
                 Elements cols = row.select("td");
@@ -321,8 +383,6 @@ public class Utilities {
             return null;
         }
     }
-
-
 
     private static boolean isEndofClass(Element row) {
         Elements cols = row.select("td");
