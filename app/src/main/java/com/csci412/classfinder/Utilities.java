@@ -175,7 +175,7 @@ public class Utilities {
             //parse html
             int size = rows.size();
             int i = 0;
-            while (i < size) {
+            while (i < size - 5) {
                 Element row = rows.get(i);
                 //add department and classes to map
                 //clear courses and get new department
@@ -223,6 +223,7 @@ public class Utilities {
                     course.chrgs = cols.get(5).text();
 
                 course.times.add(cols.get(2).text());
+                System.out.println(cols.get(2).text());
 
                 i++;
                 row = rows.get(i);
@@ -232,6 +233,7 @@ public class Utilities {
                     if (!cols.get(0).hasText() || cols.get(0).text().equals("")) {
                         if (cols.size() > 3) {
                             course.times.add(cols.get(1).text());
+                            System.out.println("added");
                             course.location.add(cols.get(2).text());
                         } else if (cols.size() > 2) {
                             course.prereq.concat(cols.get(2).text());
@@ -252,14 +254,15 @@ public class Utilities {
                     row = rows.get(i);
                     cols = row.select("td");
                 }
-
+                System.out.println("-------------------------------------");
                 courses.add(course);
             }
 
             classes.put(department, courses);
         } catch (Exception e){
             //no classes or some other error
-            //returning null will report no classes to a user
+            //returning null will report no classes to a
+            System.out.println(e);
             return null;
         } finally {
             if(connection != null)
@@ -348,7 +351,7 @@ public class Utilities {
             rows = attributes.select("tr");
             int defaultValue = 0;
             //parse html
-            //only go through the first 3 rows becasue those are the only ones that contain scrollable options
+            //only go through the first 3 rows because those are the only ones that contain scrollable options
             for(int i = 0; i < 3; i++) {
                 Element row = rows.get(i);
                 Elements td = row.select("td");

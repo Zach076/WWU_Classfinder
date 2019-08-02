@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/filter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="invisible">
+    android:orientation="vertical"
+    android:visibility="visible">
 
-
-    <android.support.constraint.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center" >
 
         <TextView
-            android:id="@+id/otherAttributes"
-            android:layout_width="122dp"
-            android:layout_height="19dp"
+            android:id="@+id/loadingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/loading"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Other Attributes:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/termButton" />
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_centerHorizontal="true"
+            android:text="Loading Filters" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_centerHorizontal="true"
+        android:indeterminateDrawable="@drawable/progress" />
+    </RelativeLayout>
+<GridLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnCount="2"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_columnWeight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/term"
@@ -30,9 +55,66 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="Term:"
+            android:text="Term" />
+
+        <Button
+            android:id="@+id/termButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Fall 2019" />
+
+        <TextView
+            android:id="@+id/otherAttributes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Other Attributes" />
+
+        <Button
+            android:id="@+id/otherAttributesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="All Courses wit..."
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/otherAttributes" />
+
+        <TextView
+            android:id="@+id/subject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Subject"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otherAttributesButton" />
+
+        <Button
+            android:id="@+id/subjectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="All Subjects"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subject" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_columnWeight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/GURattributes"
@@ -43,10 +125,25 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="GUR Attributes:"
+            android:text="GUR Attributes"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/term"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+
+            android:id="@+id/GURattributesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="All GUR/Non-GUR..."
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/termButton"
+            app:layout_constraintTop_toBottomOf="@+id/GURattributes" />
 
         <TextView
             android:id="@+id/siteAttributes"
@@ -63,16 +160,21 @@
             app:layout_constraintStart_toEndOf="@+id/otherAttributes"
             app:layout_constraintTop_toBottomOf="@+id/GURattributesButton" />
 
-        <TextView
-            android:id="@+id/subject"
+        <Button
+            android:id="@+id/siteAttributesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="Subject:"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/otherAttributesButton" />
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="All Sites"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/otherAttributesButton"
+            app:layout_constraintTop_toBottomOf="@+id/siteAttributes" />
+
+
 
         <TextView
             android:id="@+id/instructor"
@@ -83,76 +185,13 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="Instructor:"
+            android:text="Instructor"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/subject"
             app:layout_constraintTop_toBottomOf="@+id/siteAttributesButton" />
 
-        <Button
-            android:id="@+id/termButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="termButton"
-            android:text="Fall 2019"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/term" />
 
-        <Button
-            android:id="@+id/GURattributesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="GURattributesButton"
-            android:text="All GUR/Non-GUR..."
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/termButton"
-            app:layout_constraintTop_toBottomOf="@+id/GURattributes" />
 
-        <Button
-            android:id="@+id/otherAttributesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="otherAttributesButton"
-            android:text="All Courses wit..."
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/otherAttributes" />
-
-        <Button
-            android:id="@+id/siteAttributesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="siteAttributesButton"
-            android:text="All Sites"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/otherAttributesButton"
-            app:layout_constraintTop_toBottomOf="@+id/siteAttributes" />
-
-        <Button
-            android:id="@+id/subjectButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:onClick="subjectButton"
-            android:text="All Subjects"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subject" />
 
         <Button
             android:id="@+id/instructorButton"
@@ -163,102 +202,23 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:onClick="instructorButton"
             android:text="All Instructors"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/subjectButton"
             app:layout_constraintTop_toBottomOf="@+id/instructor" />
 
-        <Button
-            android:id="@+id/search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            android:layout_marginBottom="8dp"
-            android:text="Search"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/creditHoursButton" />
 
 
-        <CheckBox
-            android:id="@+id/mon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Mon"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+    </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/Tue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Tue"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toEndOf="@+id/mon"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <CheckBox
-            android:id="@+id/Wed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Wed"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toEndOf="@+id/Tue"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+</GridLayout >
 
-        <CheckBox
-            android:id="@+id/Thu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Thu"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toEndOf="@+id/Wed"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <CheckBox
-            android:id="@+id/Fri"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Fri"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toEndOf="@+id/Thu"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <CheckBox
-            android:id="@+id/Sat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Sat"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toEndOf="@+id/Fri"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <CheckBox
-            android:id="@+id/Sun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="Sun"
-            android:buttonTint="#0000FF"
-            app:layout_constraintStart_toEndOf="@+id/Sat"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView"
@@ -268,64 +228,211 @@
             android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="Days:"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/subjectButton"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="302dp" />
+            android:layout_gravity="center"
+            android:text="Days" />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mon"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <CheckBox
+                    android:id="@+id/mon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="#0000FF"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Tue"/>
+
+            <CheckBox
+                android:id="@+id/Tue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#0000FF"
+                app:layout_constraintStart_toEndOf="@+id/mon"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Wed"/>
+            <CheckBox
+                android:id="@+id/Wed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:buttonTint="#0000FF"
+                app:layout_constraintStart_toEndOf="@+id/Tue"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Thu"/>
+            <CheckBox
+                android:id="@+id/Thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:buttonTint="#0000FF"
+                app:layout_constraintStart_toEndOf="@+id/Wed"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="6dp"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:text="Fri"/>
+            <CheckBox
+                android:id="@+id/Fri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#0000FF"
+                app:layout_constraintStart_toEndOf="@+id/Thu"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15dp"
+                    android:text="Sat"/>
+            <CheckBox
+                android:id="@+id/Sat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#0000FF"
+                app:layout_constraintStart_toEndOf="@+id/Fri"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+        </LinearLayout>
+
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="15dp"
+                    android:text="Sun"/>
+            <CheckBox
+                android:id="@+id/Sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="#0000FF"
+                app:layout_constraintStart_toEndOf="@+id/Sat"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+    </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2">
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_column="0"
+            android:orientation="vertical">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:id="@+id/begin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="276dp"
-            android:layout_marginRight="276dp"
-            android:text="Start Time"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mon" />
-
-        <TextView
-            android:id="@+id/end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="End Time"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/begin"
-            app:layout_constraintTop_toBottomOf="@+id/mon" />
-
-        <Button
-            android:id="@+id/reset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:text="Reset"
-            android:onClick="resetFilters"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editCourseNumber" />
-
+            android:text="Start Time" />
         <RadioGroup
             android:id="@+id/radioGroup2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
+            android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/begin">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/startAM"
@@ -344,13 +451,30 @@
 
             <Button
                 android:id="@+id/startHour"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="startHourButton"
                 android:text="All" />
 
         </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical">
+        <TextView
+            android:id="@+id/end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="End Time" />
 
         <RadioGroup
             android:id="@+id/radioGroup4"
@@ -361,10 +485,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/radioGroup2"
-            app:layout_constraintTop_toBottomOf="@+id/end">
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/endAM"
@@ -383,92 +505,162 @@
 
             <Button
                 android:id="@+id/endHour"
-                android:layout_width="match_parent"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:onClick="endHourButton"
                 android:text="All" />
 
         </RadioGroup>
+        </LinearLayout>
+    </GridLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3">
 
-        <EditText
-            android:id="@+id/editCourseNumber"
-            android:layout_width="136dp"
-            android:layout_height="48dp"
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/courseNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Course Number"
+                android:layout_gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:focusableInTouchMode="true"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="#0000FF"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text=""
-            android:textCursorDrawable="@drawable/blue_cursor"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseNumber" />
-
-        <TextView
-            android:id="@+id/courseNumber"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/editCourseNumber"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:backgroundTint="#0000FF"
+                android:text=""
+                android:textCursorDrawable="@drawable/blue_cursor"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/courseNumber" />
+        </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Course Number"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup2" />
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/openSections"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_gravity="center"
+                android:text="Open Sections Only" />
 
-        <TextView
-            android:id="@+id/openSections"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Open Sections Only:"
-            app:layout_constraintEnd_toStartOf="@+id/creditHours"
-            app:layout_constraintStart_toEndOf="@+id/courseNumber"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
+            <CheckBox
+                android:id="@+id/openSectionsCheck"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:buttonTint="#0000FF"
+                android:layout_gravity="center"
+                android:text="Yes" />
 
-        <CheckBox
-            android:id="@+id/openSectionsCheck"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:buttonTint="#0000FF"
-            android:text="Yes"
-            app:layout_constraintEnd_toStartOf="@+id/creditHoursButton"
-            app:layout_constraintStart_toEndOf="@+id/editCourseNumber"
-            app:layout_constraintTop_toBottomOf="@+id/openSections" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/creditHours"
-            android:layout_width="wrap_content"
+        <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Credit Hours"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/creditHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="Credit Hours"
+                android:layout_gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup4" />
+
+            <Button
+                android:id="@+id/creditHoursButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_gravity="center"
+                android:text="All"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/creditHours" />
+
+        </LinearLayout>
+
+    </GridLayout>
+
+    <FrameLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:columnCount="2"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/creditHoursButton"
+            android:layout_column="0"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:id="@+id/reset"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="Reset"
+            android:layout_gravity="left"
+            android:background="@color/white"
+            android:textColor="@color/blue"
+            android:textSize="12dp" />
+
+
+        <Button
+            android:id="@+id/search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_column="1"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="creditHoursButton"
-            android:text="All"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/creditHours" />
+            android:text="Search"
+            android:layout_gravity="right"
+            android:textColor="@color/blue"
+            android:background="@color/white"
+            android:textSize="12dp" />
 
+    </FrameLayout>
 
-
-    </android.support.constraint.ConstraintLayout>
-</ScrollView >
+</LinearLayout>

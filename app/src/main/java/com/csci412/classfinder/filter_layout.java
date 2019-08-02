@@ -1,8 +1,12 @@
 package com.csci412.classfinder;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.util.BuddhistCalendar;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +15,7 @@ import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -100,7 +105,6 @@ public class filter_layout extends Fragment {
 
     View v;
 
-    boolean initilized = false;
     Bundle savedInstance;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -140,19 +144,9 @@ public class filter_layout extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_filter_layout, container, false);
-
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     public void updateButton(Button button,ArrayList<String> isSelected){
         int length = isSelected.size();
@@ -165,32 +159,28 @@ public class filter_layout extends Fragment {
             button.setText("none");
         }
     }
+
     public void getMenuReferences() {
         termButton = v.findViewById(R.id.termButton);
+        filter_layout f = this;
         termButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Set<String> keys = term.keySet();
-                keys.remove(defaultValues.get("" + 0));
-                callMenuList(keys.toArray(new String[keys.size()]),term.size(), termSelected,TERM, defaultValues.get("" + 0),true,YEAR);
+                termButtonOnClick();
             }
         });
         otherAttributesButton = v.findViewById(R.id.otherAttributesButton);
         otherAttributesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Set<String> keys = otherAttributes.keySet();
-                keys.remove(defaultValues.get("" + 2));
-                callMenuList(keys.toArray(new String[keys.size()]),otherAttributes.size(), otherAttributesSelected,OTHERATTRIBUTES, defaultValues.get("" + 2),true,ALPHABET);
+                otherAttributesButtonOnClick();
             }
         });
         subjectButton = v.findViewById(R.id.subjectButton);
         subjectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Set<String> keys = subject.keySet();
-                keys.remove(defaultValues.get("" + 4));
-                callMenuList(keys.toArray(new String[keys.size()]),subject.size(), subjectSelected,SUBJECT, defaultValues.get("" + 4),false,ALPHABET);
+                subjectButtonOnClick();
             }
         });
 
@@ -198,51 +188,42 @@ public class filter_layout extends Fragment {
         gurAttributesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Set<String> keys = gurAttributes.keySet();
-                keys.remove(defaultValues.get("" + 1));
-                callMenuList(keys.toArray(new String[keys.size()]),gurAttributes.size(),gurAttributesSelected,GURATTRIBUTES, defaultValues.get("" + 1),true,ALPHABET);
+                gurAttributesButtonOnClick();
             }
         });
         siteAttributesButton = v.findViewById(R.id.siteAttributesButton);
         siteAttributesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Set<String> keys = siteAttributes.keySet();
-                keys.remove(defaultValues.get("" + 3));
-                callMenuList(keys.toArray(new String[keys.size()]),siteAttributes.size(),siteAttributesSelected ,SITEATTRIBUTES, defaultValues.get("" + 3),true,ALPHABET);
+                siteAttributesOnClick();
             }
         });
         InstructorButton = v.findViewById(R.id.instructorButton);
         InstructorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Set<String> keys = Instructor.keySet();
-                keys.remove(defaultValues.get("" + 5));
-                callMenuList(keys.toArray(new String[keys.size()]),Instructor.size(), InstructorSelected,INSTRUCTOR, defaultValues.get("" + 5),true,ALPHABET);
+                InstructorOnClick();
             }
         });
         startHourButton = v.findViewById(R.id.startHour);
         startHourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] hours = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-                callMenuList(hours,hours.length, startHourSelected,STARTHOUR,"All",true,NONE);
+                startHourOnClick();
             }
         });
         endHourButton = v.findViewById(R.id.endHour);
         endHourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-                callMenuList(hours,hours.length, endHourSelected,ENDHOUR, "All",true,NONE);
+                endHourOnClick();
             }
         });
         creditHourButton = v.findViewById(R.id.creditHoursButton);
         creditHourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] credits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
-                callMenuList(credits, credits.length, creditHourSelected, CREDITS, "All", true, NONE);
+                creditHourOnClick();
             }
         });
         searchButton = v.findViewById(R.id.search);
@@ -283,137 +264,196 @@ public class filter_layout extends Fragment {
         endPM = v.findViewById(R.id.endPM);
     }
 
+    private void creditHourOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        String[] credits = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18"};
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Credit Hours", credits, creditHourSelected, "All", true, false, fragment, CREDITS);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void endHourOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        menuListDialogue alertDialog = menuListDialogue.newInstance("End Hour", hours, endHourSelected, "All", true, false, fragment, ENDHOUR);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void startHourOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Start Hour", hours, startHourSelected, "All", true, false, fragment, STARTHOUR);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void InstructorOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(Instructor.clone())).keySet();
+        keys.remove(defaultValues.get("" + 5));
+        String[] names = keys.toArray(new String[keys.size()]);
+        Arrays.sort(names);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Instructor", names, InstructorSelected, defaultValues.get("" + 5), true, false, fragment, INSTRUCTOR);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void siteAttributesOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(siteAttributes.clone())).keySet();
+        keys.remove(defaultValues.get("" + 3));
+        String[] names = keys.toArray(new String[keys.size()]);
+        Arrays.sort(names);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Site Attributes", names, siteAttributesSelected, defaultValues.get("" + 3), true, false, fragment, SITEATTRIBUTES);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void gurAttributesButtonOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(gurAttributes.clone())).keySet();
+        keys.remove(defaultValues.get("" + 1));
+        String[] names = keys.toArray(new String[keys.size()]);
+        Arrays.sort(names);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("GUR Attributes", names, gurAttributesSelected, defaultValues.get("" + 1), true, false, fragment, GURATTRIBUTES);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void subjectButtonOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(subject.clone())).keySet();
+        keys.remove(defaultValues.get("" + 4));
+        String[] names = keys.toArray(new String[keys.size()]);
+
+        Arrays.sort(names);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Subject", names, subjectSelected, defaultValues.get("" + 4), false, true, fragment, SUBJECT);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void otherAttributesButtonOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(otherAttributes.clone())).keySet();
+        keys.remove(defaultValues.get("" + 2));
+        String[] names = keys.toArray(new String[keys.size()]);
+        Arrays.sort(names);
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Other Attributes", names, otherAttributesSelected, defaultValues.get("" + 2), true, false, fragment, OTHERATTRIBUTES);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
+    private void termButtonOnClick() {
+        filter_layout fragment  = this;
+        FragmentManager fm = getFragmentManager();
+        //cloning so that removing the default does not effect the hash map
+        Set<String> keys= ((HashMap<String, String>)(term.clone())).keySet();
+        keys.remove(defaultValues.get("" + 0));
+        String[] names = keys.toArray(new String[keys.size()]);
+        //sort by year
+        Arrays.sort(names, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                //return ORDER.indexOf(o1) -  ORDER.indexOf(o2) ;
+                return Integer.parseInt(s2.split(" ")[1]) - Integer.parseInt(s1.split(" ")[1]);
+            }
+        });
+        menuListDialogue alertDialog = menuListDialogue.newInstance("Term", names, termSelected, defaultValues.get("" + 0), true, false, fragment, TERM);
+        alertDialog.show(fm, "fragment_alert");
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
-        outState.putBoolean("created",true);
-        outState.putInt("termLength",termSelected.size());
-        for(int i = 0; i < termSelected.size(); i++){
-            outState.putString("t" + i,termSelected.get(i));
-        }
-        outState.putInt("gurAttributesLength",gurAttributesSelected.size());
-        for(int i = 0; i < gurAttributesSelected.size(); i++){
-            outState.putString("ga" + i,gurAttributesSelected.get(i));
-        }
-        outState.putInt("otherAttributesLength",otherAttributesSelected.size());
-        for(int i = 0; i < otherAttributesSelected.size(); i++){
-            outState.putString("oa" + i,otherAttributesSelected.get(i));
-        }
-        outState.putInt("subjectLength",subjectSelected.size());
-        for(int i = 0; i < subjectSelected.size(); i++){
-            outState.putString("s" + i,subjectSelected.get(i));
-        }
-        outState.putInt("siteAttributesLength",siteAttributesSelected.size());
-        for(int i = 0; i < siteAttributesSelected.size(); i++){
-            outState.putString("sa" + i,siteAttributesSelected.get(i));
-        }
-        outState.putInt("InstructorLength",InstructorSelected.size());
-        for(int i = 0; i < InstructorSelected.size(); i++){
-            outState.putString("i" + i,InstructorSelected.get(i));
-        }
-        outState.putInt("startLength",startHourSelected.size());
-        for(int i = 0; i < startHourSelected.size(); i++){
-            outState.putString("sh" + i,startHourSelected.get(i));
-        }
-        outState.putInt("endLength",endHourSelected.size());
-        for(int i = 0; i < endHourSelected.size(); i++){
-            outState.putString("eh" + i,endHourSelected.get(i));
-        }
-        outState.putInt("creditLength", creditHourSelected.size());
-        for(int i = 0; i < creditHourSelected.size(); i++){
-            outState.putString("c" + i,creditHourSelected.get(i));
-        }
-    }
-
-   /*  @Override
-    public void onRestoreInstanceState(Bundle savedState){
-        super.onRestoreInstanceState(savedState);
-
-    }*/
-
-    public void callMenuList(String[] content, int length, ArrayList<String> isSelected,int requestCode,String defaultItem, boolean oneSelectMode, int sortType){
-        Intent intent = new Intent(v.getContext(), menuListActivity.class);
-        if(sortType == ALPHABET){
-            Arrays.sort(content);
-        }else if(sortType == YEAR){
-            Arrays.sort(content, new Comparator<String>() {
-
-                @Override
-                public int compare(String s1, String s2) {
-                    //return ORDER.indexOf(o1) -  ORDER.indexOf(o2) ;
-                    return Integer.parseInt(s2.split(" ")[1]) - Integer.parseInt(s1.split(" ")[1]);
-                }
-            });
-        }
-
-        for(int i = 0; i < length; i++) {
-            intent.putExtra("0" + i, content[i]);
-            if(isSelected.contains(content[i])){
-                intent.putExtra(content[i],"s");
+        try {
+            outState.putBoolean("created", true);
+            outState.putInt("termLength", termSelected.size());
+            for (int i = 0; i < termSelected.size(); i++) {
+                outState.putString("t" + i, termSelected.get(i));
             }
+            outState.putInt("gurAttributesLength", gurAttributesSelected.size());
+            for (int i = 0; i < gurAttributesSelected.size(); i++) {
+                outState.putString("ga" + i, gurAttributesSelected.get(i));
+            }
+            outState.putInt("otherAttributesLength", otherAttributesSelected.size());
+            for (int i = 0; i < otherAttributesSelected.size(); i++) {
+                outState.putString("oa" + i, otherAttributesSelected.get(i));
+            }
+            outState.putInt("subjectLength", subjectSelected.size());
+            for (int i = 0; i < subjectSelected.size(); i++) {
+                outState.putString("s" + i, subjectSelected.get(i));
+            }
+            outState.putInt("siteAttributesLength", siteAttributesSelected.size());
+            for (int i = 0; i < siteAttributesSelected.size(); i++) {
+                outState.putString("sa" + i, siteAttributesSelected.get(i));
+            }
+            outState.putInt("InstructorLength", InstructorSelected.size());
+            for (int i = 0; i < InstructorSelected.size(); i++) {
+                outState.putString("i" + i, InstructorSelected.get(i));
+            }
+            outState.putInt("startLength", startHourSelected.size());
+            for (int i = 0; i < startHourSelected.size(); i++) {
+                outState.putString("sh" + i, startHourSelected.get(i));
+            }
+            outState.putInt("endLength", endHourSelected.size());
+            for (int i = 0; i < endHourSelected.size(); i++) {
+                outState.putString("eh" + i, endHourSelected.get(i));
+            }
+            outState.putInt("creditLength", creditHourSelected.size());
+            for (int i = 0; i < creditHourSelected.size(); i++) {
+                outState.putString("c" + i, creditHourSelected.get(i));
+            }
+        }catch (Exception e){
+            System.out.println("filters not initialized yet");
         }
-        intent.putExtra("length",length);
-        intent.putExtra("default",defaultItem);
-        intent.putExtra("defaultSel",isSelected.contains(defaultItem));
-        intent.putExtra("oneSelectMode",oneSelectMode);
-        startActivityForResult(intent, requestCode);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent dataIntent) {
-        super.onActivityResult(requestCode, resultCode, dataIntent);
 
-        // The returned result data is identified by requestCode.
-        // The request code is specified in startActivityForResult(intent, REQUEST_CODE); method.
-        int length = dataIntent.getIntExtra("length",0);
-        ArrayList<String> isSelected = null;
+
+    public void onDialogDismiss(int requestCode, Bundle resultData) {
         switch (requestCode)
         {
             case TERM:
-                isSelected = termSelected;
-                updateSelected(isSelected,length, dataIntent,termButton);
+                updateSelected(termSelected,resultData.getInt("length"), resultData,termButton);
                 break;
             case OTHERATTRIBUTES:
-                isSelected = otherAttributesSelected;
-                updateSelected(isSelected,length, dataIntent, otherAttributesButton);
+                updateSelected(otherAttributesSelected,resultData.getInt("length"), resultData, otherAttributesButton);
                 break;
             case SUBJECT:
-                isSelected = subjectSelected;
-                updateSelected(isSelected,length, dataIntent, subjectButton);
+                updateSelected(subjectSelected,resultData.getInt("length"), resultData, subjectButton);
                 break;
             case GURATTRIBUTES:
-                isSelected = gurAttributesSelected;
-                updateSelected(isSelected,length, dataIntent,gurAttributesButton);
+                updateSelected(gurAttributesSelected,resultData.getInt("length"), resultData,gurAttributesButton);
                 break;
             case SITEATTRIBUTES:
-                isSelected = siteAttributesSelected;
-                updateSelected(isSelected,length, dataIntent, siteAttributesButton);
+                updateSelected(siteAttributesSelected,resultData.getInt("length"), resultData, siteAttributesButton);
                 break;
             case INSTRUCTOR:
-                isSelected = InstructorSelected;
-                updateSelected(isSelected,length, dataIntent, InstructorButton);
+                updateSelected(InstructorSelected,resultData.getInt("length"), resultData, InstructorButton);
                 break;
             case STARTHOUR:
-                isSelected = startHourSelected;
-                updateSelected(isSelected,length, dataIntent, startHourButton);
+                updateSelected(startHourSelected,resultData.getInt("length"), resultData, startHourButton);
                 break;
             case ENDHOUR:
-                isSelected = endHourSelected;
-                updateSelected(isSelected,length, dataIntent, endHourButton);
+                updateSelected(endHourSelected,resultData.getInt("length"), resultData, endHourButton);
                 break;
             case CREDITS:
-                isSelected = creditHourSelected;
-                updateSelected(isSelected,length, dataIntent, creditHourButton);
+                updateSelected(creditHourSelected,resultData.getInt("length"), resultData, creditHourButton);
                 break;
         }
 
     }
 
-    private void updateSelected(ArrayList<String> isSelected, int length, Intent dataIntent, Button button) {
-        if(isSelected != null) {
+    private void updateSelected(ArrayList<String> isSelected, int length, Bundle resultData, Button button) {
             isSelected.clear();
             for (int i = 0; i < length; i++) {
-                String name = dataIntent.getStringExtra("" + i);
+                String name = resultData.getString("" + i);
                 isSelected.add(name);
             }
             if (length > 1) {
@@ -424,8 +464,8 @@ public class filter_layout extends Fragment {
             } else {
                 button.setText("none");
             }
-        }
     }
+
     private void setButtonText(Button button, String text){
         if(text.length() > 15) {
             button.setText(text.substring(0,15) + "...");
@@ -453,13 +493,13 @@ public class filter_layout extends Fragment {
         startHourSelected.add("All");
         endHourSelected.add("All");
         creditHourSelected.add("All");
-        mon.setChecked(true);
-        tue.setChecked(true);
-        wed.setChecked(true);
-        thu.setChecked(true);
-        fri.setChecked(true);
-        sat.setChecked(true);
-        sun.setChecked(true);
+        mon.setChecked(false);
+        tue.setChecked(false);
+        wed.setChecked(false);
+        thu.setChecked(false);
+        fri.setChecked(false);
+        sat.setChecked(false);
+        sun.setChecked(false);
         startAM.setChecked(false);
         startPM.setChecked(false);
         endPM.setChecked(false);
@@ -550,46 +590,56 @@ public class filter_layout extends Fragment {
         }
         return days;
     }
+
     public Filter getFilters(){
         Filter filter = new Filter();
-        filter.term = term.get(termSelected.get(0));
-        filter.sel_gur = gurAttributes.get(gurAttributesSelected.get(0));
-        filter.sel_attr = otherAttributes.get(otherAttributesSelected.get(0));
-        filter.sel_site = siteAttributes.get(siteAttributesSelected.get(0));
-        filter.sel_subj = getSubjects();
-        filter.sel_inst = Instructor.get(InstructorSelected.get(0));
-        filter.sel_crse = courseNumber.getText().toString();
-        filter.sel_day = getDays();
-        if(startPM.isChecked()){
-            filter.begin_mi = "P";
-        }else {
-            filter.begin_mi = "A";
-        }
-        if(endPM.isChecked()){
-            filter.end_mi = "P";
-        }else {
-            filter.end_mi = "A";
-        }
-        String startHour = startHourSelected.get(0);
-        if(startHour.equals("All")) {
-            filter.begin_hh = "0";
-        }else{
-            filter.begin_hh = startHour;
-        }
-        String endHour = endHourSelected.get(0);
-        if(startHour.equals("All")) {
-            filter.end_hh = "0";
-        }else{
-            filter.end_hh = endHour;
-        }
-        String creditHour = creditHourSelected.get(0);
-        if(creditHour.equals("All")) {
-            filter.sel_cdts = "%25";
-        }else{
-            filter.sel_cdts = creditHour;
+        try {
+            filter.term = term.get(termSelected.get(0));
+            filter.sel_gur = gurAttributes.get(gurAttributesSelected.get(0));
+            filter.sel_attr = otherAttributes.get(otherAttributesSelected.get(0));
+            filter.sel_site = siteAttributes.get(siteAttributesSelected.get(0));
+            filter.sel_subj = getSubjects();
+            filter.sel_inst = Instructor.get(InstructorSelected.get(0));
+            filter.sel_crse = courseNumber.getText().toString();
+            filter.sel_day = getDays();
+            if (startPM.isChecked()) {
+                filter.begin_mi = "P";
+            } else {
+                filter.begin_mi = "A";
+            }
+            if (endPM.isChecked()) {
+                filter.end_mi = "P";
+            } else {
+                filter.end_mi = "A";
+            }
+            String startHour = startHourSelected.get(0);
+            if (startHour.equals("All")) {
+                filter.begin_hh = "0";
+            } else {
+                filter.begin_hh = startHour;
+            }
+            String endHour = endHourSelected.get(0);
+            if (startHour.equals("All")) {
+                filter.end_hh = "0";
+            } else {
+                filter.end_hh = endHour;
+            }
+            String creditHour = creditHourSelected.get(0);
+            if (creditHour.equals("All")) {
+                filter.sel_cdts = "%25";
+            } else {
+                filter.sel_cdts = creditHour;
+            }
+            if (openSections.isChecked()) {
+                filter.sel_open = "Y";
+            }
+        }catch (Exception e){
+            //filter is either loading or errored
+            return null;
         }
         return filter;
     }
+
 
     private class getMenuAttributes extends AsyncTask<List<Pair<String, String>>, Void, List<HashMap<String, String>> > {
 
@@ -602,7 +652,6 @@ public class filter_layout extends Fragment {
         protected void onPostExecute(List<HashMap<String, String>> result) {
             if(result == null){
                 noInternet.setVisibility(View.VISIBLE);
-                System.out.println("no internet");
             }else {
                 term = result.get(0);
                 gurAttributes = result.get(1);
@@ -634,7 +683,6 @@ public class filter_layout extends Fragment {
                 v = getView();
                 getMenuReferences();
                 if(savedInstance != null){
-                    initilized = true;
                     termSelected = new ArrayList<>();
                     int termLength = savedInstance.getInt("termLength");
                     for(int i = 0; i < termLength; i++){
@@ -690,6 +738,7 @@ public class filter_layout extends Fragment {
                     }
                     updateButton(creditHourButton,creditHourSelected);
                 }
+                v.findViewById(R.id.loadingPanel).setVisibility(View.GONE);
                 v.setVisibility(View.VISIBLE);
             }
             CustomItems.getTerm();

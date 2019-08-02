@@ -148,7 +148,10 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                 if (newPos == 1) {
                     if(crseFrag.isRefreshing())
                         return;
-                    crseFrag.updateClasses(getFilters(), true);
+                    Filter filter = getFilters();
+                    if(filter != null) {
+                        crseFrag.updateClasses(filter, true);
+                    }
                 }
                 return;
             }
@@ -164,7 +167,10 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     break;
                 case 1:
                     if(!crseFrag.isRefreshing()) {
-                        crseFrag.updateClasses(getFilters(), false);
+                        Filter filter = getFilters();
+                        if(filter != null) {
+                            crseFrag.updateClasses(filter, false);
+                        }
                     }
 
                     RecyclerView rv = crseFrag.getView().findViewById(R.id.course_recycler_view);
@@ -317,50 +323,6 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
     private Filter getFilters(){
         return filterLayout.getFilters();
-    }
-
-    public void termButton(View view) {
-        //filterLayout.termButton(view);
-    }
-
-    public void GURattributesButton(View view) {
-        //filterLayout.GURattributesButton(view);
-    }
-
-    public void otherAttributesButton(View view) {
-       // filterLayout.otherAttributesButton(view);
-    }
-
-    public void siteAttributesButton(View view) {
-       // filterLayout.siteAttributesButton(view);
-    }
-
-    public void subjectButton(View view) {
-      //  filterLayout.subjectButton(view);
-    }
-
-    public void instructorButton(View view) {
-      //  filterLayout.instructorButton(view);
-    }
-
-    public void startHourButton(View view) {
-      //  filterLayout.startHourButton(view);
-    }
-
-    public void endHourButton(View view) {
-       // filterLayout.endHourButton(view);
-    }
-
-    public void creditHoursButton(View view) {
-      //  filterLayout.creditHoursButton(view);
-    }
-
-    public void resetFilters(View view) {
-      //  filterLayout.resetFilters(view);
-    }
-
-    public void search(View view) {
-      ///  bottomView.changePosition(1);
     }
 
 
