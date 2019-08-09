@@ -319,6 +319,7 @@ public class CustomItems {
 
         List<Pair<String, String>> formData;
         String crn;
+        int size;
 
         @Override
         protected HashMap<String, List<Course>> doInBackground(String... unused) {
@@ -332,9 +333,11 @@ public class CustomItems {
                 if(c.get(i).crn.equals(crn)) {
                     avail.add(c.get(i));
                     i = c.size();
+                    if(avail.size() == size) {
+                        updateClassList();
+                    }
                 }
             }
-            updateClassList();
         }
     }
 }
