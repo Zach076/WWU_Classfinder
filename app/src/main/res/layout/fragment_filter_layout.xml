@@ -5,8 +5,7 @@
     android:id="@+id/filter"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:visibility="visible">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -27,192 +26,234 @@
             android:layout_centerHorizontal="true"
             android:text="Loading Filters" />
 
-    <ProgressBar
-        android:id="@+id/loading"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_centerHorizontal="true"
-        android:indeterminateDrawable="@drawable/progress" />
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_centerHorizontal="true"
+            android:indeterminateDrawable="@drawable/progress" />
     </RelativeLayout>
-<GridLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:columnCount="2"
-    android:visibility="visible">
 
-    <LinearLayout
+
+    <GridLayout
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_columnWeight="1"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:columnCount="2">
 
+        <LinearLayout
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/term"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Term" />
+
+    </LinearLayout>
+
+        <LinearLayout
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="Term" />
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_column="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+        <TextView
+            android:id="@+id/otherAttributes"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:text="Other Attributes" />
+        </LinearLayout>
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/termButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
+            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:text="Fall 2019" />
-
-        <TextView
-            android:id="@+id/otherAttributes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Other Attributes" />
-
         <Button
             android:id="@+id/otherAttributesButton"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="All Courses wit..."
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/otherAttributes" />
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center"
+            android:text="All Courses wit..." />
 
+        </LinearLayout>
+
+    <GridLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:columnCount="2">
+        <LinearLayout
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_column="0"
+            android:layout_gravity="center"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/subject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
             android:text="Subject"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/otherAttributesButton" />
+            android:layout_gravity="center" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/subjectButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="All Subjects"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subject" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_column="1"
-        android:layout_columnWeight="1"
-        android:orientation="vertical">
-
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_column="1"
+            android:layout_gravity="center"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/GURattributes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:text="GUR Attributes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/term"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_gravity="center" />
+        </LinearLayout>
+
+
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
 
         <Button
+            android:id="@+id/subjectButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="All Subjects" />
 
+        <Button
             android:id="@+id/GURattributesButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="All GUR/Non-GUR..."
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/termButton"
-            app:layout_constraintTop_toBottomOf="@+id/GURattributes" />
+            android:layout_gravity="center"
+            android:text="All GUR/Non-GUR..." />
 
+    </LinearLayout>
+    <GridLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:columnCount="2">
+
+        <LinearLayout
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_column="0"
+            android:layout_gravity="center"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/siteAttributes"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_width="wrap_content"
             android:text="Site Attributes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.392"
-            app:layout_constraintStart_toEndOf="@+id/otherAttributes"
-            app:layout_constraintTop_toBottomOf="@+id/GURattributesButton" />
+            android:layout_gravity="center" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/siteAttributesButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="All Sites"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/otherAttributesButton"
-            app:layout_constraintTop_toBottomOf="@+id/siteAttributes" />
-
-
-
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_column="1"
+            android:layout_gravity="center">
         <TextView
             android:id="@+id/instructor"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Instructor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/subject"
-            app:layout_constraintTop_toBottomOf="@+id/siteAttributesButton" />
+            android:layout_width="wrap_content"
+            android:text="Instructor" />
+        </LinearLayout>
 
+    </GridLayout>
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
 
-
+            <Button
+                android:id="@+id/siteAttributesButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_gravity="center"
+                android:text="All Sites" />
 
         <Button
             android:id="@+id/instructorButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:text="All Instructors"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/subjectButton"
-            app:layout_constraintTop_toBottomOf="@+id/instructor" />
-
+            android:layout_gravity="center"
+            android:text="All Instructors" />
 
 
     </LinearLayout>
 
-
-</GridLayout >
 
     <LinearLayout
         android:layout_height="wrap_content"
