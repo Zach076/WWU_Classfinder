@@ -2,18 +2,13 @@ package com.csci412.classfinder;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.view.View;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SchedViewActivity extends AppCompatActivity {
 
@@ -45,7 +40,6 @@ public class SchedViewActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("delete");
                 onBackPressed();
                 CustomItems.removeSchedule(fragment.Sched);
             }
@@ -95,7 +89,6 @@ public class SchedViewActivity extends AppCompatActivity {
     public void checkSche(View view) {
         if(press == 0) {
             press++;
-            System.out.println("check");
             int size  = fragment.Sched.classes.size();
             for (Course c : fragment.Sched.classes) {
                 Filter f = CustomItems.getFilter(c);

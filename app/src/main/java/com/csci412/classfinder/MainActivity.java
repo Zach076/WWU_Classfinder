@@ -3,48 +3,33 @@ package com.csci412.classfinder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.DragEvent;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
 import com.csci412.classfinder.classviewwidget.ClassViewWidget;
 import com.csci412.classfinder.pagefragments.CourseListFragment;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
-import org.w3c.dom.Text;
-
-import java.io.FileReader;
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements CourseListFragment.OnFragmentInteractionListener {
 
@@ -63,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
     //editText to name schedules
     private String currEditText;
 
+    private InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //intitalize all the menu options
@@ -71,6 +58,50 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
 
         setContentView(R.layout.activity_main);
 
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        //production mInterstitialAd.setAdUnitId("ca-app-pub-8447225644842981~8148660639");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                mInterstitialAd.show();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+            }
+        });
+
+        AdView mAdView = findViewById(R.id.bannerAd);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         //get content views
         filterLayout =  (filter_layout) getFragmentManager().findFragmentById(R.id.filter_view);
@@ -121,10 +152,8 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                System.out.println("show +1");
                 return false; // Right to left
             }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                System.out.println("show -1");
                 return false; // Left to right
             }
             return false;
@@ -150,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                         return;
                     Filter filter = getFilters();
                     if(filter != null) {
-                        crseFrag.updateClasses(filter, true);
+                        crseFrag.updateClasses(filter, true, null);
                     }
                 }
                 return;
@@ -169,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
                     if(!crseFrag.isRefreshing()) {
                         Filter filter = getFilters();
                         if(filter != null) {
-                            crseFrag.updateClasses(filter, false);
+                            crseFrag.updateClasses(filter, false, mInterstitialAd);
                         }
                     }
 

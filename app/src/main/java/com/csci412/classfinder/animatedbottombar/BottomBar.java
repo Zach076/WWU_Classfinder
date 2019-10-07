@@ -76,7 +76,6 @@ private int inactiveColor = Color.GRAY;
 
     //called when everything is set up to build the nav bar
     public void build(int start) {
-        System.out.println(start);
         createNavigationItems();
 
         setBackgroundColor(bgColor);

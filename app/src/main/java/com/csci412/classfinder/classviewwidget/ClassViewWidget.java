@@ -1,15 +1,13 @@
 package com.csci412.classfinder.classviewwidget;
 
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 
 import com.csci412.classfinder.Course;
-import com.csci412.classfinder.MainActivity;
 import com.csci412.classfinder.R;
-import com.csci412.classfinder.Utilities;
 
 import java.util.ArrayList;
 

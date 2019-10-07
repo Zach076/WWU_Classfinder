@@ -1,8 +1,9 @@
 package com.csci412.classfinder;
 
 import android.content.res.Resources;
-import android.support.v4.util.Pair;
-import android.widget.Toast;
+import android.util.Log;
+
+import androidx.core.util.Pair;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,14 +13,13 @@ import org.jsoup.select.Elements;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -80,8 +80,7 @@ public class Utilities {
             classInfo = new Pair<>(course, result);
         } catch (Exception e){
             //no classes or some other error
-            //return null
-            System.out.println(e);
+            Log.e("utilities", "No classes or source has changed?");
             return null;
         } finally {
             if(connection != null)
@@ -90,10 +89,10 @@ public class Utilities {
         return classInfo;
     }
 
-    public static HashMap<String, List<Course>> getClasses(List<Pair<String, String>> formData){
+    public static TreeMap<String, List<Course>> getClasses(List<Pair<String, String>> formData){
 
         HttpsURLConnection connection = null;
-        HashMap<String, List<Course>> classes;
+        TreeMap<String, List<Course>> classes;
 
         try{
             URL url = new URL("https://admin.wwu.edu/pls/wwis/wwsktime.ListClass");
@@ -157,7 +156,7 @@ public class Utilities {
             Elements rows = classTable.select("tr");
 
             //data structures to store information in
-            classes = new HashMap<>();
+            classes = new TreeMap<>();
             String department = null;
             List<Course> courses = null;
             Course course = null;
@@ -223,7 +222,6 @@ public class Utilities {
                     course.chrgs = cols.get(5).text();
 
                 course.times.add(cols.get(2).text());
-                System.out.println(cols.get(2).text());
 
                 i++;
                 row = rows.get(i);
@@ -233,7 +231,6 @@ public class Utilities {
                     if (!cols.get(0).hasText() || cols.get(0).text().equals("")) {
                         if (cols.size() > 3) {
                             course.times.add(cols.get(1).text());
-                            System.out.println("added");
                             course.location.add(cols.get(2).text());
                         } else if (cols.size() > 2) {
                             course.prereq.concat(cols.get(2).text());
@@ -254,7 +251,6 @@ public class Utilities {
                     row = rows.get(i);
                     cols = row.select("td");
                 }
-                System.out.println("-------------------------------------");
                 courses.add(course);
             }
 
@@ -262,7 +258,7 @@ public class Utilities {
         } catch (Exception e){
             //no classes or some other error
             //returning null will report no classes to a
-            System.out.println(e);
+            Log.e("utilities", "No classes or source has changed?");
             return null;
         } finally {
             if(connection != null)
