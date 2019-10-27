@@ -1,21 +1,17 @@
 package com.csci412.classfinder;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.icu.util.BuddhistCalendar;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.Pair;
+
+import androidx.core.util.Pair;
+
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -410,7 +406,7 @@ public class filter_layout extends Fragment {
                 outState.putString("c" + i, creditHourSelected.get(i));
             }
         }catch (Exception e){
-            System.out.println("filters not initialized yet");
+            Log.e("filter", "There was an error saving filter state.");
         }
     }
 

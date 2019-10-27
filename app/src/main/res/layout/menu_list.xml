@@ -27,7 +27,7 @@
         android:textCursorDrawable="@drawable/blue_cursor"
         android:text="Search" />
 
-    <android.support.v7.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.recyclerview.widget.RecyclerView xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/item_list"
         android:name="com.csci412.classfinder.ItemListFragment"
@@ -67,7 +67,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/white"
-        android:text="Back"
+        android:text="Done"
         android:layout_weight=".25"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
