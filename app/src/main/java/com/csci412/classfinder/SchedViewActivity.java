@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SchedViewActivity extends AppCompatActivity {
@@ -72,8 +73,12 @@ public class SchedViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
-                    CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString());
-                    item.classes = fragment.Sched.classes;
+                    List<Course> classes = new ArrayList<>();
+                    for(int j = 0; j < fragment.Sched.classes.size(); j++){
+                     classes.add(new Course());
+                    }
+                    Collections.copy(classes,fragment.Sched.classes);
+                    CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString(), classes);
                     CustomItems.addSchedule(item);
                     CustomItems.rva.notifyDataSetChanged();
                 }

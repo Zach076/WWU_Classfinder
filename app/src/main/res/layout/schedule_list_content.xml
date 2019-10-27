@@ -14,7 +14,8 @@
         android:textAppearance="?attr/textAppearanceListItem"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/content"
@@ -24,7 +25,17 @@
         android:paddingRight="32dp"
         android:textColor="@color/black"
         android:textAppearance="?attr/textAppearanceListItem"
-        android:layout_alignRight="@+id/avail"/>
+        android:layout_alignRight="@+id/avail"
+        android:layout_centerVertical="true"/>
+
+    <Button
+        android:id="@+id/classDelete"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Delete"
+        android:layout_centerVertical="true"/>
 
     <TextView
         android:id="@+id/avail"
@@ -34,5 +45,6 @@
         android:textColor="@color/red"
         android:textAppearance="?attr/textAppearanceListItem"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 </RelativeLayout>

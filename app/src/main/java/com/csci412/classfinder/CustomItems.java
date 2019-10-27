@@ -58,6 +58,11 @@ public class CustomItems {
             this.name = name;
             this.classes = new ArrayList<>();
         }
+
+        public ScheduleItem(String name, List<Course> courses) {
+            this.name = name;
+            this.classes = courses;
+        }
     }
 
     public static void addSchedule(String name) {

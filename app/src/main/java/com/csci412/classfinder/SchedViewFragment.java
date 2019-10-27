@@ -283,6 +283,7 @@ public class SchedViewFragment extends Fragment {
             extends RecyclerView.Adapter<SchedViewFragment.SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final List<Course> mValues;
+        private final View rootView;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -295,6 +296,7 @@ public class SchedViewFragment extends Fragment {
         SimpleItemRecyclerViewAdapter(View parent,
                                       List<Course> items) {
             mValues = items;
+            rootView = parent;
         }
 
         @Override
@@ -311,9 +313,10 @@ public class SchedViewFragment extends Fragment {
             if(CustomItems.avail.size() > 0) {
                 holder.mAvailView.setText(CustomItems.avail.get(position).avail);
             }
-
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+            Button Delete = holder.itemView.findViewById(R.id.classDelete);
+            Delete.setVisibility(View.VISIBLE);
+            Delete.setTag(mValues.get(position));
+            Delete.setOnClickListener(mOnClickListener);
         }
 
         @Override
