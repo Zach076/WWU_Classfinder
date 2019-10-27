@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.List;
 public class SchedViewActivity extends AppCompatActivity {
 
     public SchedViewFragment fragment;
+    public int press = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -96,13 +98,21 @@ public class SchedViewActivity extends AppCompatActivity {
     }
 
     public void checkSche(View view) {
-        System.out.println("check");
-        for (Course c : fragment.Sched.classes) {
-            Filter f = CustomItems.getFilter(c);
-            CustomItems.getAvail a = new CustomItems.getAvail();
-            a.crn = c.crn;
-            a.formData = f.getFormData();
-            a.execute();
+        if(press == 0) {
+            press++;
+            System.out.println("check");
+            int size  = fragment.Sched.classes.size();
+            for (Course c : fragment.Sched.classes) {
+                Filter f = CustomItems.getFilter(c);
+                CustomItems.getAvail a = new CustomItems.getAvail();
+                a.size = size;
+                a.crn = c.crn;
+                a.formData = f.getFormData();
+                a.execute();
+            }
+        } else {
+            Toast.makeText(SchedViewActivity.this, "Checking availability uses many resources.\nPlease be mindful when using this button.", Toast.LENGTH_LONG).show();
+            press = 0;
         }
         view.findViewById(R.id.checkBtn).setVisibility(View.GONE);
     }

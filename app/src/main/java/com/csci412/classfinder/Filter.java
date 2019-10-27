@@ -26,7 +26,7 @@ public class Filter {
     public List<Pair<String, String>> getFormData(){
         List<Pair<String, String>> formData = new ArrayList<>();
         formData.add(new Pair<>("sel_crn", sel_crn));
-        formData.add(new Pair<>("term", term));
+        formData.add(new Pair<>("term", term));//needs to be the second item
         formData.add(new Pair<>("sel_gur", sel_gur));
         formData.add(new Pair<>("sel_attr", sel_attr));
         formData.add(new Pair<>("sel_site", sel_site));

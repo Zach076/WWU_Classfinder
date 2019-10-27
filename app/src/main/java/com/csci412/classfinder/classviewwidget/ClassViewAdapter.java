@@ -1,9 +1,13 @@
 package com.csci412.classfinder.classviewwidget;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -18,14 +22,17 @@ import com.csci412.classfinder.MainActivity;
 import com.csci412.classfinder.R;
 import com.csci412.classfinder.Utilities;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
 
     //need the items here
     //as well as the id of the layout for each item to be used in the recycler view
     ArrayList<Course> courses;
-
+    ViewGroup parent;
 
     ClassViewAdapter(ArrayList<Course> courses) {
         this.courses = courses;
@@ -35,6 +42,7 @@ public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
     @Override
     public ClassViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         //inflate the item layout and return in in a new holder
+        this.parent = parent;
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_layout, parent, false);
         return new ClassViewHolder(itemView);
     }
@@ -157,7 +165,31 @@ public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
         });
 
         courseView.findViewById(R.id.tableLayout).setOnClickListener((view) -> {
-            Toast.makeText(view.getContext(), "Hold to drag and drop classes onto schedule.", Toast.LENGTH_LONG).show();
+            GetClassInfo task = new GetClassInfo();
+            task.formData = new Pair<>(course.term, course.course.replaceAll(" ", ""));
+            task.contextRef = new WeakReference<>(parent.getContext());
+            task.execute("");
         });
+    }
+
+    public static class GetClassInfo extends AsyncTask<String, Void, Pair<String, String>> {
+
+        WeakReference<Context> contextRef;
+        Pair<String, String> formData;
+
+        @Override
+        protected Pair<String, String> doInBackground(String... unused) {
+            return Utilities.getClassInfo(formData.first, formData.second);
+        }
+
+        @Override
+        protected void onPostExecute(Pair<String, String> result) {
+            new AlertDialog.Builder(contextRef.get())
+                    .setTitle(result.first)
+                    .setMessage(result.second)
+                    .setNegativeButton(android.R.string.ok, null)
+                    .show();
+            contextRef.clear();
+        }
     }
 }
