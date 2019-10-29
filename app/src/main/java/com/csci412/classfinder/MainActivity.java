@@ -111,18 +111,40 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         filterLayout =  (filter_layout) getFragmentManager().findFragmentById(R.id.filter_view);
         clsView = findViewById(R.id.classes_view);
         crseFrag = (CourseListFragment) getFragmentManager().findFragmentById(R.id.classes_view);
-        ConstraintLayout all = (ConstraintLayout) findViewById(R.id.all);
+        scheView = findViewById(R.id.schedule_view);
 
-        findViewById(R.id.all).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+        //setting up swipe gestures
+        findViewById(R.id.scrollFilter).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+
+            public void onSwipeLeft() {
+                bottomView.changePosition(1);
+            }
+        });
+        findViewById(R.id.schedule_list).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+
             public void onSwipeRight() {
-                System.out.println("right");
+                bottomView.changePosition(1);
+            }
+        });
+        findViewById(R.id.course_recycler_view).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+            public void onSwipeRight() {
+                bottomView.changePosition(0);
             }
 
             public void onSwipeLeft() {
-                System.out.println("left");
+                bottomView.changePosition(2);
             }
         });
-        scheView = findViewById(R.id.schedule_view);
+        findViewById(R.id.tableLayout).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+            public void onSwipeRight() {
+                bottomView.changePosition(0);
+            }
+
+            public void onSwipeLeft() {
+                bottomView.changePosition(2);
+            }
+        });
+
         List<CustomItems.ScheduleItem> schedules= CustomItems.getFromSharedPrefs(getApplicationContext());
         for (CustomItems.ScheduleItem item : schedules) {
             CustomItems.addSchedule(item);
@@ -360,7 +382,9 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         //possible communication between fragment needed?
     }
 
-    private class OnSwipeTouchListener implements View.OnTouchListener {
+
+    //gesture class for swipe left and right
+    public class OnSwipeTouchListener implements View.OnTouchListener {
 
         private final GestureDetector gestureDetector;
 
@@ -376,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         private final class GestureListener extends GestureDetector.SimpleOnGestureListener{
 
             private static final int SWIPE_THRESHOLD = 120;
-            private static final int SWIPE_VELOCITY_THRESHOLD = 200;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 150;
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
