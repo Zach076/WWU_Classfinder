@@ -89,10 +89,10 @@ public class Utilities {
         return classInfo;
     }
 
-    public static HashMap<String, List<Course>> getClasses(List<Pair<String, String>> formData){
+    public static TreeMap<String, List<Course>> getClasses(List<Pair<String, String>> formData){
 
         HttpsURLConnection connection = null;
-        HashMap<String, List<Course>> classes;
+        TreeMap<String, List<Course>> classes;
 
         try{
             URL url = new URL("https://admin.wwu.edu/pls/wwis/wwsktime.ListClass");
@@ -156,7 +156,7 @@ public class Utilities {
             Elements rows = classTable.select("tr");
 
             //data structures to store information in
-            classes = new HashMap<>();
+            classes = new TreeMap<>();
             String department = null;
             List<Course> courses = null;
             Course course = null;

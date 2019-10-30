@@ -125,17 +125,17 @@ public class CourseListFragment extends Fragment {
     }
 
     //example async class for getting classes from classfinder
-    private class GetClasses extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
+    private class GetClasses extends AsyncTask<String, Void, TreeMap<String, List<Course>>> {
 
         List<Pair<String, String>> formData;
 
         @Override
-        protected HashMap<String, List<Course>> doInBackground(String... unused) {
+        protected TreeMap<String, List<Course>> doInBackground(String... unused) {
             return Utilities.getClasses(formData);
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, List<Course>> result) {
+        protected void onPostExecute(TreeMap<String, List<Course>> result) {
             if(result != null) {
                 getView().findViewById(R.id.no_classes).setVisibility(View.INVISIBLE);
                 //todo sort hashmap by key

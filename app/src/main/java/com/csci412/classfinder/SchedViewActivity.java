@@ -48,7 +48,6 @@ public class SchedViewActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                System.out.println("delete");
                 onBackPressed();
                 CustomItems.removeSchedule(fragment.Sched);
             }
@@ -102,7 +101,6 @@ public class SchedViewActivity extends AppCompatActivity {
     public void checkSche(View view) {
         if(press == 0) {
             press++;
-            System.out.println("check");
             int size  = fragment.Sched.classes.size();
             for (Course c : fragment.Sched.classes) {
                 Filter f = CustomItems.getFilter(c);

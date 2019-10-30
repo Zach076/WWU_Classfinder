@@ -317,19 +317,19 @@ public class CustomItems {
 
     public static ArrayList<Course> avail = new ArrayList();
 
-    public static class getAvail extends AsyncTask<String, Void, HashMap<String, List<Course>>> {
+    public static class getAvail extends AsyncTask<String, Void, TreeMap<String, List<Course>>> {
 
         List<Pair<String, String>> formData;
         String crn;
         int size;
 
         @Override
-        protected HashMap<String, List<Course>> doInBackground(String... unused) {
+        protected TreeMap<String, List<Course>> doInBackground(String... unused) {
             return  Utilities.getClasses(formData);
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, List<Course>> result) {
+        protected void onPostExecute(TreeMap<String, List<Course>> result) {
             List<Course> c = result.values().iterator().next();
             for (int i = 0; i < c.size(); i++) {
                 if(c.get(i).crn.equals(crn)) {
