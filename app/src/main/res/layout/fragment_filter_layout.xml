@@ -36,6 +36,14 @@
             android:indeterminateDrawable="@drawable/progress" />
     </RelativeLayout>
 
+    <ScrollView
+        android:id="@+id/scrollFilter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
 
     <GridLayout
         android:layout_height="wrap_content"
@@ -703,5 +711,6 @@
             android:textSize="12dp" />
 
     </FrameLayout>
-
-</LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    </LinearLayout>

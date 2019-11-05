@@ -5,14 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -54,6 +54,11 @@ public class CustomItems {
         public ScheduleItem(String name) {
             this.name = name;
             this.classes = new ArrayList<>();
+        }
+
+        public ScheduleItem(String name, List<Course> courses) {
+            this.name = name;
+            this.classes = courses;
         }
     }
 
@@ -320,7 +325,7 @@ public class CustomItems {
 
         @Override
         protected TreeMap<String, List<Course>> doInBackground(String... unused) {
-            return Utilities.getClasses(formData);
+            return  Utilities.getClasses(formData);
         }
 
         @Override

@@ -148,7 +148,6 @@ public class ClassViewAdapter extends RecyclerView.Adapter<ClassViewHolder> {
         } else
             tv.setVisibility(View.GONE);
 
-
         courseView.findViewById(R.id.tableLayout).setOnLongClickListener((view) -> {
             MainActivity.bottomView.changePosition(2);
             Intent intent = new Intent();

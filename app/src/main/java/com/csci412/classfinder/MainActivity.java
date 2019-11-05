@@ -3,10 +3,13 @@ package com.csci412.classfinder;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.csci412.classfinder.animatedbottombar.BottomBar;
 import com.csci412.classfinder.animatedbottombar.Item;
@@ -107,8 +111,40 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         filterLayout =  (filter_layout) getFragmentManager().findFragmentById(R.id.filter_view);
         clsView = findViewById(R.id.classes_view);
         crseFrag = (CourseListFragment) getFragmentManager().findFragmentById(R.id.classes_view);
-
         scheView = findViewById(R.id.schedule_view);
+
+        //setting up swipe gestures
+        findViewById(R.id.scrollFilter).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+
+            public void onSwipeLeft() {
+                bottomView.changePosition(1);
+            }
+        });
+        findViewById(R.id.schedule_list).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+
+            public void onSwipeRight() {
+                bottomView.changePosition(1);
+            }
+        });
+        findViewById(R.id.course_recycler_view).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+            public void onSwipeRight() {
+                bottomView.changePosition(0);
+            }
+
+            public void onSwipeLeft() {
+                bottomView.changePosition(2);
+            }
+        });
+        findViewById(R.id.tableLayout).setOnTouchListener(new OnSwipeTouchListener(MainActivity.this){
+            public void onSwipeRight() {
+                bottomView.changePosition(0);
+            }
+
+            public void onSwipeLeft() {
+                bottomView.changePosition(2);
+            }
+        });
+
         List<CustomItems.ScheduleItem> schedules= CustomItems.getFromSharedPrefs(getApplicationContext());
         for (CustomItems.ScheduleItem item : schedules) {
             CustomItems.addSchedule(item);
@@ -132,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         super.onStop();
     }
 
+
     @Override
     protected void onDestroy() {
         CustomItems.saveToSharedPrefs(getApplicationContext());
@@ -144,21 +181,6 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
         outState.putInt("page", bottomView.getCurrentPage());
     }
 
-    //todo(nick) finish fling
-    private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-
-    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                return false; // Right to left
-            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                return false; // Left to right
-            }
-            return false;
-        }
-    }
 
 
     private void setupBar(int start){
@@ -358,5 +380,55 @@ public class MainActivity extends AppCompatActivity implements CourseListFragmen
     @Override
     public void onFragmentInteraction(Uri uri) {
         //possible communication between fragment needed?
+    }
+
+
+    //gesture class for swipe left and right
+    public class OnSwipeTouchListener implements View.OnTouchListener {
+
+        private final GestureDetector gestureDetector;
+
+        public OnSwipeTouchListener(Context context) {
+            gestureDetector = new GestureDetector(context,new GestureListener());
+        }
+        @Override
+        public boolean onTouch(View v, MotionEvent event){
+            return gestureDetector.onTouchEvent(event);
+        }
+
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener{
+
+            private static final int SWIPE_THRESHOLD = 120;
+            private static final int SWIPE_VELOCITY_THRESHOLD = 200;
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                boolean result = false;
+                try {
+                    float diffY = e2.getY() - e1.getY();
+                    float diffX = e2.getX() - e1.getX();
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+                                onSwipeRight();
+                            } else {
+                                onSwipeLeft();
+                            }
+                            result = true;
+                        }
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+            }
+        }
+        public void onSwipeRight() {
+        }
+
+        public void onSwipeLeft() {
+        }
+
     }
 }

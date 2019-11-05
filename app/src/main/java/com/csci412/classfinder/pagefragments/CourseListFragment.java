@@ -25,6 +25,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -43,6 +44,7 @@ public class CourseListFragment extends Fragment {
         CourseListFragment fragment = new CourseListFragment();
         return fragment;
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

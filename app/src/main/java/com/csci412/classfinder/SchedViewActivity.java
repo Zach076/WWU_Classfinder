@@ -2,18 +2,26 @@ package com.csci412.classfinder;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class SchedViewActivity extends AppCompatActivity {
 
     public SchedViewFragment fragment;
     public int press = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,8 +76,12 @@ public class SchedViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if(input.getText().toString() != null && CustomItems.SCHEDULE_MAP.get(input.getText().toString()) == null) {
-                    CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString());
-                    item.classes = fragment.Sched.classes;
+                    List<Course> classes = new ArrayList<>();
+                    for(int j = 0; j < fragment.Sched.classes.size(); j++){
+                     classes.add(new Course());
+                    }
+                    Collections.copy(classes,fragment.Sched.classes);
+                    CustomItems.ScheduleItem item = new CustomItems.ScheduleItem(input.getText().toString(), classes);
                     CustomItems.addSchedule(item);
                     CustomItems.rva.notifyDataSetChanged();
                 }

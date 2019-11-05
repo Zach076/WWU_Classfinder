@@ -11,7 +11,6 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_below="@+id/app_bar"
         android:text="Schedules"
         android:textSize="40sp"
         android:textColor="@color/black"
@@ -20,14 +19,16 @@
         android:layout_marginLeft="8dp"
         android:layout_height="wrap_content"/>
 
-    <FrameLayout
+    <ScrollView
         android:layout_below="@+id/title"
-        android:id="@+id/frameLayout"
+        android:id="@+id/schedule_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <include layout="@layout/schedule_list" />
-    </FrameLayout>
+
+        <include
+            layout="@layout/schedule_list" />
+    </ScrollView>
 
     <Button
         android:id="@+id/newScheduleButton"
