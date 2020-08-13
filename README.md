@@ -1,11 +1,1 @@
-# csci412_s19_classfinder
-
-CSCI 412 Spring 2019 Classfinder term project
-
-[CHECKPOINT 1](https://gitlab.cs.wwu.edu/richarz/412_s19_classfinder/wikis/CHECKPOINT_1)
-
-[CHECKPOINT 2](https://gitlab.cs.wwu.edu/richarz/412_s19_classfinder/wikis/CHECKPOINT_2)
-
-[CHECKPOINT 3](https://gitlab.cs.wwu.edu/richarz/412_s19_classfinder/wikis/CHECKPOINT_3)
-
-[FINAL](https://gitlab.cs.wwu.edu/richarz/412_s19_classfinder/wikis/FINAL)
+ClassFinder Began as a school project and was completed after graduation. It was never brought to market out of concern for monetizing a resource owned by the school. ClassFinder is an android app built on top of the network calls made by the official WWU ClassFinder website (https://admin.wwu.edu/pls/wwis/wwsktime.SelClass). This project was developed by Zach Richardson, Nick Mounier, and Ian Fahning.
